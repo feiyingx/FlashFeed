@@ -3,7 +3,8 @@
       package="com.flashfeed.www"
       android:versionCode="1"
       android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/icon" android:label="@string/app_name"
+    	android:debuggable="true">
         <activity android:name=".FlashFeed"
                   android:label="@string/app_name">
             <intent-filter>
@@ -11,8 +12,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+		<activity android:name=".StatusFeed"
+				  android:label="@string/statusfeed_name">
+		</activity>
     </application>
-
-
 </manifest> 
