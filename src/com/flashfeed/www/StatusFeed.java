@@ -2,10 +2,13 @@ package com.flashfeed.www;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
@@ -39,6 +42,18 @@ public class StatusFeed extends Activity{
         
         Gallery gallery8 = (Gallery) findViewById(R.id.gallery8);
         gallery8.setAdapter(new ImageAdapter(this));
+        
+        Button cameraBtn = (Button) findViewById(R.id.cameraBtn);
+        cameraBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(v.getContext(), CameraView.class);
+				startActivity(i);
+			}
+        	
+        });
     }
     
     public class ImageAdapter extends BaseAdapter {

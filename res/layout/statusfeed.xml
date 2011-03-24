@@ -4,6 +4,22 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
+  <LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:orientation="horizontal">
+  <Button
+  	android:id="@+id/homeBtn"
+  	android:text="home"
+  	android:layout_height="wrap_content"
+  	android:layout_width="wrap_content"/>
+  <Button
+  	android:id="@+id/cameraBtn"
+  	android:text="camera"
+  	android:layout_height="wrap_content"
+  	android:layout_width="wrap_content"/>
+</LinearLayout>
   <ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
@@ -16,42 +32,51 @@
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery1"/>
+  android:id="@+id/gallery1"
+  />
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery2"/>
+  android:id="@+id/gallery2"
+  android:layout_marginLeft="-160dp"
+  />
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery3"/>
+  android:id="@+id/gallery3"
+  android:layout_marginLeft="-160dp"/>
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery4"/>
+  android:id="@+id/gallery4"
+  android:layout_marginLeft="-160dp"/>
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery5"/>
+  android:id="@+id/gallery5"
+  android:layout_marginLeft="-160dp"/>
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery6"/>
+  android:id="@+id/gallery6"
+  android:layout_marginLeft="-160dp"/>
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery7"/>
+  android:id="@+id/gallery7"
+  android:layout_marginLeft="-160dp"/>
   
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:id="@+id/gallery8"/>
+  android:id="@+id/gallery8"
+  android:layout_marginLeft="-160dp"/>
   </LinearLayout>
   </ScrollView>
 </LinearLayout>

@@ -15,6 +15,11 @@ public class FlashFeed extends Activity implements OnClickListener{
         
         View loginBtn = findViewById(R.id.login_btn_login);
         loginBtn.setOnClickListener(this);
+        
+        
+        Intent i = new Intent(this, Profile.class);
+		startActivity(i);
+		
     }
     
     public void onClick(View v){
