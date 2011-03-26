@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, FlashFeed!</string>
+    <string name="app_name">FlashFeed</string>
+    <string name="login_label_username">Username</string>
+    <string name="login_label_password">Password</string>
+    <string name="login_label_login">Login</string>
+    <string name="login_label_signup">Sign Up</string>
+    <string name="statusfeed_name">StatusFeed</string>
+    <string name="statusdetail_name">StatusDetail</string>
+    <string name="registration_name">Registration</string>
+    <string name="email">Email</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="sex">Sex</string>
+    <string name="DOB">Date of Birth</string>
+    <string name="photoconfirm_name">PhotoConfirm</string>
+    <string name="friendtaggeractivity_name">FriendTagger</string>
+</resources>

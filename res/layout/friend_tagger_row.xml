@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:gravity="left|center"
+  android:paddingTop="10px"
+  android:paddingBottom="10px"
+  android:paddingLeft="10px">
+  <TextView android:id="@+id/friend_tagger_row_img_text"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+  	android:gravity="center"
+  	android:textColor="#FFFF00"
+  	>
+  	</TextView>
+  <TextView android:id="@+id/friend_tagger_row_name_text"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+  	android:layout_marginLeft="10dp" android:textColor="#0099CC"
+  	>
+  	</TextView>
+</LinearLayout>
