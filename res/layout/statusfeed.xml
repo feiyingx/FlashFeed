@@ -21,56 +21,58 @@
   	android:layout_width="wrap_content"/>
 </LinearLayout>
   <ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   <LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery1"
   />
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery2"
   android:layout_marginLeft="-160dp"
   />
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery3"
   android:layout_marginLeft="-160dp"/>
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery4"
   android:layout_marginLeft="-160dp"/>
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery5"
   android:layout_marginLeft="-160dp"/>
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery6"
   android:layout_marginLeft="-160dp"/>
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery7"
   android:layout_marginLeft="-160dp"/>
   
-  <Gallery
+  <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:id="@+id/gallery8"
@@ -78,3 +80,4 @@
   </LinearLayout>
   </ScrollView>
 </LinearLayout>
+
