@@ -56,8 +56,8 @@ public class PhotoConfirm extends Activity {
         
         HttpClient client = new DefaultHttpClient();
         HttpContext localContext = new BasicHttpContext();
-        String postUrl = "http://10.0.2.2:3000/posts";
-        //String postUrl = "http://192.168.1.4:3000/posts";
+        //String postUrl = "http://10.0.2.2:3000/posts";
+        String postUrl = "http://192.168.1.4:3000/posts";
         HttpPost post = new HttpPost(postUrl);
         
         FileBody bin = new FileBody(pic, "image/jpeg");
@@ -67,10 +67,11 @@ public class PhotoConfirm extends Activity {
         
 		try {
 			StringBody sbody, sbody2, sbody3;
-			sbody = new StringBody("1");
+			sbody = new StringBody("3");
 			sbody2 = new StringBody("hello fichey fichey");
 			reqEntity.addPart("user_id", sbody);
 	        reqEntity.addPart("caption", sbody2);
+	        reqEntity.addPart("post_type", new StringBody("default"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
