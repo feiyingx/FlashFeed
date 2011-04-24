@@ -20,6 +20,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
+import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -77,6 +78,13 @@ public class CameraView extends Activity implements SurfaceHolder.Callback {
         setContentView(R.layout.camera_surface);
         mSurfaceView = (SurfaceView) findViewById(R.id.surface_camera);
         
+        /*int width = mSurfaceView.getWidth();
+		int height = mSurfaceView.getHeight();
+		Toast
+		.makeText(CameraView.this, String.format("width: %d, heigh: %d", width, height),
+				Toast.LENGTH_LONG)
+				.show();*/
+        
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -93,7 +101,8 @@ public class CameraView extends Activity implements SurfaceHolder.Callback {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				mCamera.takePicture(mShutterCallback, mPictureCallback, mjpeg);
+				//mCamera.takePicture(mShutterCallback, mPictureCallback, mjpeg);
+				mCamera.takePicture(null, null, mjpeg);
 			}
         	
         });
@@ -174,7 +183,13 @@ public class CameraView extends Activity implements SurfaceHolder.Callback {
 	};
 	void done(){
 		Bitmap bm = BitmapFactory.decodeByteArray(tempData, 0, tempData.length);
-		bm = Bitmap.createScaledBitmap(bm, (int)(0.18 * bm.getHeight()), (int) (0.18 * bm.getWidth()), true);
+		
+		Toast
+		.makeText(CameraView.this, String.format("width: %d, heigh: %d", bm.getWidth(), bm.getHeight()),
+				Toast.LENGTH_LONG)
+				.show();
+		
+		//bm = Bitmap.createScaledBitmap(bm, (int)(0.18 * bm.getHeight()), (int) (0.18 * bm.getWidth()), true);
 		File myDir = new File("/sdcard/fichey_images");
 		myDir.mkdirs();
 		String username = "user1";
@@ -220,6 +235,11 @@ public class CameraView extends Activity implements SurfaceHolder.Callback {
 	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 		// TODO Auto-generated method stub
 		Log.e(TAG, "surfaceChanged");
+		Log.e(TAG, String.format("width: %d, height: %d", w, h));
+		Toast
+		.makeText(CameraView.this, String.format("width: %d, height: %d", w, h),
+				Toast.LENGTH_LONG)
+				.show();
 		try{
 			if(mPreviewRunning){
 				mCamera.stopPreview();
@@ -227,7 +247,14 @@ public class CameraView extends Activity implements SurfaceHolder.Callback {
 			}
 			
 			Camera.Parameters params = mCamera.getParameters();
-			params.setPreviewSize(w, (int)(0.8*h));
+			Size supportedSize = params.getSupportedPreviewSizes().get(0);
+			params.setPreviewSize(supportedSize.width, supportedSize.height);
+			Log.e(TAG, String.format("preview_width: %d, preview_height: %d", supportedSize.width, supportedSize.height));
+			Toast
+			.makeText(CameraView.this, String.format("preview_width: %d, preview_height: %d", supportedSize.width, supportedSize.height),
+					Toast.LENGTH_LONG)
+					.show();
+			//params.setPreviewSize(w, (int)(0.8*h));
 			params.setJpegQuality(100);
 			
 			mCamera.setParameters(params);

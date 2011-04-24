@@ -36,6 +36,9 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
                
         //Intent i = new Intent(this, Profile.class);
 		//startActivity(i);
+        
+        //Intent i = new Intent(this, TestHttpRequest.class);
+        //startActivity(i);
 		
     }
     

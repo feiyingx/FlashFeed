@@ -59,7 +59,8 @@ public class StatusFeed extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(v.getContext(), CameraView.class);
+				//Intent i = new Intent(v.getContext(), CameraView.class);
+				Intent i = new Intent(v.getContext(), CameraTest.class);
 				startActivity(i);
 			}
         	
