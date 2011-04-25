@@ -176,6 +176,7 @@ public class CameraTest extends Activity {
 					Toast.LENGTH_LONG)
 					.show();
 			
+			//test
 			Bitmap bmSkewed = Bitmap.createBitmap(picture, (width-height)/2, 0, height, height);
 			//Bitmap bmScaled = Bitmap.createScaledBitmap(bmSkewed, 600, 600, false);
 			
