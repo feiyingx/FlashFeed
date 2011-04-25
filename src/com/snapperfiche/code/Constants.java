@@ -13,6 +13,7 @@ public class Constants {
 	
 	/* Post urls */
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";
+	public static final String NewDefaultPost = BaseUrl + "posts.json";
 	
 	/* Follow urls */
 	

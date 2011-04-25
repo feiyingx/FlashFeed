@@ -21,12 +21,27 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.snapperfiche.code.Constants;
+import com.snapperfiche.code.Enumerations;
 import com.snapperfiche.code.Enumerations.LoginStatus;
 import com.snapperfiche.code.Utility;
+import com.snapperfiche.data.User;
 
 
 public class AccountService extends BaseService {
+	private static User currentUser;
+	
+	public static void setUser(User u){
+		currentUser = u;
+	}
+	
+	public static User getUser(){
+		return currentUser;
+	}
+	
 	public static LoginStatus Login(String username, String password){
 		HttpPost post = new HttpPost(Constants.LoginUrl);
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
@@ -44,10 +59,27 @@ public class AccountService extends BaseService {
 			HttpResponse loginResponse = GetHttpClient().execute(post);
 			HttpEntity entity = loginResponse.getEntity();
 			if(entity != null){				
+				InputStream stream = entity.getContent();
+				String jsonResultString = Utility.ConvertStreamToString(stream);
+				JsonParser parser = new JsonParser();
+				JsonElement resultElement = parser.parse(jsonResultString);
+				JsonObject resultJson = resultElement.getAsJsonObject();
+				JsonElement statusJson = resultJson.get("status");
+				JsonElement userJson = resultJson.get("user");
+				
+				Gson gson = new Gson();
+				int status = gson.fromJson(statusJson, int.class);
+				if(status == Enumerations.LoginStatus.SUCCESS.value()){
+					User currentUser = gson.fromJson(userJson, User.class);
+					setUser(currentUser);
+					List<Cookie> cookies = GetHttpClient().getCookieStore().getCookies();
+					return LoginStatus.SUCCESS;
+				}
 				entity.consumeContent();
 			}
-			List<Cookie> cookies = GetHttpClient().getCookieStore().getCookies();
-			return LoginStatus.SUCCESS;
+			
+			return LoginStatus.FAILED;
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

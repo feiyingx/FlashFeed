@@ -10,6 +10,10 @@ public class Enumerations {
 		LoginStatus(int val){
 			this.value = val;
 		}
+		
+		public int value(){
+			return value;
+		}
 	}
 	
 	public enum BasicStatus{
@@ -21,6 +25,10 @@ public class Enumerations {
 		final int value;
 		BasicStatus(int val){
 			this.value = val;
+		}
+		
+		public int value(){
+			return value;
 		}
 	}
 }
