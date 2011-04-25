@@ -131,19 +131,16 @@ public class CameraTest extends Activity {
 			.makeText(CameraTest.this, String.format("(Picture size) width: %d, height: %d", parameters.getPictureSize().width, parameters.getPictureSize().height),
 					Toast.LENGTH_LONG)
 					.show();*/
-			
-			//Size supportedSize = parameters.getSupportedPreviewSizes().get(0);
+						
 			List<Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
 			List<Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
-			//Size supportedSize = supportedPreviewSizes.get(5);
-			Size optimizedPreviewSize = getOptimalSize(supportedPreviewSizes, width, height);
-			Size optimizedPictureSize = getOptimalSize(supportedPictureSizes, width, height);
-			/*Log.e("camera_test", String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height));
+			Size optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
+			Size optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, width, height);
+			/*Log.e("camera_test", String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height));*/
 			Toast
 			.makeText(CameraTest.this, String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height),
 					Toast.LENGTH_LONG)
-					.show();*/
-			//parameters.setPreviewSize(width, height);
+					.show();
 			parameters.setPreviewSize(optimizedPreviewSize.width, optimizedPreviewSize.height);
 			parameters.setPictureSize(optimizedPictureSize.width, optimizedPictureSize.height);
 			parameters.setPictureFormat(PixelFormat.JPEG);
@@ -168,21 +165,24 @@ public class CameraTest extends Activity {
 	void showPicture(byte[] data) {
 		if (data != null) {
 			Bitmap picture = BitmapFactory.decodeByteArray(data, 0, data.length);
-			
+							
 			int width = picture.getWidth();
 			int height = picture.getHeight();
+			int xCoord = (width-height)/2;
+			
+			Log.e("flashfeed: CameraTest(showPicture)", String.format("w: %d, h: %d, x: %d", width, height, xCoord));
+			Toast
+			.makeText(CameraTest.this, String.format("w: %d, h: %d", picture.getWidth(), picture.getHeight()),
+					Toast.LENGTH_LONG)
+					.show();
 			
 			Bitmap bmSkewed = Bitmap.createBitmap(picture, (width-height)/2, 0, height, height);
+			//Bitmap bmScaled = Bitmap.createScaledBitmap(bmSkewed, 600, 600, false);
 			
 			ImageView view = new ImageView(this);
 			//view.setImageBitmap(picture);
 			view.setImageBitmap(bmSkewed);
 			this.setContentView(view);
-			/*
-			Toast
-			.makeText(CameraTest.this, String.format("w: %d, h: %d", picture.getWidth(), picture.getHeight()),
-					Toast.LENGTH_LONG)
-					.show();*/
 			
 			File myDir = new File("/sdcard/fichey_images");
 			myDir.mkdirs();
@@ -202,7 +202,6 @@ public class CameraTest extends Activity {
 			String fullpathSkewed = fileSkewed.getAbsolutePath();
 			try{
 				fos = new FileOutputStream(file);
-				//picture.compress(CompressFormat.JPEG, 100, fos);
 				picture.compress(CompressFormat.JPEG, 100, fos);
 				
 				fos = new FileOutputStream(fileSkewed);
@@ -220,7 +219,15 @@ public class CameraTest extends Activity {
 		}		
 	}
 	
-	Size getOptimalSize(List<Size> sizes, int w, int h) {
+	Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
+		return getOptimalSize(sizes, w, h, true);
+	}
+	
+	Size getOptimalPictureSize(List<Size> sizes, int w, int h) {
+		return getOptimalSize(sizes, w, h, false);
+	}
+	
+	Size getOptimalSize(List<Size> sizes, int w, int h, boolean isPreview) {
 		final double ASPECT_TOLERANCE = 0.1;
 		double targetRatio = (double) w / h;
 		int targetHeight = h;
@@ -233,14 +240,20 @@ public class CameraTest extends Activity {
 		for (Size size : sizes) {
 			double ratio = (double) size.width / size.height;
 			if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
-			if (Math.abs(size.height - targetHeight) < minDiff) {
+			//if (isPreview) {
+				if (Math.abs(size.height - targetHeight) < minDiff) {
+					optimalSize = size;
+					minDiff = Math.abs(size.height - targetHeight);
+				}
+			/*} else {
 				optimalSize = size;
-				minDiff = Math.abs(size.height - targetHeight);
-			}
+				break;
+			}	*/
 		}
 		
 		// If cannot find a match for the target ratio, take the closest height match
 		if (optimalSize == null ) {
+			Log.e("flashfeed camera", "Camera aspect ratio not found");
 			minDiff = Double.MAX_VALUE;
 			for (Size size : sizes) {
 				if (Math.abs(size.height - targetHeight) < minDiff) {
