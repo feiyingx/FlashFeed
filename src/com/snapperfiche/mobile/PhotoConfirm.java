@@ -21,6 +21,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import com.snapperfiche.code.Enumerations.BasicStatus;
+import com.snapperfiche.webservices.PostService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,6 +34,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 public class PhotoConfirm extends Activity {
+	String cameraImageUrl;
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +42,12 @@ public class PhotoConfirm extends Activity {
         
         ImageView imgPreview = (ImageView) findViewById(R.id.picPreview);
         Bundle cameraBundle = this.getIntent().getExtras();
-        String imgUrl = (String) cameraBundle.get("fullpath");
-        String username = (String) cameraBundle.get("username");
+        String imgUrl = (String) cameraBundle.get("fullpathSkewed");
+        //String username = (String) cameraBundle.get("username");
         Uri imgUri = Uri.parse(imgUrl);
-        
-        imgPreview.setImageURI(imgUri);
+        cameraImageUrl = imgUrl;
+        //imgPreview.setImageURI(imgUri);
+        /*
         File pic = new File(imgUrl);
         
         pic = pic.getAbsoluteFile();
@@ -109,7 +114,7 @@ public class PhotoConfirm extends Activity {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
         
 		Button btnTagFriend = (Button) findViewById(R.id.btnTagFriend);
 		btnTagFriend.setOnClickListener(new OnClickListener(){
@@ -117,8 +122,12 @@ public class PhotoConfirm extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(v.getContext(), FriendTaggerActivity.class);
+				BasicStatus status = PostService.NewPost("flied fiche", cameraImageUrl, 44.06, 123.11, "Eugene", "OR", "US");
+				
+				
+				Intent i = new Intent(v.getContext(), CameraTest.class);
 				startActivity(i);
+				
 			}
         	
         });

@@ -14,5 +14,5 @@
 		android:id="@+id/btnTagFriend"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Tag Friend"/>
+		android:text="Ready to go!"/>
 </LinearLayout>
