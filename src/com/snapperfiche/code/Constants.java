@@ -14,10 +14,25 @@ public class Constants {
 	/* Post urls */
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";
 	public static final String NewDefaultPost = BaseUrl + "posts.json";
+	public static final String UserLatestPosts = BaseUrl + "posts/latest.json";
 	
 	/* Follow urls */
 	
-	/* Url parameters, route keys, querystring keys */
+	/* json parameters, route keys, querystring keys, request key */
 	public static final String urlParameter_Email = "email";
 	public static final String urlParameter_Password = "password";
+	
+	public static final String jsonParameter_User = "user";
+	public static final String jsonParameter_Status = "status";
+	public static final String jsonParameter_Posts = "posts";
+	
+	public static final String requestParameter_Photo = "photo";
+	public static final String requestParameter_UserId = "user_id";
+	public static final String requestParameter_Caption = "caption";
+	public static final String requestParameter_PostType = "post_type";
+	public static final String requestParameter_Longitude = "longitude";
+	public static final String requestParameter_Latitude = "latitude";
+	public static final String requestParameter_Locality = "locality"; //city
+	public static final String requestParameter_AdminArea = "admin_area"; //state
+	public static final String requestParameter_CountryCode = "country";
 }

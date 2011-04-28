@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -222,6 +223,15 @@ public class CameraTest extends Activity {
 			}
 			//String url = Images.Media.insertImage(getContentResolver(), bm, "test", null);
 			//picture.recycle();
+			
+			/* bundle photo info and send to the confirm activity */
+			Bundle bundle = new Bundle();
+			if(fullpath != null){
+				bundle.putString("fullpathSkewed", fullpath);
+				Intent mIntent = new Intent(this, PhotoConfirm.class);
+				mIntent.putExtras(bundle);
+				startActivity(mIntent);
+			}
 		}		
 	}
 	

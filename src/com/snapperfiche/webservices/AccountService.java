@@ -64,8 +64,8 @@ public class AccountService extends BaseService {
 				JsonParser parser = new JsonParser();
 				JsonElement resultElement = parser.parse(jsonResultString);
 				JsonObject resultJson = resultElement.getAsJsonObject();
-				JsonElement statusJson = resultJson.get("status");
-				JsonElement userJson = resultJson.get("user");
+				JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+				JsonElement userJson = resultJson.get(Constants.jsonParameter_User);
 				
 				Gson gson = new Gson();
 				int status = gson.fromJson(statusJson, int.class);
@@ -74,6 +74,8 @@ public class AccountService extends BaseService {
 					setUser(currentUser);
 					List<Cookie> cookies = GetHttpClient().getCookieStore().getCookies();
 					return LoginStatus.SUCCESS;
+				}else if(status == Enumerations.LoginStatus.FAILED.value()){
+					return LoginStatus.FAILED;
 				}
 				entity.consumeContent();
 			}
@@ -120,6 +122,7 @@ public class AccountService extends BaseService {
 				String jsonResultString = Utility.ConvertStreamToString(stream);
 				Gson gson = new Gson();
 				isAuthenticated = gson.fromJson(jsonResultString, boolean.class);
+				entity.consumeContent();
 			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block

@@ -1,5 +1,10 @@
 package com.snapperfiche.mobile;
 
+import java.util.List;
+
+import com.snapperfiche.data.Post;
+import com.snapperfiche.webservices.PostService;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +25,8 @@ public class StatusFeed extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusfeed);
+        
+        List<Post> posts = PostService.GetLatestPosts();
         
         Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
         gallery1.setAdapter(new ImageAdapter(this));
