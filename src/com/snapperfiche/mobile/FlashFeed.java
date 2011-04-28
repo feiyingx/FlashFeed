@@ -45,11 +45,13 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
     public void onClick(View v){
     	switch(v.getId()){
     	case R.id.login_btn_login:
-    		dialog = ProgressDialog.show(FlashFeed.this, "", 
+    		/*dialog = ProgressDialog.show(FlashFeed.this, "", 
                     "Loading... Here's a smile while you wait ^^", true);
     		
     		Thread thread = new Thread(this);
-    		thread.start();
+    		thread.start();*/
+    		Intent j = new Intent(myContext, StatusFeed.class);
+    		startActivity(j);
     		break;
     	case R.id.login_btn_signup:
     		Intent i = new Intent(this, RegistrationActivity.class);

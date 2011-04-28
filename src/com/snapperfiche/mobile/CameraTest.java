@@ -170,18 +170,23 @@ public class CameraTest extends Activity {
 			int height = picture.getHeight();
 			int xCoord = (width-height)/2;
 			
+			int targetHeight = 600;
+			double scaleFactor = (double)targetHeight / height;
+			int targetWidth = (int)(width*scaleFactor);
+			
 			Log.e("flashfeed: CameraTest(showPicture)", String.format("w: %d, h: %d, x: %d", width, height, xCoord));
+			Log.e("flashfeed: CameraTest(scaled)", String.format("scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
 			Toast
 			.makeText(CameraTest.this, String.format("w: %d, h: %d", picture.getWidth(), picture.getHeight()),
 					Toast.LENGTH_LONG)
 					.show();
 			
-			//test
-			Bitmap bmSkewed = Bitmap.createBitmap(picture, (width-height)/2, 0, height, height);
-			//Bitmap bmScaled = Bitmap.createScaledBitmap(bmSkewed, 600, 600, false);
+			//test			
+			Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetWidth, targetHeight, false);
+			Bitmap bmSkewed = Bitmap.createBitmap(bmScaled, (targetWidth-targetHeight)/2, 0, targetHeight, targetHeight);
 			
 			ImageView view = new ImageView(this);
-			//view.setImageBitmap(picture);
+			//view.setImageBitmap(bmScaled);
 			view.setImageBitmap(bmSkewed);
 			this.setContentView(view);
 			
@@ -241,15 +246,15 @@ public class CameraTest extends Activity {
 		for (Size size : sizes) {
 			double ratio = (double) size.width / size.height;
 			if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
-			//if (isPreview) {
+			if (isPreview) {
 				if (Math.abs(size.height - targetHeight) < minDiff) {
 					optimalSize = size;
 					minDiff = Math.abs(size.height - targetHeight);
 				}
-			/*} else {
+			} else {
 				optimalSize = size;
 				break;
-			}	*/
+			}	
 		}
 		
 		// If cannot find a match for the target ratio, take the closest height match
