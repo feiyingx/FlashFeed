@@ -2,6 +2,7 @@ package com.snapperfiche.mobile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,11 @@ import android.graphics.PixelFormat;
 import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -36,6 +42,8 @@ public class CameraTest extends Activity {
 	private Camera camera=null;
 	private LayoutInflater mInflater = null;
 	Button takePictureBtn;
+	LocationManager locMgr;
+	String locProvider;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,10 @@ public class CameraTest extends Activity {
 		previewHolder=preview.getHolder();
 		previewHolder.addCallback(surfaceCallback);
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		locProvider = LocationManager.NETWORK_PROVIDER;
+		locMgr = (LocationManager)getSystemService(LOCATION_SERVICE);
+		locMgr.requestLocationUpdates(locProvider, 0, 0, onLocationChange);
 		
 		mInflater = LayoutInflater.from(this);
         View overView = mInflater.inflate(R.layout.camera_test_overlay, null);
@@ -58,15 +70,15 @@ public class CameraTest extends Activity {
         TextView bottom = (TextView) findViewById(R.id.camera_bottom);
         TextView cameraOverlay = (TextView) findViewById(R.id.cameraview_overlay);
         
-        Log.e("camera_test", "width: " + (width-height)/2);
+        Log.e("flashfeed.camera", "width: " + (width-height)/2);
         
         
         int sideLengths = (int)(Math.ceil((double)(width-height)/2));
         
-        Toast
+        /*Toast
 		.makeText(CameraTest.this, String.format("width: %d, height: %d, sideLengths: %d", width, height, sideLengths),
 				Toast.LENGTH_LONG)
-				.show();
+				.show();*/
         
         LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(sideLengths, LayoutParams.FILL_PARENT);
         LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(height, LayoutParams.FILL_PARENT);
@@ -78,6 +90,24 @@ public class CameraTest extends Activity {
         //takePictureBtn.setWidth(300);
         //takePictureBtn.setLayoutParams(new LayoutParams(300, LayoutParams.FILL_PARENT));
 	}
+	
+	private LocationListener onLocationChange=new LocationListener() {
+		public void onLocationChanged(Location location) {
+			//required for interface
+			//Toast.makeText(CameraTest.this, "Location Change", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(CameraTest.this, String.format("Lat: %f, Long: %f", location.getLatitude(), location.getLongitude()), Toast.LENGTH_SHORT).show();
+		}
+		public void onProviderDisabled(String provider) {
+			//required for interface
+		}
+		public void onProviderEnabled(String provider) {
+			//required for interface
+			Toast.makeText(CameraTest.this, "Location Provider Enabled", Toast.LENGTH_SHORT).show();
+		}
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			//required for interface
+		}
+	};
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -94,7 +124,7 @@ public class CameraTest extends Activity {
 	}
 	SurfaceHolder.Callback surfaceCallback=new SurfaceHolder.Callback() {
 		public void surfaceCreated(SurfaceHolder holder) {
-			Log.e("camera_test", "surfaceCreated");
+			Log.e("flashfeed.camera", "surfaceCreated");
 			/*Toast
 			.makeText(CameraTest.this, String.format("width: %d, height: %d", holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height()),
 					Toast.LENGTH_LONG)
@@ -119,8 +149,8 @@ public class CameraTest extends Activity {
 		public void surfaceChanged(SurfaceHolder holder,
 				int format, int width,
 				int height) {
-			Log.e("camera_test", "surfaceChanged");
-			Log.e("camera_test", "surfaceCreated: {width=" + width + ", height=" + height + "}");
+			Log.e("flashfeed.camera", "surfaceChanged");
+			Log.e("flashfeed.camera", "surfaceCreated: {width=" + width + ", height=" + height + "}");
 			/*Toast
 			.makeText(CameraTest.this, String.format("width: %d, height: %d", width, height),
 					Toast.LENGTH_LONG)
@@ -138,10 +168,10 @@ public class CameraTest extends Activity {
 			Size optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
 			Size optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, width, height);
 			/*Log.e("camera_test", String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height));*/
-			Toast
+			/*Toast
 			.makeText(CameraTest.this, String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height),
 					Toast.LENGTH_LONG)
-					.show();
+					.show();*/
 			parameters.setPreviewSize(optimizedPreviewSize.width, optimizedPreviewSize.height);
 			parameters.setPictureSize(optimizedPictureSize.width, optimizedPictureSize.height);
 			parameters.setPictureFormat(PixelFormat.JPEG);
@@ -175,12 +205,12 @@ public class CameraTest extends Activity {
 			double scaleFactor = (double)targetHeight / height;
 			int targetWidth = (int)(width*scaleFactor);
 			
-			Log.e("flashfeed: CameraTest(showPicture)", String.format("w: %d, h: %d, x: %d", width, height, xCoord));
-			Log.e("flashfeed: CameraTest(scaled)", String.format("scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
-			Toast
+			Log.e("flashfeed.camera", String.format("(showPicture) w: %d, h: %d, x: %d", width, height, xCoord));
+			Log.e("flashfeed.camera", String.format("(scaled) scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
+			/*Toast
 			.makeText(CameraTest.this, String.format("w: %d, h: %d", picture.getWidth(), picture.getHeight()),
 					Toast.LENGTH_LONG)
-					.show();
+					.show();*/
 			
 			//test			
 			Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetWidth, targetHeight, false);
@@ -190,6 +220,8 @@ public class CameraTest extends Activity {
 			//view.setImageBitmap(bmScaled);
 			view.setImageBitmap(bmSkewed);
 			this.setContentView(view);
+			
+			getLocation();
 			
 			File myDir = new File("/sdcard/fichey_images");
 			myDir.mkdirs();
@@ -235,6 +267,18 @@ public class CameraTest extends Activity {
 		}		
 	}
 	
+	/*private void onDestroy() {
+		super.onDestroy();
+		
+		locMgr.removeUpdates(onLocationChange);
+	}*/
+	
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		locMgr.removeUpdates(onLocationChange);
+	}
+	
 	Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
 		return getOptimalSize(sizes, w, h, true);
 	}
@@ -269,7 +313,7 @@ public class CameraTest extends Activity {
 		
 		// If cannot find a match for the target ratio, take the closest height match
 		if (optimalSize == null ) {
-			Log.e("flashfeed camera", "Camera aspect ratio not found");
+			Log.e("flashfeed.camera", "Camera aspect ratio not found");
 			minDiff = Double.MAX_VALUE;
 			for (Size size : sizes) {
 				if (Math.abs(size.height - targetHeight) < minDiff) {
@@ -280,5 +324,34 @@ public class CameraTest extends Activity {
 		}
 			
 		return optimalSize;
-	}	
+	}
+	
+	private void getLocation() {
+		Location loc =locMgr.getLastKnownLocation(locProvider);
+		
+		if (loc == null) {
+			Toast.makeText(this, "No location available", Toast.LENGTH_SHORT).show();
+		}
+		else {
+			Log.e("flashfeed.camera", String.format("L:%f,%f", loc.getLatitude(), loc.getLongitude()));
+			//Toast.makeText(this, String.format("L:%f,%f", loc.getLatitude(), loc.getLongitude()), Toast.LENGTH_LONG).show();
+			Geocoder gc = new Geocoder(this);
+			try {
+				List<Address> addresses = gc.getFromLocation(loc.getLatitude(), loc.getLongitude(), 3);
+				Address addr = addresses.get(0);
+				Toast.makeText(this, String.format("Address: %s\nLocality: %s\nAdmin: %s\nPostal: %s\nCountry: %s\nFeature: %s\nPremises: %s", 
+						addr.getAddressLine(0), 
+						addr.getLocality(),
+						addr.getAdminArea(),
+						addr.getPostalCode(),
+						addr.getCountryCode(),
+						addr.getFeatureName(),
+						addr.getPremises()
+						), Toast.LENGTH_LONG).show();
+			} catch (IOException ex) {
+				Log.e("flashfeed.camera", "error finding list of addresses");
+			}
+		}
+		
+	}
 }
