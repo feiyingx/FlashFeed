@@ -122,7 +122,7 @@ public class PhotoConfirm extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				BasicStatus status = PostService.NewPost("flied fiche", cameraImageUrl, 44.06, 123.11, "Eugene", "OR", "US");
+				//BasicStatus status = PostService.NewPost("flied fiche", cameraImageUrl, 44.06, 123.11, "Eugene", "OR", "US");
 				
 				
 				Intent i = new Intent(v.getContext(), CameraTest.class);

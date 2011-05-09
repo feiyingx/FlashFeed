@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import com.snapperfiche.code.Enumerations;
+import com.snapperfiche.code.Utility;
 
 public class Post {
 	private int id;
@@ -29,7 +30,7 @@ public class Post {
 	}
 	
 	public String getPhotoUrl(){
-		return photo_file_name;
+		return Utility.GetAbsoluteUrl(photo_file_name);
 	}
 	
 	public String getCaption(){

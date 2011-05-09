@@ -15,6 +15,8 @@ public class Constants {
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";
 	public static final String NewDefaultPost = BaseUrl + "posts.json";
 	public static final String UserLatestPosts = BaseUrl + "posts/latest.json";
+	public static final String PostDetail = BaseUrl + "posts/";
+	public static final String NewAnswer = BaseUrl + "answer/";
 	
 	/* Follow urls */
 	
@@ -25,6 +27,7 @@ public class Constants {
 	public static final String jsonParameter_User = "user";
 	public static final String jsonParameter_Status = "status";
 	public static final String jsonParameter_Posts = "posts";
+	public static final String jsonParameter_Post = "post";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";
@@ -35,4 +38,7 @@ public class Constants {
 	public static final String requestParameter_Locality = "locality"; //city
 	public static final String requestParameter_AdminArea = "admin_area"; //state
 	public static final String requestParameter_CountryCode = "country";
+	public static final String requestParameter_Tags = "tags";
+	public static final String requestParameter_Friends = "friends";
+	public static final String requestParameter_QuestionId = "question_id";
 }
