@@ -25,6 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ProfileFeedActivity extends Activity 
 {
+	Context myContext = this;
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class ProfileFeedActivity extends Activity
 				return i;
 			}
 			
-			Bitmap imgBitmap = Utility.GetImageBitmapFromUrl(post.getPhotoUrl());
+			Bitmap imgBitmap = Utility.GetImageBitmapFromUrl(post.getPhotoUrl(), post.getPhotoFileName(), myContext);
 			if(imgBitmap == null){
 				//TODO: log error if imgBitmap wasn't found and hide this View
 				return i;

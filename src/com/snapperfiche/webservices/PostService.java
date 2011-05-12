@@ -66,7 +66,7 @@ public class PostService extends BaseService {
 	        FileBody bin = new FileBody(pic, "image/jpeg");
 	        MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 	        
-	        //reqEntity.addPart(Constants.requestParameter_Photo, bin);
+	        reqEntity.addPart(Constants.requestParameter_Photo, bin);
 	        
 	        try {
 				String userId = String.valueOf(currentUser.getId());
@@ -161,7 +161,7 @@ public class PostService extends BaseService {
 	        FileBody bin = new FileBody(pic, "image/jpeg");
 	        MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 	        
-	        //reqEntity.addPart(Constants.requestParameter_Photo, bin);
+	        reqEntity.addPart(Constants.requestParameter_Photo, bin);
 	        
 	        try {
 				String userId = String.valueOf(currentUser.getId());

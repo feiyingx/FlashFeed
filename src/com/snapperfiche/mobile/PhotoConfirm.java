@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -26,6 +27,7 @@ import com.snapperfiche.webservices.PostService;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -122,10 +124,12 @@ public class PhotoConfirm extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//BasicStatus status = PostService.NewPost("flied fiche", cameraImageUrl, 44.06, 123.11, "Eugene", "OR", "US");
+				Address address = new Address(new Locale("en"));
+				address.setAdminArea("CA");
+				address.setLocality("Cerritos");
+				BasicStatus status = PostService.Post("ice cream fiche", cameraImageUrl, address, null, null);
 				
-				
-				Intent i = new Intent(v.getContext(), CameraTest.class);
+				Intent i = new Intent(v.getContext(), StatusFeed.class);
 				startActivity(i);
 				
 			}

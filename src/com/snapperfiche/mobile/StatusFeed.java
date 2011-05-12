@@ -4,13 +4,17 @@ import java.util.List;
 
 import com.snapperfiche.code.Utility;
 import com.snapperfiche.data.Post;
+import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.PostService;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -22,15 +26,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class StatusFeed extends Activity{
+public class StatusFeed extends Activity implements Runnable{
+	ProgressDialog dialog;
+	Context myContext = this;
+	List<Post> mPosts;
 	/** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.statusfeed);
-        
-        
-        Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
+	@Override
+	public void run() {
+		AccountService.Login("bigfiche@fiche.com", "asdf");		
+		mPosts = PostService.GetLatestPosts();
+		
+		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
         gallery1.setAdapter(new ImageAdapter(this));
         gallery1.setOnItemClickListener(statusImageItemClickListener);
         
@@ -62,6 +68,77 @@ public class StatusFeed extends Activity{
         gallery8.setAdapter(new ImageAdapter(this));
         gallery8.setOnItemClickListener(statusImageItemClickListener);
         
+		handler.sendEmptyMessage(0);
+	}
+	
+	private Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			dialog.dismiss();
+			//Intent i = new Intent(myContext,  StatusFeed.class);
+			//startActivity(i);
+			/*
+			if(AccountService.IsAuthenticated()){
+				dialog.cancel();
+	    		Intent i = new Intent(myContext,  StatusFeed.class);
+	    		startActivity(i);
+	    		Toast.makeText(FlashFeed.this, "Welcome ^^", Toast.LENGTH_LONG).show();
+			}else{
+				dialog.cancel();
+				Toast.makeText(FlashFeed.this, "Ruh-roh, we couldn't find your fiche <-< Please try again.", Toast.LENGTH_LONG).show();
+			}*/
+		}
+	};
+	
+	private void loadStatusFeed(){
+		dialog = ProgressDialog.show(StatusFeed.this, "", 
+                "Loading... Fiching for your feed", true);
+		
+		Thread thread = new Thread(this);
+		thread.start();
+	}
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.statusfeed);
+        
+        //loadStatusFeed();
+        AccountService.Login("bigfiche@fiche.com", "asdf");		
+		mPosts = PostService.GetLatestPosts();
+		
+		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
+        gallery1.setAdapter(new ImageAdapter(this));
+        gallery1.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
+        gallery2.setAdapter(new ImageAdapter(this));
+        gallery2.setOnItemClickListener(statusImageItemClickListener);
+        /*
+        Gallery gallery3 = (Gallery) findViewById(R.id.gallery3);
+        gallery3.setAdapter(new ImageAdapter(this));
+        gallery3.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery4 = (Gallery) findViewById(R.id.gallery4);
+        gallery4.setAdapter(new ImageAdapter(this));
+        gallery4.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery5 = (Gallery) findViewById(R.id.gallery5);
+        gallery5.setAdapter(new ImageAdapter(this));
+        gallery5.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery6 = (Gallery) findViewById(R.id.gallery6);
+        gallery6.setAdapter(new ImageAdapter(this));
+        gallery6.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery7 = (Gallery) findViewById(R.id.gallery7);
+        gallery7.setAdapter(new ImageAdapter(this));
+        gallery7.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery8 = (Gallery) findViewById(R.id.gallery8);
+        gallery8.setAdapter(new ImageAdapter(this));
+        gallery8.setOnItemClickListener(statusImageItemClickListener);
+        */
         Button cameraBtn = (Button) findViewById(R.id.cameraBtn);
         cameraBtn.setOnClickListener(new OnClickListener(){
 
@@ -107,6 +184,7 @@ public class StatusFeed extends Activity{
     		//mPosts = PostService.GetLatestPosts();
     	}
     	
+    	/*
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
@@ -137,10 +215,12 @@ public class StatusFeed extends Activity{
 			i.setImageResource(mImageIds[position]);
 			i.setLayoutParams(new Gallery.LayoutParams(150, 100));
 			i.setScaleType(ImageView.ScaleType.FIT_XY);
-			*/
-			return i;
-		}
-		/*
+			
+			//return i;
+		//}
+		*/
+		
+		
     	@Override
 		public int getCount() {
 			return mPosts.size();
@@ -159,9 +239,9 @@ public class StatusFeed extends Activity{
 				return -1;
 			return mPosts.get(position).getId();
 		}
-		*/
 		
-		/*
+		
+		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView i = new ImageView(mContext);
@@ -172,7 +252,7 @@ public class StatusFeed extends Activity{
 				return i;
 			}
 			
-			Bitmap imgBitmap = Utility.GetImageBitmapFromUrl(post.getPhotoUrl());
+			Bitmap imgBitmap = Utility.GetImageBitmapFromUrl(post.getPhotoThumbUrl(), post.getPhotoFileName(), mContext);
 			if(imgBitmap == null){
 				//TODO: log error if imgBitmap wasn't found and hide this View
 				return i;
@@ -184,11 +264,11 @@ public class StatusFeed extends Activity{
 			
 			i.setImageBitmap(imgBitmap);
 			
-			i.setLayoutParams(new Gallery.LayoutParams(150, 100));
-			i.setScaleType(ImageView.ScaleType.FIT_XY);
+			i.setLayoutParams(new Gallery.LayoutParams(100, 100));
+			//i.setScaleType(ImageView.ScaleType.FIT_XY);
 			
 			return i;
-		}*/
+		}
     	
     }
 }

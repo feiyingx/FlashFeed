@@ -259,7 +259,7 @@ public class CameraTest extends Activity {
 			/* bundle photo info and send to the confirm activity */
 			Bundle bundle = new Bundle();
 			if(fullpath != null){
-				bundle.putString("fullpathSkewed", fullpath);
+				bundle.putString("fullpathSkewed", fullpathSkewed);
 				Intent mIntent = new Intent(this, PhotoConfirm.class);
 				mIntent.putExtras(bundle);
 				startActivity(mIntent);

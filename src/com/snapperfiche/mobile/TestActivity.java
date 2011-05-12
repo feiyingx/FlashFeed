@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Locale;
 
 import com.google.gson.Gson;
+import com.snapperfiche.code.Enumerations.BasicStatus;
+import com.snapperfiche.code.Enumerations.GroupType;
+import com.snapperfiche.data.Group;
 import com.snapperfiche.data.Post;
 import com.snapperfiche.data.Tag;
 import com.snapperfiche.webservices.AccountService;
+import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
 
 import android.app.Activity;
@@ -45,10 +49,18 @@ public class TestActivity extends Activity {
 		tags2[0] = 3;
 		tags2[1] = 4;
 		
-		System.out.println(tagsJsonString);
-		PostService.Post("test cap", "postImg.jpg", address, friends, tags2);
+		//System.out.println(tagsJsonString);
+		//PostService.Post("test cap", "postImg.jpg", address, friends, tags2);
 		
-		PostService.AskQuestion("what are you doing?", "questionImage.jpg", address, friends, tags2);
-		PostService.AnswerQuestion(32, "i'm reading", "answerImage.jpg", address, friends, tags2);
+		//PostService.AskQuestion("what are you doing?", "questionImage.jpg", address, friends, tags2);
+		//PostService.AnswerQuestion(32, "i'm reading", "answerImage.jpg", address, friends, tags2);
+		
+		int[] group_members = new int[2];
+		group_members[0] = 1;
+		group_members[1] = 2;
+		BasicStatus status = GroupService.CreateGroup("yum", GroupType.USER_FEED, group_members);
+		System.out.println(status.toString());
+		List<Group> groups = GroupService.GetGroups(3, GroupType.USER_FEED);
+		System.out.println(groups);
 	}
 }
