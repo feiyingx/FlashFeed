@@ -47,10 +47,10 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         Bitmap imgBitmap = Utility.GetImageBitmapFromUrl("http://192.168.1.4:3000/images/mine.jpg");
         i.setImageBitmap(imgBitmap);
         */
-        /*
+        
         Intent i = new Intent(this, StatusFeed.class);
 		startActivity(i);
-        */
+        
         /*
         File cacheDir = myContext.getCacheDir();
         if(new File(cacheDir, "mine.jpg").exists()){
@@ -78,10 +78,10 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         */
         //Intent i = new Intent(this, TestHttpRequest.class);
         //startActivity(i);
-		
+		/*
         Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
-        
+        */
     }
     
     public void onClick(View v){

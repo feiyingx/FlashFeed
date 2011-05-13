@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent" android:orientation="vertical">
 	<TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
@@ -28,12 +26,7 @@
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	/>
-    <Button
-    	android:id="@+id/login_btn_signup"
-    	android:text="@string/login_label_signup"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	/>
+    <Button android:layout_width="fill_parent" android:id="@+id/login_btn_signup" android:layout_height="wrap_content" android:text="@string/login_label_signup"></Button>
     <ImageView
     	android:id="@+id/img_web"
     	android:layout_width="wrap_content"

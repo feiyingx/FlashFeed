@@ -4,22 +4,9 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:orientation="horizontal">
-  <Button
-  	android:id="@+id/homeBtn"
-  	android:text="home"
-  	android:layout_height="wrap_content"
-  	android:layout_width="wrap_content"/>
-  <Button
-  	android:id="@+id/cameraBtn"
-  	android:text="camera"
-  	android:layout_height="wrap_content"
-  	android:layout_width="wrap_content"/>
-</LinearLayout>
+  <include layout="@layout/main_top_nav"  android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+  <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
+  </LinearLayout>
   <ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
@@ -27,8 +14,14 @@
   <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:orientation="vertical">
+  android:layout_height="fill_parent" android:orientation="vertical">
+      <LinearLayout android:id="@+id/linearLayout3" android:layout_height="wrap_content" android:layout_width="match_parent">
+          <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btn_status_feed_add_group" android:text="@string/btn_status_feed_add_group"></Button>
+          <HorizontalScrollView android:scrollbars="none" android:scrollbarAlwaysDrawHorizontalTrack="false" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/horiscrollview_status_feed_groups">
+              <LinearLayout android:layout_height="match_parent" android:orientation="horizontal" android:layout_width="match_parent" android:id="@+id/ll_status_feed_groups">
+              </LinearLayout>
+          </HorizontalScrollView>
+      </LinearLayout>
   <Gallery xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
