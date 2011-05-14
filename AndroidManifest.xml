@@ -39,7 +39,7 @@
 		</activity>
 		<activity android:name=".CameraTest"
 			android:configChanges="keyboardHidden|orientation"
-			android:screenOrientation="landscape"
+			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		</activity>
     </application>

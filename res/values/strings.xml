@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, FlashFeed!</string>
-    <string name="app_name">FlashFeed</string>
+    <string name="app_name">Snapperfiche</string>
     <string name="login_label_username">Username</string>
     <string name="login_label_password">Password</string>
     <string name="login_label_login">Login</string>
