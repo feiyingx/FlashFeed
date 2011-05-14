@@ -15,8 +15,14 @@ public class Constants {
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";
 	public static final String NewDefaultPost = BaseUrl + "posts.json";
 	public static final String UserLatestPosts = BaseUrl + "posts/latest.json";
+	public static final String PostDetail = BaseUrl + "posts/";
+	public static final String NewAnswer = BaseUrl + "answer/";
 	
 	/* Follow urls */
+	
+	/* Group urls */
+	public static final String NewGroup = BaseUrl + "groups.json";
+	public static final String GetGroupsByUser_Format = BaseUrl + "groups/byuser/:id/:group_type.json";
 	
 	/* json parameters, route keys, querystring keys, request key */
 	public static final String urlParameter_Email = "email";
@@ -25,6 +31,8 @@ public class Constants {
 	public static final String jsonParameter_User = "user";
 	public static final String jsonParameter_Status = "status";
 	public static final String jsonParameter_Posts = "posts";
+	public static final String jsonParameter_Post = "post";
+	public static final String jsonParameter_Groups = "groups";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";
@@ -35,4 +43,11 @@ public class Constants {
 	public static final String requestParameter_Locality = "locality"; //city
 	public static final String requestParameter_AdminArea = "admin_area"; //state
 	public static final String requestParameter_CountryCode = "country";
+	public static final String requestParameter_Tags = "tags";
+	public static final String requestParameter_Friends = "friends";
+	public static final String requestParameter_QuestionId = "question_id";
+	//for groups
+	public static final String requestParameter_Name = "name";
+	public static final String requestParameter_GroupType = "group_type";
+	public static final String requestParameter_GroupMembers = "group_members";
 }

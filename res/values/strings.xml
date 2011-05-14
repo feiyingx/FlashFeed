@@ -16,4 +16,9 @@
     <string name="DOB">Date of Birth</string>
     <string name="photoconfirm_name">PhotoConfirm</string>
     <string name="friendtaggeractivity_name">FriendTagger</string>
+    <string name="activity_profilefeed_name">Profile Feed</string>
+    <string name="txt_top_nav_profile">Profile</string>
+    <string name="txt_top_nav_question">Question</string>
+    <string name="activity_name_question_landing">Question Landing</string>
+    <string name="btn_status_feed_add_group">+</string>
 </resources>

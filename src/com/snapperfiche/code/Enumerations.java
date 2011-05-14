@@ -71,4 +71,34 @@ public class Enumerations {
 			return NONE;
 		}
 	}
+	
+	public enum GroupType{
+		NONE(""),
+		USER("user"),
+		TAG("tag"),
+		USER_FEED("user_feed"),
+		TAG_FEED("tag_feed");
+		
+		final String value;
+		GroupType(String val){
+			this.value = val;
+		}
+		
+		public String value(){
+			return value;
+		}
+		
+		public static GroupType getGroupType(String val){
+			if(val == "user")
+				return USER;
+			if(val ==  "tag")
+				return TAG;
+			if(val == "user_feed")
+				return USER_FEED;
+			if(val == "tag_feed")
+				return TAG_FEED;
+			
+			return NONE;
+		}
+	}
 }

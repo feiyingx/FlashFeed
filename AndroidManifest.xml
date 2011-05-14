@@ -42,6 +42,14 @@
 			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		</activity>
+		<activity android:name=".ProfileFeedActivity"
+				  android:label="@string/activity_profilefeed_name">
+		</activity>
+		<activity android:name=".QuestionLandingActivity"
+				  android:label="@string/activity_name_question_landing">
+		</activity>
+		<activity android:name=".TestActivity">
+		</activity>
     </application>
     <!--<supports-screens
 		android:largeScreens="true"

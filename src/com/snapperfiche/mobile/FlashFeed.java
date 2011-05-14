@@ -1,5 +1,11 @@
 package com.snapperfiche.mobile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import com.snapperfiche.code.Utility;
 import com.snapperfiche.webservices.AccountService;
 
 import android.app.Activity;
@@ -10,9 +16,12 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 
 public class FlashFeed extends Activity implements OnClickListener, Runnable{
     /** Called when the activity is first created. */
@@ -33,26 +42,60 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         
         View signinBtn = findViewById(R.id.login_btn_signup);
         signinBtn.setOnClickListener(this);
-               
-        //Intent i = new Intent(this, Profile.class);
-		//startActivity(i);
+        /*       
+        ImageView i = (ImageView) findViewById(R.id.img_web);
+        Bitmap imgBitmap = Utility.GetImageBitmapFromUrl("http://192.168.1.4:3000/images/mine.jpg");
+        i.setImageBitmap(imgBitmap);
+        */
         
+        Intent i = new Intent(this, StatusFeed.class);
+		startActivity(i);
+        
+        /*
+        File cacheDir = myContext.getCacheDir();
+        if(new File(cacheDir, "mine.jpg").exists()){
+        	System.out.println("yay exists");
+        }else{
+        	Bitmap imgBitmap2 = Utility.GetImageBitmapFromUrl("http://192.168.1.4:3000/images/mine.jpg");
+        	FileOutputStream fos = null;
+        	try {
+				fos = new FileOutputStream(new File(cacheDir, "mine.jpg"));
+				imgBitmap2.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+	        	fos.flush();
+	        	fos.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        }
+        
+        boolean cachedPhotoExists = (new File(cacheDir, "mine.jpg")).exists();
+        System.out.println("done");
+        */
         //Intent i = new Intent(this, TestHttpRequest.class);
         //startActivity(i);
-		
+		/*
+        Intent intent = new Intent(this, TestActivity.class);
+        startActivity(intent);
+        */
     }
     
     public void onClick(View v){
     	switch(v.getId()){
     	case R.id.login_btn_login:
-    		/*dialog = ProgressDialog.show(FlashFeed.this, "", 
+    		dialog = ProgressDialog.show(FlashFeed.this, "", 
                     "Loading... Here's a smile while you wait ^^", true);
     		
     		Thread thread = new Thread(this);
-    		thread.start();*/
+    		thread.start();
+    		/*
     		Intent j = new Intent(myContext, StatusFeed.class);
     		startActivity(j);
-    		break;
+    		break;*/
     	case R.id.login_btn_signup:
     		Intent i = new Intent(this, RegistrationActivity.class);
     		startActivity(i);
@@ -72,10 +115,14 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
 	private Handler handler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
+			/*
 			dialog.dismiss();
+			Intent i = new Intent(myContext,  StatusFeed.class);
+			startActivity(i);
+			*/
 			if(AccountService.IsAuthenticated()){
 				dialog.cancel();
-	    		Intent i = new Intent(myContext, StatusFeed.class);
+	    		Intent i = new Intent(myContext,  StatusFeed.class);
 	    		startActivity(i);
 	    		Toast.makeText(FlashFeed.this, "Welcome ^^", Toast.LENGTH_LONG).show();
 			}else{
