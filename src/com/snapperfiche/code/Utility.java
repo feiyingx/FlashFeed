@@ -98,4 +98,12 @@ public class Utility {
 		url = Constants.GetGroupsByUser_Format.replace(":id", String.valueOf(userId)).replace(":group_type", groupType.value());
 		return url;
 	}
+	
+	public static String GetFriendsByUserUrl(int userId){
+		String url = "";
+		if(userId < 0)
+			return url;
+		url = Constants.GetFriendsByUser_Format.replace(":user_id", String.valueOf(userId));
+		return url;
+	}
 }
