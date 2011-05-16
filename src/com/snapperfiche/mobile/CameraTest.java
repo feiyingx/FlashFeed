@@ -9,14 +9,15 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -27,6 +28,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -47,6 +49,7 @@ public class CameraTest extends Activity {
 	LocationManager locMgr;
 	String locProvider;
 	private int orientation;
+	OrientationEventListener mOrientationEventListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,55 +60,100 @@ public class CameraTest extends Activity {
 		previewHolder.addCallback(surfaceCallback);
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		
+		mOrientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+			
+			@Override
+			public void onOrientationChanged(int orientation) {
+				// TODO Auto-generated method stub
+				/*Toast
+				.makeText(CameraTest.this, String.format("orientation: %d", orientation),
+						Toast.LENGTH_LONG)
+						.show();*/
+				TextView top = (TextView) findViewById(R.id.camera_top);
+				top.setText(String.valueOf(orientation));
+			}
+		};
+		
+		if (mOrientationEventListener.canDetectOrientation()){
+		       Toast.makeText(this, "Can DetectOrientation", Toast.LENGTH_LONG).show();
+		       mOrientationEventListener.enable();
+		      }
+		      else{
+		       Toast.makeText(this, "Can't DetectOrientation", Toast.LENGTH_LONG).show();
+		       finish();
+		      }
+		
 		locProvider = LocationManager.NETWORK_PROVIDER;
 		locMgr = (LocationManager)getSystemService(LOCATION_SERVICE);
 		locMgr.requestLocationUpdates(locProvider, 0, 0, onLocationChange);
 		
-		Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
         //int orientation = display.getOrientation();
-        orientation = getResources().getConfiguration().orientation;
+        
 		
 		mInflater = LayoutInflater.from(this);
         View overView = mInflater.inflate(R.layout.camera_test_overlay, null);
         this.addContentView(overView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         
-        LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.ll_camera_overlay);
-        TextView top = (TextView) findViewById(R.id.camera_top);
-        TextView bottom = (TextView) findViewById(R.id.camera_bottom);
-        TextView cameraOverlay = (TextView) findViewById(R.id.cameraview_overlay);
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
         
-        Log.e("flashfeed.camera", "width: " + (width-height)/2);
-        
-        
-        int sideLengths = (int)(Math.ceil((double)(Math.abs(width-height))/2));
-        
-        Toast
-		.makeText(CameraTest.this, String.format("width: %d, height: %d, orientation: %d", width, height, orientation),
+        int orientation1 = getResources().getConfiguration().orientation;
+		int orientation2 = getWindowManager().getDefaultDisplay().getOrientation();
+		Toast
+		.makeText(CameraTest.this, String.format("orientation1: %d, orientation2: %d, rotation: %d", orientation1, orientation2, rotation),
 				Toast.LENGTH_LONG)
 				.show();
-        
-        /*LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(sideLengths, LayoutParams.FILL_PARENT);
-        LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(height, LayoutParams.FILL_PARENT);
-        top.setLayoutParams(sideLayoutParams);
-        cameraOverlay.setLayoutParams(cameraLayoutParams);
-        bottom.setLayoutParams(sideLayoutParams);*/
-        
-        overlayLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, sideLengths);
-        LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, width);
-        top.setLayoutParams(sideLayoutParams);
-        cameraOverlay.setLayoutParams(cameraLayoutParams);
-        bottom.setLayoutParams(sideLayoutParams);
-        
-        
-        
+		
+		setCameraOverlay();
         //top.setLayoutParams(new LayoutParams((width-height)/2, height));
         //top.setLayoutParams(new LayoutParams(200, 200));
         //takePictureBtn.setWidth(300);
         //takePictureBtn.setLayoutParams(new LayoutParams(300, LayoutParams.FILL_PARENT));
+	}
+	
+	private void setCameraOverlay() {
+		Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        
+		LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.ll_camera_overlay);
+        TextView top = (TextView) findViewById(R.id.camera_top);
+        TextView bottom = (TextView) findViewById(R.id.camera_bottom);
+        TextView cameraOverlay = (TextView) findViewById(R.id.cameraview_overlay);
+        
+        int sideLengths = (int)(Math.ceil((double)(Math.abs(width-height))/2));
+        
+        //orientation = getResources().getConfiguration().orientation;
+        orientation = display.getOrientation();
+        
+		if (orientation == Surface.ROTATION_180) {  // left landscape
+			overlayLayout.setOrientation(LinearLayout.HORIZONTAL);
+			LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(sideLengths, LayoutParams.FILL_PARENT);
+	        LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(height, LayoutParams.FILL_PARENT);
+	        top.setLayoutParams(sideLayoutParams);
+	        cameraOverlay.setLayoutParams(cameraLayoutParams);
+	        bottom.setLayoutParams(sideLayoutParams);
+		}
+		else if (orientation == Surface.ROTATION_0) { //portrait
+			overlayLayout.setOrientation(LinearLayout.VERTICAL);
+	        LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, sideLengths);
+	        LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, width);
+	        top.setLayoutParams(sideLayoutParams);
+	        cameraOverlay.setLayoutParams(cameraLayoutParams);
+	        bottom.setLayoutParams(sideLayoutParams);
+		}
+		else {
+			Toast
+			.makeText(CameraTest.this, "Camera not supported on this device",
+					Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		
+		Toast
+		.makeText(CameraTest.this, String.format("width: %d, height: %d, orientation: %d", width, height, orientation),
+				Toast.LENGTH_LONG)
+				.show();
 	}
 	
 	public static void setCameraDisplayOrientation(Activity activity, int cameraId, Camera camera) {
@@ -166,7 +214,12 @@ public class CameraTest extends Activity {
 			
 			camera=Camera.open();
 			try {
-				camera.setDisplayOrientation(90);
+				if (orientation == Surface.ROTATION_0) {  //portrait
+					camera.setDisplayOrientation(90);
+				} else if (orientation == Surface.ROTATION_270) {
+					camera.setDisplayOrientation(180);
+				}
+				
 				
 				/*Camera.Parameters p = camera.getParameters();
 				p.setRotation(90);
@@ -195,32 +248,38 @@ public class CameraTest extends Activity {
 							
 			Camera.Parameters parameters=camera.getParameters();
 			
-			Toast
+			/*Toast
 			.makeText(CameraTest.this, String.format("(Picture size) width: %d, height: %d", parameters.getPictureSize().width, parameters.getPictureSize().height),
 					Toast.LENGTH_LONG)
-					.show();
+					.show();*/
 						
-			int orientation = getResources().getConfiguration().orientation;
-			
+			//int orientation = getResources().getConfiguration().orientation;
 			List<Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
 			List<Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
 			
-			/*Size optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
-			Size optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, width, height);*/
-			Size optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, height, width);
-			Size optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, height, width);
+			Size optimizedPreviewSize, optimizedPictureSize;
+			
+			 if (orientation == Surface.ROTATION_0) { //portrait
+				optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, height, width);
+				optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, height, width);
+				parameters.setRotation(90);
+			} else { //landscape
+				optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
+				optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, width, height);
+				if (orientation == Surface.ROTATION_270) {
+					parameters.setRotation(180);
+				}
+			}
+			
 			Log.e("camera_test", String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height));
-			Toast
+			/*Toast
 			.makeText(CameraTest.this, String.format("preview_width: %d, preview_height: %d", optimizedPreviewSize.width, optimizedPreviewSize.height),
 					Toast.LENGTH_LONG)
-					.show();
+					.show();*/
+			
 			parameters.setPreviewSize(optimizedPreviewSize.width, optimizedPreviewSize.height);
 			parameters.setPictureSize(optimizedPictureSize.width, optimizedPictureSize.height);
-			/*parameters.setRotation(90);
-			parameters.setPreviewSize(optimizedPreviewSize.height, optimizedPreviewSize.width);
-			parameters.setPictureSize(optimizedPictureSize.height, optimizedPictureSize.width);*/
 			parameters.setPictureFormat(PixelFormat.JPEG);
-			parameters.setRotation(90);
 			camera.setParameters(parameters);
 			camera.startPreview();
 		}
@@ -233,50 +292,93 @@ public class CameraTest extends Activity {
 	};
 	Camera.PictureCallback photoCallback=new Camera.PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
-			// do something with the photo JPEG (data[]) here!
 			showPicture(data);
-			//camera.startPreview();
 		}
 	};
 	
 	void showPicture(byte[] data) {
 		if (data != null) {
 			Bitmap picture = BitmapFactory.decodeByteArray(data, 0, data.length);
+			
+			Log.e("flashfeed.camera", String.format("width: %d, height: %d", picture.getWidth(), picture.getHeight()));
+			
+			int orientation1 = getResources().getConfiguration().orientation;
+			int orientation2 = getWindowManager().getDefaultDisplay().getOrientation();
+			/*Toast
+			.makeText(CameraTest.this, String.format("orientation1: %d, orientation2: %d", orientation1, orientation2),
+					Toast.LENGTH_LONG)
+					.show();*/
 							
-			/*int width = picture.getWidth();
-			int height = picture.getHeight();*/
-			int width = picture.getHeight();
-			int height = picture.getWidth();
-			int offset = Math.abs((width-height))/2;
+			int width = picture.getWidth();
+			int height = picture.getHeight();
 			
-			int targetHeight = 600;
-			double scaleFactor = (double)targetHeight / height;
-			int targetWidth = (int)(width*scaleFactor);
+			boolean isOutputPortrait = width < height;
+			//int offset = Math.abs((width-height))/2;
 			
-			Log.e("flashfeed.camera", String.format("(showPicture) w: %d, h: %d, x: %d", width, height, offset));
+			int targetDim = 600;
+			int longDim = 0, shortDim = 0;
+			float scaleFactor = 1;
+			int x = 0, y = 0, scaledLongDim = 0;
+			
+			if (orientation == Surface.ROTATION_90 || orientation == Surface.ROTATION_270) { //landscape
+				longDim = width;
+				shortDim = height;
+				scaleFactor = (float)targetDim / shortDim;
+				scaledLongDim = (int)(longDim*scaleFactor);
+				x = (scaledLongDim-targetDim)/2;
+				y = 0;
+			}
+			else if (orientation == Surface.ROTATION_0 || orientation == Surface.ROTATION_180) {  //portrait
+				if (isOutputPortrait) {
+					longDim = height;
+					shortDim = width;
+				} else {
+					longDim = width;
+					shortDim = height;
+				}
+				scaleFactor = (float)targetDim / shortDim;
+				scaledLongDim = (int)(longDim*scaleFactor);
+				x = 0;
+				y = (scaledLongDim-targetDim)/2;
+			}
+			else {
+				Toast
+				.makeText(CameraTest.this, "Camera not supported on this device",
+						Toast.LENGTH_LONG)
+						.show();
+				return;
+			}
+			
+			Log.e("flashfeed.camera", String.format("(showPicture) w: %d, h: %d, x: %d", width, height, (scaledLongDim-targetDim)/2));
 			Log.e("flashfeed.camera", String.format("(scaled) scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
 			/*Toast
 			.makeText(CameraTest.this, String.format("w: %d, h: %d", picture.getWidth(), picture.getHeight()),
 					Toast.LENGTH_LONG)
 					.show();*/
 			
-			int orientation1 = getResources().getConfiguration().orientation;
-			int orientation2 = getWindowManager().getDefaultDisplay().getOrientation();
-			Toast
-			.makeText(CameraTest.this, String.format("orientation1: %d, orientation2: %d", orientation1, orientation2),
-					Toast.LENGTH_LONG)
-					.show();
-			
-			//test			
+			// orientation: landscape			
 			//Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetWidth, targetHeight, false);			
 			//Bitmap bmSkewed = Bitmap.createBitmap(bmScaled, (targetWidth-targetHeight)/2, 0, targetHeight, targetHeight);
 			
-			Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetHeight, targetWidth, false);
-			Bitmap bmSkewed = Bitmap.createBitmap(bmScaled, 0, (targetWidth-targetHeight)/2, targetHeight, targetHeight);
+			Log.e("flashfeed.camera", "saving bitmaps");
+			Log.e("flashfeed.camera", String.format("(x,y)=(%d,%d), targetHeight=%d", 0, (scaledLongDim-targetDim)/2, targetDim));
+			
+			Matrix matrix = new Matrix();
+			matrix.preScale(scaleFactor, scaleFactor);
+			if (orientation == Surface.ROTATION_0 && !isOutputPortrait) {
+				matrix.preRotate(90);
+			} else if (orientation == Surface.ROTATION_270) {
+				matrix.preRotate(180);
+			}
+			
+			//Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetHeight, targetWidth, false);
+			Bitmap targetBitmap = Bitmap.createBitmap(picture, 0, 0, width, height, matrix, false);
+			//Bitmap bmSkewed = Bitmap.createBitmap(targetBitmap, 0, (scaledLongDim-targetDim)/2, targetDim, targetDim);
+			Bitmap finalBitmap = Bitmap.createBitmap(targetBitmap, x, y, targetDim, targetDim);
 			
 			ImageView view = new ImageView(this);
 			//view.setImageBitmap(picture);
-			view.setImageBitmap(bmSkewed);
+			//view.setImageBitmap(bmSkewed);
 			this.setContentView(view);
 			
 			//getLocation();
@@ -319,7 +421,7 @@ public class CameraTest extends Activity {
 				picture.compress(CompressFormat.JPEG, 100, fos);
 				
 				fos = new FileOutputStream(fileSkewed);
-				bmSkewed.compress(CompressFormat.JPEG, 100, fos);
+				finalBitmap.compress(CompressFormat.JPEG, 100, fos);
 				
 				fos = new FileOutputStream(locationInfo);
 				fos.write(currentAddr.getBytes());
@@ -346,11 +448,12 @@ public class CameraTest extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		Toast
-		.makeText(CameraTest.this, "orientation change",
-				Toast.LENGTH_LONG)
-				.show();
+		Toast.makeText(CameraTest.this, "orientation change",Toast.LENGTH_LONG).show();
+		
+		setCameraOverlay();
 	}
+	
+	
 	
 	/*private void onDestroy() {
 		super.onDestroy();

@@ -39,7 +39,7 @@
 		</activity>
 		<activity android:name=".CameraTest"
 			android:configChanges="keyboardHidden|orientation"
-			android:screenOrientation="portrait"
+			android:screenOrientation="sensor"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		</activity>
 		<activity android:name=".ProfileFeedActivity"
