@@ -21,4 +21,6 @@
     <string name="txt_top_nav_question">Question</string>
     <string name="activity_name_question_landing">Question Landing</string>
     <string name="btn_status_feed_add_group">+</string>
+    <string name="btn_add_group_confirm">Add</string>
+    <string name="btn_ask_question">Ask</string>
 </resources>

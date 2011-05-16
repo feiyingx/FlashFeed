@@ -106,4 +106,12 @@ public class Utility {
 		url = Constants.GetFriendsByUser_Format.replace(":user_id", String.valueOf(userId));
 		return url;
 	}
+	
+	public static String GetQuestionsByUserUrl(int userId){
+		String url = "";
+		if(userId < 0)
+			return url;
+		url = Constants.GetUserQuestions_Format.replace(":id", String.valueOf(userId));
+		return url;
+	}
 }

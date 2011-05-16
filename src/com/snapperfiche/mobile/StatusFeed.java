@@ -166,6 +166,16 @@ public class StatusFeed extends Activity implements Runnable{
         	
         });
         
+        //add new group feed button
+        Button btnAddGroupFeed = (Button) findViewById(R.id.btn_status_feed_add_group);
+        btnAddGroupFeed.setOnClickListener(new OnClickListener(){
+        	@Override
+			public void onClick(View v) {
+				Intent i = new Intent(v.getContext(), AddUserGroupActivity.class);
+				startActivity(i);
+			}
+        });
+        
         BindTopNav();
     }
     
@@ -295,7 +305,7 @@ public class StatusFeed extends Activity implements Runnable{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//Intent i = new Intent(v.getContext(), CameraView.class);
-				Intent i = new Intent(v.getContext(), QuestionLandingActivity.class);
+				Intent i = new Intent(v.getContext(), QuestionActivity.class);
 				startActivity(i);
 			}
         });

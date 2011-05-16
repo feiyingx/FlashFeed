@@ -66,6 +66,8 @@ public class CameraTest extends Activity {
         int height = display.getHeight();
         //int orientation = display.getOrientation();
         orientation = getResources().getConfiguration().orientation;
+        
+        Log.e("flashfeed.camera", String.format("(oncreate) width: %d, height: %d", width, height));
 		
 		mInflater = LayoutInflater.from(this);
         View overView = mInflater.inflate(R.layout.camera_test_overlay, null);
@@ -242,6 +244,8 @@ public class CameraTest extends Activity {
 	void showPicture(byte[] data) {
 		if (data != null) {
 			Bitmap picture = BitmapFactory.decodeByteArray(data, 0, data.length);
+			
+			Log.e("flashfeed.camera", String.format("width: %d, height: %d", picture.getWidth(), picture.getHeight()));
 							
 			/*int width = picture.getWidth();
 			int height = picture.getHeight();*/
@@ -270,6 +274,9 @@ public class CameraTest extends Activity {
 			//test			
 			//Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetWidth, targetHeight, false);			
 			//Bitmap bmSkewed = Bitmap.createBitmap(bmScaled, (targetWidth-targetHeight)/2, 0, targetHeight, targetHeight);
+			
+			Log.e("flashfeed.camera", "create bitmaps");
+			Log.e("flashfeed.camera", String.format("(x,y)=(%d,%d), targetHeight=%d", 0, (targetWidth-targetHeight)/2, targetHeight));
 			
 			Bitmap bmScaled = Bitmap.createScaledBitmap(picture, targetHeight, targetWidth, false);
 			Bitmap bmSkewed = Bitmap.createBitmap(bmScaled, 0, (targetWidth-targetHeight)/2, targetHeight, targetHeight);
