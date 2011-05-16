@@ -31,6 +31,7 @@ import com.snapperfiche.code.Utility;
 import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.code.Enumerations.PostType;
 import com.snapperfiche.data.Post;
+import com.snapperfiche.data.QuestionPost;
 import com.snapperfiche.data.Tag;
 import com.snapperfiche.data.User;
 
@@ -93,7 +94,10 @@ public class PostService extends BaseService {
 			}
 			
 			try {
-				HttpPost post = new HttpPost(Constants.NewDefaultPost);
+				String url = Constants.NewDefaultPost;
+				if(postType == PostType.QUESTION)
+					url = Constants.NewQuestion;
+				HttpPost post = new HttpPost(url);
 				post.setEntity(reqEntity);
 				HttpResponse response = GetHttpClient().execute(post);
 				HttpEntity entity = response.getEntity();
@@ -125,8 +129,8 @@ public class PostService extends BaseService {
 		return NewPost(PostType.DEFAULT, caption, imgUrl, address, friends_ids, tags_ids);
 	}
 	
-	public static BasicStatus AskQuestion(String question, String imgUrl, Address address, int[] friends_ids, int[] tags_ids){
-		return NewPost(PostType.QUESTION, question, imgUrl, address, friends_ids, tags_ids);
+	public static BasicStatus AskQuestion(String question, String imgUrl, Address address, int[] friends_ids){
+		return NewPost(PostType.QUESTION, question, imgUrl, address, friends_ids, null);
 	}
 	
 	public static BasicStatus AnswerQuestion(int questionId, String answer, String answerImgUrl, Address address, int[] friends_ids, int[] tags_ids){
@@ -317,4 +321,42 @@ public class PostService extends BaseService {
 		
 		return null;
 	}
-}
+	
+	//TODO: implement getQuestionsByUser
+	public static List<QuestionPost> GetQuestionsByUser(int userId, int pageSize, int pageNum){
+		List<QuestionPost> questions = new ArrayList<QuestionPost>();
+		User currentUser = AccountService.getUser();
+		if(currentUser == null || userId < 0)
+			return questions;
+		
+		HttpGet getQuestions = new HttpGet(Utility.GetQuestionsByUserUrl(currentUser.getId()));
+		try {
+			HttpResponse response = GetHttpClient().execute(getQuestions);
+			HttpEntity entity = response.getEntity();
+			if(entity != null){
+				InputStream stream = entity.getContent();
+				String jsonResultString = Utility.ConvertStreamToString(stream);
+				entity.consumeContent();
+				
+				JsonParser parser = new JsonParser();
+				JsonElement resultElement = parser.parse(jsonResultString);
+				JsonObject resultJson = resultElement.getAsJsonObject();
+				JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+				JsonElement questionsJson = resultJson.get(Constants.jsonParameter_Questions);
+				
+				Gson gson = new Gson();
+				QuestionPost[] questionPosts = gson.fromJson(questionsJson, QuestionPost[].class);
+
+				questions = new ArrayList<QuestionPost>(Arrays.asList(questionPosts));
+			}
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return questions;
+	}
+ }
