@@ -20,6 +20,9 @@ public class Constants {
 	
 	/* Follow urls */
 	
+	/* Friend urls */
+	public static final String GetFriendsByUser_Format = BaseUrl + "/friends/:user_id.json";
+	
 	/* Group urls */
 	public static final String NewGroup = BaseUrl + "groups.json";
 	public static final String GetGroupsByUser_Format = BaseUrl + "groups/byuser/:id/:group_type.json";
@@ -33,6 +36,7 @@ public class Constants {
 	public static final String jsonParameter_Posts = "posts";
 	public static final String jsonParameter_Post = "post";
 	public static final String jsonParameter_Groups = "groups";
+	public static final String jsonParameter_Friends = "friends";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";
