@@ -45,8 +45,10 @@
 		<activity android:name=".ProfileFeedActivity"
 				  android:label="@string/activity_profilefeed_name">
 		</activity>
-		<activity android:name=".QuestionLandingActivity"
+		<activity android:name="QuestionActivity"
 				  android:label="@string/activity_name_question_landing">
+		</activity>
+		<activity android:name=".AddUserGroupActivity">
 		</activity>
 		<activity android:name=".TestActivity">
 		</activity>

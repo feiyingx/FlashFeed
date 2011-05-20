@@ -17,11 +17,13 @@ public class Constants {
 	public static final String UserLatestPosts = BaseUrl + "posts/latest.json";
 	public static final String PostDetail = BaseUrl + "posts/";
 	public static final String NewAnswer = BaseUrl + "answer/";
+	public static final String GetUserQuestions_Format = BaseUrl + "questions/:id.json";
+	public static final String NewQuestion = BaseUrl + "questions.json";
 	
 	/* Follow urls */
 	
 	/* Friend urls */
-	public static final String GetFriendsByUser_Format = BaseUrl + "/friends/:user_id.json";
+	public static final String GetFriendsByUser_Format = BaseUrl + "friends/:user_id.json";
 	
 	/* Group urls */
 	public static final String NewGroup = BaseUrl + "groups.json";
@@ -37,6 +39,7 @@ public class Constants {
 	public static final String jsonParameter_Post = "post";
 	public static final String jsonParameter_Groups = "groups";
 	public static final String jsonParameter_Friends = "friends";
+	public static final String jsonParameter_Questions = "questions";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";
