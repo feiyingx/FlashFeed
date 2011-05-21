@@ -359,4 +359,94 @@ public class PostService extends BaseService {
 		
 		return questions;
 	}
+	
+	public static List<Post> GetAnswersForQuestion(int questionId){
+		List<Post> answers = new ArrayList<Post>();
+		User currentUser = AccountService.getUser();
+		if(currentUser != null && questionId > 0){
+			HttpGet getAnswers = new HttpGet(Utility.GetAnswersByQuestionUrl(questionId));
+			try {
+				HttpResponse response = GetHttpClient().execute(getAnswers);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					JsonElement answersJson = resultJson.get(Constants.jsonParameter_Answers);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					
+					if(status == Enumerations.BasicStatus.SUCCESS.value()){
+						Post[] answerPosts = gson.fromJson(answersJson, Post[].class);
+						answers = new ArrayList<Post>(Arrays.asList(answerPosts));
+					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+						
+					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+						
+					}else{ //error case
+						
+					}
+					
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return answers;
+	}
+	
+	public static List<Post> GetQuestionsFromFriends(int userId){
+		List<Post> questionsFromFriends = new ArrayList<Post>();
+		User currentUser = AccountService.getUser();
+		if(currentUser != null && userId > 0 && userId == currentUser.getId()){
+			HttpGet getQuestions = new HttpGet(Constants.GetQuestionsFromFriendsUrl);
+			try {
+				HttpResponse response = GetHttpClient().execute(getQuestions);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					JsonElement questionsJson = resultJson.get(Constants.jsonParameter_Questions);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					
+					if(status == Enumerations.BasicStatus.SUCCESS.value()){
+						Post[] answerPosts = gson.fromJson(questionsJson, Post[].class);
+						questionsFromFriends = new ArrayList<Post>(Arrays.asList(answerPosts));
+					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+						
+					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+						
+					}else{ //error case
+						
+					}
+					
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return questionsFromFriends;
+	}
  }

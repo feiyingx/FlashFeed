@@ -19,6 +19,11 @@ public class Constants {
 	public static final String NewAnswer = BaseUrl + "answer/";
 	public static final String GetUserQuestions_Format = BaseUrl + "questions/:id.json";
 	public static final String NewQuestion = BaseUrl + "questions.json";
+	public static final String GetAnswersUrl_Format = BaseUrl + "post/:id/answers.json";
+	public static final String GetQuestionsFromFriendsUrl = BaseUrl + "questions/friends.json";
+	
+	/* Comment urls */
+	public static final String NewComment_Format = BaseUrl + "comments/:post_id.json";
 	
 	/* Follow urls */
 	
@@ -40,6 +45,7 @@ public class Constants {
 	public static final String jsonParameter_Groups = "groups";
 	public static final String jsonParameter_Friends = "friends";
 	public static final String jsonParameter_Questions = "questions";
+	public static final String jsonParameter_Answers = "answers";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";
@@ -53,6 +59,8 @@ public class Constants {
 	public static final String requestParameter_Tags = "tags";
 	public static final String requestParameter_Friends = "friends";
 	public static final String requestParameter_QuestionId = "question_id";
+	public static final String requestParameter_PostId = "post_id";
+	public static final String requestParameter_Content = "content";
 	//for groups
 	public static final String requestParameter_Name = "name";
 	public static final String requestParameter_GroupType = "group_type";

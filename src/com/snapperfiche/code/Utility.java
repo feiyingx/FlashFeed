@@ -114,4 +114,20 @@ public class Utility {
 		url = Constants.GetUserQuestions_Format.replace(":id", String.valueOf(userId));
 		return url;
 	}
+	
+	public static String GetAnswersByQuestionUrl(int questionId){
+		String url = "";
+		if(questionId < 0)
+			return url;
+		url = Constants.GetAnswersUrl_Format.replace(":id", String.valueOf(questionId));
+		return url;
+	}
+	
+	public static String GetNewCommentUrl(int postId){
+		String url = "";
+		if(postId < 0)
+			return url;
+		url = Constants.NewComment_Format.replace(":post_id", String.valueOf(postId));
+		return url;
+	}
 }
