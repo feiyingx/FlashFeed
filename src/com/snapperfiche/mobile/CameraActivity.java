@@ -49,7 +49,7 @@ public class CameraActivity extends Activity {
 	Button takePictureBtn;
 	LocationManager locMgr;
 	String locProvider;
-	private int orientation;
+	private int mOrientation;
 	OrientationEventListener mOrientationEventListener;
 
 	@Override
@@ -85,7 +85,8 @@ public class CameraActivity extends Activity {
 		locMgr = (LocationManager)getSystemService(LOCATION_SERVICE);
 		locMgr.requestLocationUpdates(locProvider, 0, 0, onLocationChange);
 		
-		orientation = getWindowManager().getDefaultDisplay().getOrientation();
+		mOrientation = getWindowManager().getDefaultDisplay().getOrientation();
+		//orientation = getWindowManager().getDefaultDisplay().getRotation();
 
 		mInflater = LayoutInflater.from(this);
 		View overView = mInflater.inflate(R.layout.camera_test_overlay, null);
@@ -93,7 +94,7 @@ public class CameraActivity extends Activity {
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		
 		Toast
-		.makeText(CameraActivity.this, String.format("orientation: %d", orientation),
+		.makeText(CameraActivity.this, String.format("orientation: %d", mOrientation),
 				Toast.LENGTH_LONG)
 				.show();
 
@@ -123,22 +124,31 @@ public class CameraActivity extends Activity {
 		bottom.setLayoutParams(sideLayoutParams);
 
 
-		Toast
-		.makeText(CameraActivity.this, String.format("width: %d, height: %d, orientation: %d", width, height, orientation),
+		/*Toast
+		.makeText(CameraActivity.this, String.format("width: %d, height: %d, orientation: %d", width, height, mOrientation),
 				Toast.LENGTH_LONG)
-				.show();
+				.show();*/
 	}
 
 	private void setDisplayOrientation(int orientation) {
+		int currentOrientation = mOrientation;
+		
 		// absolute cases
 		if ((orientation >= 0 && orientation < 30) || orientation >= 330 ) {
-			orientation = Surface.ROTATION_0;
+			mOrientation = Surface.ROTATION_0;
 		} else if (orientation >= 60 && orientation < 120) {
-			orientation = Surface.ROTATION_270;
+			mOrientation = Surface.ROTATION_270;
 		} else if (orientation >= 150 && orientation < 210) {
-			orientation = Surface.ROTATION_90;
+			mOrientation = Surface.ROTATION_180;
 		} else if (orientation >= 240 && orientation < 300) {
-			orientation = Surface.ROTATION_90;
+			mOrientation = Surface.ROTATION_90;
+		}
+		
+		if (mOrientation != currentOrientation) {
+			Toast
+			.makeText(CameraActivity.this, String.format("orientation change: %d ", mOrientation),
+					Toast.LENGTH_LONG)
+					.show();
 		}
 		
 		// relative cases
@@ -266,19 +276,31 @@ public class CameraActivity extends Activity {
 			.makeText(CameraActivity.this, String.format("orientation1: %d, orientation2: %d", orientation1, orientation2),
 					Toast.LENGTH_LONG)
 					.show();*/
+			
+			Toast
+			.makeText(CameraActivity.this, String.format("orientation: %d", mOrientation),
+					Toast.LENGTH_LONG)
+					.show();
 
 			int width = picture.getWidth();
 			int height = picture.getHeight();
 
 			//boolean isOutputPortrait = width < height;
 			//int offset = Math.abs((width-height))/2;
-
-			// TODO: create calculations based on portrait or landscape //
+			
 			int targetDim = 600;
 			float scaleFactor = (float)targetDim / height;
 			int scaledWidth = (int)(width*scaleFactor);
-			int x = (scaledWidth-targetDim)/2;
-			int y = 0;
+			int x = 0, y = 0;
+			
+			if (mOrientation == Surface.ROTATION_0 || mOrientation == Surface.ROTATION_180) {  //portrait
+				x = 0;
+				y = (scaledWidth-targetDim)/2;
+			} else { //landscape
+				x = (scaledWidth-targetDim)/2;
+				y = 0;
+			}
+			
 
 			Log.e("flashfeed.camera", String.format("(showPicture) w: %d, h: %d, x: %d", width, height, (scaledWidth-targetDim)/2));
 			Log.e("flashfeed.camera", String.format("(scaled) scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
@@ -291,13 +313,13 @@ public class CameraActivity extends Activity {
 
 			Matrix matrix = new Matrix();
 			matrix.preScale(scaleFactor, scaleFactor);
-			if (orientation == Surface.ROTATION_0) {
+			if (mOrientation == Surface.ROTATION_0) {
 				Toast.makeText(CameraActivity.this, "portrait: rotate 90",Toast.LENGTH_LONG).show();
 				matrix.postRotate(90);
-			} else if (orientation == Surface.ROTATION_270) {
+			} else if (mOrientation == Surface.ROTATION_270) {
 				Toast.makeText(CameraActivity.this, "reverse landscape: rotate 180",Toast.LENGTH_LONG).show();
 				matrix.postRotate(180);
-			} else if (orientation == Surface.ROTATION_180) {
+			} else if (mOrientation == Surface.ROTATION_180) {
 				Toast.makeText(CameraActivity.this, "reverse portrait: rotate 270",Toast.LENGTH_LONG).show();
 				matrix.postRotate(270);
 			}
