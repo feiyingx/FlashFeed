@@ -116,7 +116,7 @@ public class StatusFeed extends Activity implements Runnable{
         setContentView(R.layout.statusfeed);
         
         //loadStatusFeed();
-        AccountService.Login("bigfiche@fiche.com", "asdf");		
+        /*AccountService.Login("bigfiche@fiche.com", "asdf");		
 		mPosts = PostService.GetLatestPosts();
 		
 		mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
@@ -127,7 +127,7 @@ public class StatusFeed extends Activity implements Runnable{
         
         Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
         gallery2.setAdapter(new ImageAdapter(this));
-        gallery2.setOnItemClickListener(statusImageItemClickListener);
+        gallery2.setOnItemClickListener(statusImageItemClickListener);*/
         /*
         Gallery gallery3 = (Gallery) findViewById(R.id.gallery3);
         gallery3.setAdapter(new ImageAdapter(this));
@@ -160,7 +160,7 @@ public class StatusFeed extends Activity implements Runnable{
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//Intent i = new Intent(v.getContext(), CameraView.class);
-				Intent i = new Intent(v.getContext(), CameraTest.class);
+				Intent i = new Intent(v.getContext(), CameraActivity.class);
 				startActivity(i);
 			}
         	
