@@ -127,7 +127,7 @@ public class PhotoConfirm extends Activity {
 				Address address = new Address(new Locale("en"));
 				address.setAdminArea("CA");
 				address.setLocality("Cerritos");
-				BasicStatus status = PostService.Post("ice cream fiche", cameraImageUrl, address, null, null);
+				BasicStatus status = PostService.Post("ice cream fiche", cameraImageUrl, address, null, null, false);
 				
 				Intent i = new Intent(v.getContext(), StatusFeed.class);
 				startActivity(i);

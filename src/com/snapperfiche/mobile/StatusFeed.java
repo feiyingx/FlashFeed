@@ -3,6 +3,7 @@ package com.snapperfiche.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.droidfu.widgets.WebImageView;
 import com.snapperfiche.code.Enumerations.GroupType;
 import com.snapperfiche.code.Utility;
 import com.snapperfiche.data.Group;
@@ -18,6 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,6 +45,7 @@ public class StatusFeed extends Activity implements Runnable{
 	Context myContext = this;
 	List<Post> mPosts;
 	List<Group> mGroups;
+	Gallery g1, g2;
 	/** Called when the activity is first created. */
 	@Override
 	public void run() {
@@ -110,16 +114,50 @@ public class StatusFeed extends Activity implements Runnable{
 		thread.start();
 	}
 	
+	static class StatusFeedDataHolder{
+		List<Post> postsData;
+		List<Group> groupsData;
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    final StatusFeedDataHolder data = new StatusFeedDataHolder();
+	    data.postsData = mPosts;
+	    data.groupsData = mGroups;
+	    
+	    return data;
+	}
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusfeed);
         
+        final Object data = getLastNonConfigurationInstance();
+        if(data != null){
+        	//cast it into the data holder obj
+        	StatusFeedDataHolder dataHolder = (StatusFeedDataHolder) data;
+        	//set the existing data
+        	mPosts = dataHolder.postsData;
+        	mGroups = dataHolder.groupsData;
+        	loadData();
+        }else{
+	        dialog = ProgressDialog.show(StatusFeed.this, "", 
+	                "Loading... Fiching for your feed", true);
+	        
+	        g1 = (Gallery) findViewById(R.id.gallery1);
+	        g2 = (Gallery) findViewById(R.id.gallery2);
+	        LoadStatusFeed task = new LoadStatusFeed();
+	        task.execute();
+        }
         //loadStatusFeed();
-        /*AccountService.Login("bigfiche@fiche.com", "asdf");		
+        /*
+        AccountService.Login("bigfiche@fiche.com", "asdf");		
 		mPosts = PostService.GetLatestPosts();
 		
 		mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+		*/
+        /*
 		BindGroupsList();
 		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
         gallery1.setAdapter(new ImageAdapter(this));
@@ -127,7 +165,8 @@ public class StatusFeed extends Activity implements Runnable{
         
         Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
         gallery2.setAdapter(new ImageAdapter(this));
-        gallery2.setOnItemClickListener(statusImageItemClickListener);*/
+        gallery2.setOnItemClickListener(statusImageItemClickListener);
+        */
         /*
         Gallery gallery3 = (Gallery) findViewById(R.id.gallery3);
         gallery3.setAdapter(new ImageAdapter(this));
@@ -183,12 +222,52 @@ public class StatusFeed extends Activity implements Runnable{
     	public void onItemClick(AdapterView parent, View v, int position, long id) {
     		//Toast.makeText(StatusFeed.this, "" + position, Toast.LENGTH_SHORT).show();
     		//Toast.makeText(StatusFeed.this, "" + id, Toast.LENGTH_SHORT).show();
+    		StatusFeedGalleryViewHolder holder = (StatusFeedGalleryViewHolder) v.getTag();
     		Intent i = new Intent(StatusFeed.this, StatusDetailActivity.class);				
 			i.putExtra("position", position);
+			if(holder != null){
+				if(holder.post != null){
+					i.putExtra("post_id", holder.post.getId());
+				}
+    		}
 			startActivity(i);
     	}
 	};
-    
+	private class LoadStatusFeed extends AsyncTask<Void, Integer, Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			AccountService.Login("bigfiche@fiche.com", "asdf");		
+			mPosts = PostService.GetLatestPosts();
+			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			closeDialog();
+		}
+	}
+	
+	public void closeDialog(){
+		loadData();
+		dialog.dismiss();
+	}
+	
+	public void loadData(){
+		BindGroupsList();
+		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
+        gallery1.setAdapter(new ImageAdapter(this));
+        gallery1.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
+        gallery2.setAdapter(new ImageAdapter(this));
+        gallery2.setOnItemClickListener(statusImageItemClickListener);
+	}
+	
+	static class StatusFeedGalleryViewHolder{
+		Post post;
+	}
+	
     public class ImageAdapter extends BaseAdapter {
     	int mGalleryItemBackground;
     	private Context mContext;
@@ -266,8 +345,24 @@ public class StatusFeed extends Activity implements Runnable{
 			return mPosts.get(position).getId();
 		}
 		
-		
-		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent){
+			Post post = (Post)getItem(position);
+			if(post == null){
+				return convertView;
+			}
+			
+			String url = post.getPhotoThumbUrl();
+			Drawable loader = mContext.getResources().getDrawable(R.drawable.loader);
+			WebImageView i = new WebImageView(mContext, url, loader, true);
+			convertView = i;
+			
+			StatusFeedGalleryViewHolder holder = new StatusFeedGalleryViewHolder();
+			holder.post = post;
+			convertView.setTag(holder);
+			return convertView;
+		}
+		/*
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView i = new ImageView(mContext);
@@ -294,7 +389,7 @@ public class StatusFeed extends Activity implements Runnable{
 			//i.setScaleType(ImageView.ScaleType.FIT_XY);
 			
 			return i;
-		}
+		}*/
     	
     }
     

@@ -130,4 +130,12 @@ public class Utility {
 		url = Constants.NewComment_Format.replace(":post_id", String.valueOf(postId));
 		return url;
 	}
+	
+	public static String GetCommentsByPostIdUrl(int postId){
+		String url = "";
+		if(postId < 0)
+			return url;
+		url = Constants.GetCommentsByPost_Format.replace(":post_id", String.valueOf(postId));
+		return url;
+	}
 }
