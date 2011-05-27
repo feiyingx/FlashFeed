@@ -14,6 +14,7 @@ import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.CommentService;
 import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,6 +42,8 @@ public class StatusDetailActivity extends Activity {
 	User currentUser;
 	CommentsAdapter mCommentsAdapter;
 	Button mBtnSubmitComment;
+	boolean mRefreshComments = false;
+	String mPostCommentsCacheKey;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class StatusDetailActivity extends Activity {
 		mLvComments = (ListView) findViewById(R.id.lv_post_comments);
 		
 		mPostId = bundle.getInt("post_id");
+		mPostCommentsCacheKey = "ck_StatusDetailActivity_Post_".concat(String.valueOf(mPostId)).concat("Comments");
 		
 		final Object data = getLastNonConfigurationInstance();
         if(data != null){
@@ -73,8 +77,18 @@ public class StatusDetailActivity extends Activity {
         	mComments = dataHolder.comments;
         	loadComments();
         }else{
-			LoadCommentsTask task = new LoadCommentsTask();
-			task.execute(mPostId);
+        	if(!mRefreshComments){
+        		mComments = (List<Comment>)SimpleCache.get(mPostCommentsCacheKey);
+        		if(mComments != null){
+        			loadComments();
+        		}else{
+        			LoadCommentsTask task = new LoadCommentsTask();
+        			task.execute(mPostId);
+        		}
+        	}else{
+				LoadCommentsTask task = new LoadCommentsTask();
+				task.execute(mPostId);
+        	}
         }
         
         mBtnSubmitComment = (Button) findViewById(R.id.btnAddComment);

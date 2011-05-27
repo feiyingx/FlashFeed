@@ -12,6 +12,7 @@ import com.snapperfiche.mobile.FriendTaggerActivity.ViewHolder;
 import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -46,6 +47,9 @@ public class StatusFeed extends Activity implements Runnable{
 	List<Post> mPosts;
 	List<Group> mGroups;
 	Gallery g1, g2;
+	
+	String mGroupCacheKey = "ck_StatusFeedActivity_mGroups";
+	String mPostsCacheKey = "ck_StatusFeedActivity_mPosts";
 	/** Called when the activity is first created. */
 	@Override
 	public void run() {
@@ -142,13 +146,21 @@ public class StatusFeed extends Activity implements Runnable{
         	mGroups = dataHolder.groupsData;
         	loadData();
         }else{
-	        dialog = ProgressDialog.show(StatusFeed.this, "", 
-	                "Loading... Fiching for your feed", true);
-	        
-	        g1 = (Gallery) findViewById(R.id.gallery1);
-	        g2 = (Gallery) findViewById(R.id.gallery2);
-	        LoadStatusFeed task = new LoadStatusFeed();
-	        task.execute();
+        	//try to get from cache
+        	mPosts = (List<Post>)SimpleCache.get(mPostsCacheKey);
+        	mGroups = (List<Group>)SimpleCache.get(mGroupCacheKey);
+        	
+        	if(mPosts != null && mGroups != null){
+        		loadData();
+        	}else{
+		        dialog = ProgressDialog.show(StatusFeed.this, "", 
+		                "Loading... Fiching for your feed", true);
+		        
+		        g1 = (Gallery) findViewById(R.id.gallery1);
+		        g2 = (Gallery) findViewById(R.id.gallery2);
+		        LoadStatusFeed task = new LoadStatusFeed();
+		        task.execute();
+        	}
         }
         //loadStatusFeed();
         /*
@@ -239,6 +251,9 @@ public class StatusFeed extends Activity implements Runnable{
 			AccountService.Login("bigfiche@fiche.com", "asdf");		
 			mPosts = PostService.GetLatestPosts();
 			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+			
+			SimpleCache.put(mPostsCacheKey, mPosts);
+			SimpleCache.put(mGroupCacheKey, mGroups);
 			return null;
 		}
 		
