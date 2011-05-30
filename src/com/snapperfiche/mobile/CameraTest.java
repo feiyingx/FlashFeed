@@ -432,6 +432,7 @@ public class CameraTest extends Activity {
 			Bundle bundle = new Bundle();
 			if(fullpath != null){
 				bundle.putString("fullpathSkewed", fullpathSkewed);
+				bundle.putParcelable("photoAddress", addr);
 				Intent mIntent = new Intent(this, PhotoConfirm.class);
 				mIntent.putExtras(bundle);
 				startActivity(mIntent);

@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:orientation="vertical">
-  <ImageView
-  	android:id="@+id/picPreview"
-  	android:layout_width="wrap_content"
-  	android:layout_height="wrap_content"
-  	></ImageView>
+  android:orientation="vertical" android:layout_height="wrap_content">
+  <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout2" android:layout_width="match_parent">
+      <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btn_photo_confirm_tags" android:text="@string/photo_confirm_tags"></Button>
+  </LinearLayout>
+  <ImageView android:layout_height="wrap_content" android:id="@+id/picPreview" android:layout_width="wrap_content"></ImageView>
+  <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent">
+      <TextView android:id="@+id/txt_photo_confirm_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:id="@+id/txt_photo_confirm_time"></TextView>
+      <TextView android:id="@+id/txt_photo_confirm_ampm" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>
+      <TextView android:id="@+id/txt_photo_confirm_date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>
+  </LinearLayout>
+  <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/etxt_photo_confirm_caption" android:hint="Say something (optional)"></EditText>
 
 	<Button
 		android:id="@+id/btnTagFriend"
@@ -16,3 +25,4 @@
 		android:layout_height="wrap_content"
 		android:text="Ready to go!"/>
 </LinearLayout>
+</ScrollView>
