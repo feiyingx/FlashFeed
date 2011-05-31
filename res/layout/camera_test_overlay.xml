@@ -10,7 +10,13 @@
  	android:layout_height="0dp"
  	android:background="#cccccc"	
  	>
-		<ImageView
+ 		<com.snapperfiche.mobile.custom.TriToggleButton
+		android:id="@+id/ttbFlash"
+		android:layout_width="106dp"
+		android:layout_height="wrap_content">
+		</com.snapperfiche.mobile.custom.TriToggleButton>
+ 		
+		<!-- <ImageView
 		android:id="@+id/fr"
 	  	android:text="top"
 	  	android:src="@drawable/icon"
@@ -18,7 +24,7 @@
 	  	android:layout_height="wrap_content"
 	  	android:layout_alignParentLeft="true"
 	  	android:layout_alignParentTop="true"
-	  	/>
+	  	/> -->
  	</RelativeLayout> 
 
 	<TextView 

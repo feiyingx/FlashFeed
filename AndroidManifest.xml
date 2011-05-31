@@ -59,6 +59,9 @@
 	/>
 	<supports-screens android:anyDensity="true"/>-->
 	<uses-feature android:name="android.hardware.camera" />
+	<uses-feature android:name="android.hardware.camera.autofocus" />
+	<uses-feature android:name="android.hardware.camera.flash" />
+	<uses-feature android:name="android.hardware.camera.front" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

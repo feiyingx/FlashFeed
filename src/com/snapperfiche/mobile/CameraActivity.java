@@ -12,13 +12,13 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.hardware.SensorManager;
+import android.hardware.Camera.Size;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -42,7 +42,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.snapperfiche.mobile.custom.TriToggleButton;
+
 public class CameraActivity extends Activity {
+	private final String DEBUGTAG = "flashfeed.camera";
 	private SurfaceView preview=null;
 	private SurfaceHolder previewHolder=null;
 	private Camera camera=null;
@@ -94,10 +97,10 @@ public class CameraActivity extends Activity {
 		this.addContentView(overView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		Toast
+		/*Toast
 		.makeText(CameraActivity.this, String.format("orientation: %d", mOrientation),
 				Toast.LENGTH_LONG)
-				.show();
+				.show();*/
 
 		setCameraOverlay();
 	}
@@ -127,6 +130,41 @@ public class CameraActivity extends Activity {
 		top.setLayoutParams(sideLayoutParams);
 		cameraOverlay.setLayoutParams(cameraLayoutParams);
 		bottom.setLayoutParams(sideLayoutParams);
+		
+		final TriToggleButton flashButton = (TriToggleButton)findViewById(R.id.ttbFlash);
+		//Toast.makeText(CameraActivity.this, "flash state: " + flashButton.getState(), Toast.LENGTH_SHORT).show();
+		flashButton.setText("flash auto");
+		flashButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				int state = flashButton.getState();
+				//Toast.makeText(CameraActivity.this, "flash state: " + flashButton.getState(), Toast.LENGTH_SHORT).show();
+				Camera.Parameters parameters = camera.getParameters();
+				try {
+					switch (state) {
+					case 0:
+						flashButton.setText("flash auto");
+						parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+						break;
+					case 1:
+						flashButton.setText("flash on");
+						parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+						break;
+					case 2:
+						flashButton.setText("flash off");
+						parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+						break;
+					default:
+						break;							
+					}
+					camera.setParameters(parameters);
+				} catch (Exception e) {
+					Log.e(DEBUGTAG, "ERROR:setCameraOverlay:flashButton:onClick()::  " + e.getMessage());
+				}
+			}
+		});
 
 
 		/*Toast
@@ -228,10 +266,10 @@ public class CameraActivity extends Activity {
 				int height) {
 			Log.e("flashfeed.camera", "surfaceChanged");
 			Log.e("flashfeed.camera", "surfaceChanged: {width=" + width + ", height=" + height + "}");
-			Toast
+			/*Toast
 			.makeText(CameraActivity.this, String.format("(surfaceChanged) width: %d, height: %d", width, height),
 					Toast.LENGTH_LONG)
-					.show();		
+					.show();	*/	
 
 			Camera.Parameters parameters=camera.getParameters();
 
@@ -256,6 +294,14 @@ public class CameraActivity extends Activity {
 			parameters.setPictureSize(optimizedPictureSize.width, optimizedPictureSize.height);
 			parameters.setPictureFormat(PixelFormat.JPEG);
 			parameters.setRotation(90);
+			
+			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+			//parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+			/*Toast
+			.makeText(CameraActivity.this, String.format("autofocus: %s", parameters.getFocusMode()),
+					Toast.LENGTH_LONG)
+					.show();*/
+			
 			camera.setParameters(parameters);
 			camera.startPreview();
 		}
@@ -287,14 +333,8 @@ public class CameraActivity extends Activity {
 			int height = picture.getHeight();
 			
 			boolean isOutputPortrait = width < height;
-
-			//boolean isOutputPortrait = width < height;
-			//int offset = Math.abs((width-height))/2;
 			
 			int targetDim = 600;
-			//float scaleFactor = (float)targetDim / height;
-			//int scaledWidth = (int)(width*scaleFactor);
-			//float scaleFactor = 1;
 			int longDim = 0, shortDim = 0;
 			int x = 0, y = 0;		
 
@@ -317,22 +357,6 @@ public class CameraActivity extends Activity {
 				y = 0;
 			}
 			
-			// HTC //
-			/*if (isOutputPortrait) {
-				longDim = height;
-				shortDim = width;
-				scaleFactor = (float)targetDim / shortDim;
-				scaledLongDim = (int)(longDim*scaleFactor);
-				x = 0;
-				y = (scaledLongDim-targetDim)/2;
-			} else {
-				longDim = width;
-				shortDim = height;
-				scaleFactor = (float)targetDim / shortDim;
-				scaledLongDim = (int)(longDim*scaleFactor);
-				x = (scaledLongDim-targetDim)/2;
-				y = 0;
-			}*/
 			Log.e("flashfeed.camera", String.format("(showPicture) w: %d, h: %d, x: %d", width, height, (scaledLongDim-targetDim)/2));
 			Log.e("flashfeed.camera", String.format("(scaled) scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
 			/*Toast
@@ -440,10 +464,9 @@ public class CameraActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		Toast.makeText(CameraActivity.this, "orientation change",Toast.LENGTH_LONG).show();
+		//Toast.makeText(CameraActivity.this, "orientation change",Toast.LENGTH_LONG).show();
 
 		setCameraOverlay();
-		//setCameraDisplayOrientation();
 	}
 
 	/*private void onDestroy() {
@@ -454,7 +477,7 @@ public class CameraActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
-
+		Toast.makeText(CameraActivity.this, "onDestroy",Toast.LENGTH_LONG).show();
 		locMgr.removeUpdates(onLocationChange);
 	}
 
