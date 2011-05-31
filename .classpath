@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/gson-1.7.1.jar" sourcepath="C:/Users/Sexy/Downloads/gson-1.7.1/google-gson-1.7.1/gson-1.7.1-sources.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="C:/Android/SnapperFiche/lib/droid-fu-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Android/SnapperFiche/lib/guava-r09-gwt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

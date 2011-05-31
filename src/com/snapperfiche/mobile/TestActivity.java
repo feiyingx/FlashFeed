@@ -13,6 +13,7 @@ import com.snapperfiche.data.Tag;
 import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
 import android.location.Address;
@@ -55,12 +56,16 @@ public class TestActivity extends Activity {
 		//PostService.AskQuestion("what are you doing?", "questionImage.jpg", address, friends, tags2);
 		//PostService.AnswerQuestion(32, "i'm reading", "answerImage.jpg", address, friends, tags2);
 		
-		int[] group_members = new int[2];
-		group_members[0] = 1;
-		group_members[1] = 2;
-		BasicStatus status = GroupService.CreateGroup("yum", GroupType.USER_FEED, group_members);
-		System.out.println(status.toString());
+		//int[] group_members = new int[2];
+		//group_members[0] = 1;
+		//group_members[1] = 2;
+		//BasicStatus status = GroupService.CreateGroup("yum", GroupType.USER_FEED, group_members);
+		//System.out.println(status.toString());
 		List<Group> groups = GroupService.GetGroups(3, GroupType.USER_FEED);
 		System.out.println(groups);
+		String groupCacheKey = "coolGroupsCached";
+		SimpleCache.put(groupCacheKey, groups);
+		List<Group> groupsFromCache = (List<Group>)SimpleCache.get(groupCacheKey);
+		System.out.println(groupsFromCache);
 	}
 }

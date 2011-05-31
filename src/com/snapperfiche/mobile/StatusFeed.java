@@ -3,6 +3,7 @@ package com.snapperfiche.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.droidfu.widgets.WebImageView;
 import com.snapperfiche.code.Enumerations.GroupType;
 import com.snapperfiche.code.Utility;
 import com.snapperfiche.data.Group;
@@ -11,6 +12,7 @@ import com.snapperfiche.mobile.FriendTaggerActivity.ViewHolder;
 import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,9 +20,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,77 +42,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class StatusFeed extends Activity implements Runnable{
+public class StatusFeed extends Activity{
 	ProgressDialog dialog;
 	Context myContext = this;
 	List<Post> mPosts;
 	List<Group> mGroups;
-	/** Called when the activity is first created. */
-	@Override
-	public void run() {
-		AccountService.Login("bigfiche@fiche.com", "asdf");		
-		mPosts = PostService.GetLatestPosts();
+	Gallery g1, g2;
+	LoadStatusFeed task;	
+	
+	String mGroupCacheKey = "ck_StatusFeedActivity_mGroups";
+	String mPostsCacheKey = "ck_StatusFeedActivity_mPosts";
 		
-		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
-        gallery1.setAdapter(new ImageAdapter(this));
-        gallery1.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
-        gallery2.setAdapter(new ImageAdapter(this));
-        gallery2.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery3 = (Gallery) findViewById(R.id.gallery3);
-        gallery3.setAdapter(new ImageAdapter(this));
-        gallery3.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery4 = (Gallery) findViewById(R.id.gallery4);
-        gallery4.setAdapter(new ImageAdapter(this));
-        gallery4.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery5 = (Gallery) findViewById(R.id.gallery5);
-        gallery5.setAdapter(new ImageAdapter(this));
-        gallery5.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery6 = (Gallery) findViewById(R.id.gallery6);
-        gallery6.setAdapter(new ImageAdapter(this));
-        gallery6.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery7 = (Gallery) findViewById(R.id.gallery7);
-        gallery7.setAdapter(new ImageAdapter(this));
-        gallery7.setOnItemClickListener(statusImageItemClickListener);
-        
-        Gallery gallery8 = (Gallery) findViewById(R.id.gallery8);
-        gallery8.setAdapter(new ImageAdapter(this));
-        gallery8.setOnItemClickListener(statusImageItemClickListener);
-        
-		handler.sendEmptyMessage(0);
+	static class StatusFeedDataHolder{
+		List<Post> postsData;
+		List<Group> groupsData;
 	}
 	
-	private Handler handler = new Handler(){
-		@Override
-		public void handleMessage(Message msg){
-			dialog.dismiss();
-			//Intent i = new Intent(myContext,  StatusFeed.class);
-			//startActivity(i);
-			/*
-			if(AccountService.IsAuthenticated()){
-				dialog.cancel();
-	    		Intent i = new Intent(myContext,  StatusFeed.class);
-	    		startActivity(i);
-	    		Toast.makeText(FlashFeed.this, "Welcome ^^", Toast.LENGTH_LONG).show();
-			}else{
-				dialog.cancel();
-				Toast.makeText(FlashFeed.this, "Ruh-roh, we couldn't find your fiche <-< Please try again.", Toast.LENGTH_LONG).show();
-			}*/
-		}
-	};
-	
-	private void loadStatusFeed(){
-		dialog = ProgressDialog.show(StatusFeed.this, "", 
-                "Loading... Fiching for your feed", true);
-		
-		Thread thread = new Thread(this);
-		thread.start();
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    final StatusFeedDataHolder data = new StatusFeedDataHolder();
+	    if(mPosts != null && mGroups != null){
+		    data.postsData = mPosts;
+		    data.groupsData = mGroups;
+	    }else{
+	    	return null;
+	    }
+	    
+	    return data;
 	}
 	
     @Override
@@ -115,11 +76,51 @@ public class StatusFeed extends Activity implements Runnable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusfeed);
         
+        final Object data = getLastNonConfigurationInstance();
+        if(data != null){
+        	//cast it into the data holder obj
+        	StatusFeedDataHolder dataHolder = (StatusFeedDataHolder) data;
+        	//set the existing data
+        	mPosts = dataHolder.postsData;
+        	mGroups = dataHolder.groupsData;
+        	loadData();
+        }else{
+        	boolean reloadFeed = this.getIntent().getBooleanExtra("reloadFeed", false);
+        	
+        	if(!reloadFeed){
+	        	//try to get from cache
+	        	mPosts = (List<Post>)SimpleCache.get(mPostsCacheKey);
+	        	mGroups = (List<Group>)SimpleCache.get(mGroupCacheKey);
+	        	
+	        	if(mPosts != null && mGroups != null){
+	        		loadData();
+	        	}else{
+			        dialog = ProgressDialog.show(StatusFeed.this, "", 
+			                "Loading... Fiching for your feed", true);
+			        
+			        g1 = (Gallery) findViewById(R.id.gallery1);
+			        g2 = (Gallery) findViewById(R.id.gallery2);
+			        task = new LoadStatusFeed();
+			        task.execute();
+	        	}
+        	}else{
+        		dialog = ProgressDialog.show(StatusFeed.this, "", 
+		                "Loading... Fiching for your feed", true);
+		        
+		        g1 = (Gallery) findViewById(R.id.gallery1);
+		        g2 = (Gallery) findViewById(R.id.gallery2);
+		        task = new LoadStatusFeed();
+		        task.execute();
+        	}
+        }
         //loadStatusFeed();
-        /*AccountService.Login("bigfiche@fiche.com", "asdf");		
+        /*
+        AccountService.Login("bigfiche@fiche.com", "asdf");		
 		mPosts = PostService.GetLatestPosts();
 		
 		mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+		*/
+        /*
 		BindGroupsList();
 		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
         gallery1.setAdapter(new ImageAdapter(this));
@@ -127,7 +128,8 @@ public class StatusFeed extends Activity implements Runnable{
         
         Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
         gallery2.setAdapter(new ImageAdapter(this));
-        gallery2.setOnItemClickListener(statusImageItemClickListener);*/
+        gallery2.setOnItemClickListener(statusImageItemClickListener);
+        */
         /*
         Gallery gallery3 = (Gallery) findViewById(R.id.gallery3);
         gallery3.setAdapter(new ImageAdapter(this));
@@ -179,16 +181,90 @@ public class StatusFeed extends Activity implements Runnable{
         BindTopNav();
     }
     
+    @Override
+    public void onPause(){
+    	closeDialog();
+    	super.onPause();
+    	Log.d("StatusFeed", "onPause called");
+    	if(task != null){
+    		task.cancel(false);
+    		Log.d("StatusFeed", "Cancelled loadfeed task from pause");
+    	}
+    }
+    
+    @Override
+    public void onStop(){
+    	super.onStop();
+    	Log.d("StatusFeed", "onStop called");
+    }
+    
+    @Override
+    public void onDestroy(){
+    	super.onDestroy();
+    	Log.d("StatusFeed", "onDestroy called");
+    }
+    
     private OnItemClickListener statusImageItemClickListener = new OnItemClickListener() {
     	public void onItemClick(AdapterView parent, View v, int position, long id) {
     		//Toast.makeText(StatusFeed.this, "" + position, Toast.LENGTH_SHORT).show();
     		//Toast.makeText(StatusFeed.this, "" + id, Toast.LENGTH_SHORT).show();
+    		StatusFeedGalleryViewHolder holder = (StatusFeedGalleryViewHolder) v.getTag();
     		Intent i = new Intent(StatusFeed.this, StatusDetailActivity.class);				
 			i.putExtra("position", position);
+			if(holder != null){
+				if(holder.post != null){
+					i.putExtra("post_id", holder.post.getId());
+				}
+    		}
 			startActivity(i);
     	}
 	};
-    
+	private class LoadStatusFeed extends AsyncTask<Void, Integer, Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			AccountService.Login("bigfiche@fiche.com", "asdf");		
+			mPosts = PostService.GetLatestPosts();
+			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+			
+			SimpleCache.put(mPostsCacheKey, mPosts);
+			SimpleCache.put(mGroupCacheKey, mGroups);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			loadData();
+			closeDialog();
+		}
+		
+		@Override
+		protected void onCancelled(){
+			//closeDialog();
+			Log.d("StatusFeed", "OnCancelled, dismiss dialog");
+		}
+	}
+	
+	public void closeDialog(){
+		if(dialog != null){
+			dialog.dismiss();
+		}
+	}
+	
+	public void loadData(){
+		BindGroupsList();
+		Gallery gallery1 = (Gallery) findViewById(R.id.gallery1);
+        gallery1.setAdapter(new ImageAdapter(this));
+        gallery1.setOnItemClickListener(statusImageItemClickListener);
+        
+        Gallery gallery2 = (Gallery) findViewById(R.id.gallery2);
+        gallery2.setAdapter(new ImageAdapter(this));
+        gallery2.setOnItemClickListener(statusImageItemClickListener);
+	}
+	
+	static class StatusFeedGalleryViewHolder{
+		Post post;
+	}
+	
     public class ImageAdapter extends BaseAdapter {
     	int mGalleryItemBackground;
     	private Context mContext;
@@ -266,8 +342,24 @@ public class StatusFeed extends Activity implements Runnable{
 			return mPosts.get(position).getId();
 		}
 		
-		
-		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent){
+			Post post = (Post)getItem(position);
+			if(post == null){
+				return convertView;
+			}
+			
+			String url = post.getPhotoThumbUrl();
+			Drawable loader = mContext.getResources().getDrawable(R.drawable.loader);
+			WebImageView i = new WebImageView(mContext, url, loader, true);
+			convertView = i;
+			
+			StatusFeedGalleryViewHolder holder = new StatusFeedGalleryViewHolder();
+			holder.post = post;
+			convertView.setTag(holder);
+			return convertView;
+		}
+		/*
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView i = new ImageView(mContext);
@@ -294,7 +386,7 @@ public class StatusFeed extends Activity implements Runnable{
 			//i.setScaleType(ImageView.ScaleType.FIT_XY);
 			
 			return i;
-		}
+		}*/
     	
     }
     

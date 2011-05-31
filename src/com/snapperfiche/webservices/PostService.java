@@ -36,7 +36,7 @@ import com.snapperfiche.data.Tag;
 import com.snapperfiche.data.User;
 
 public class PostService extends BaseService {
-	private static BasicStatus NewPost(Enumerations.PostType postType, String caption, String imgUrl, Address address, int[] friends_ids, int[] tags_ids){
+	private static BasicStatus NewPost(Enumerations.PostType postType, String caption, String imgUrl, Address address, int[] friends_ids, int[] tags_ids, boolean isPrivate){
 		User currentUser = AccountService.getUser();
 		if(currentUser != null && address != null){
 			String tagsJsonString = "";
@@ -73,6 +73,7 @@ public class PostService extends BaseService {
 				String userId = String.valueOf(currentUser.getId());
 				String sLatitude = String.valueOf(latitude);
 				String sLongitude = String.valueOf(longitude);
+				String privacy = String.valueOf(isPrivate);
 				reqEntity.addPart(Constants.requestParameter_UserId, new StringBody(userId));
 		        reqEntity.addPart(Constants.requestParameter_Caption, new StringBody(caption));
 		        reqEntity.addPart(Constants.requestParameter_PostType, new StringBody(postType.value()));
@@ -81,6 +82,7 @@ public class PostService extends BaseService {
 		        reqEntity.addPart(Constants.requestParameter_Locality, new StringBody(locality));
 		        reqEntity.addPart(Constants.requestParameter_AdminArea, new StringBody(adminArea));
 		        reqEntity.addPart(Constants.requestParameter_CountryCode, new StringBody(countryCode));
+		        reqEntity.addPart(Constants.requestParameter_IsPrivate, new StringBody(privacy));
 		        if(!Utility.IsNullOrEmpty(tagsJsonString)){
 		        	reqEntity.addPart(Constants.requestParameter_Tags, new StringBody(tagsJsonString));
 		        }
@@ -125,15 +127,15 @@ public class PostService extends BaseService {
 		return BasicStatus.ERROR;
 	}
 	
-	public static BasicStatus Post(String caption, String imgUrl, Address address, int[] friends_ids, int[] tags_ids){
-		return NewPost(PostType.DEFAULT, caption, imgUrl, address, friends_ids, tags_ids);
+	public static BasicStatus Post(String caption, String imgUrl, Address address, int[] friends_ids, int[] tags_ids, boolean isPrivate){
+		return NewPost(PostType.DEFAULT, caption, imgUrl, address, friends_ids, tags_ids, isPrivate);
 	}
 	
-	public static BasicStatus AskQuestion(String question, String imgUrl, Address address, int[] friends_ids){
-		return NewPost(PostType.QUESTION, question, imgUrl, address, friends_ids, null);
+	public static BasicStatus AskQuestion(String question, String imgUrl, Address address, int[] friends_ids, boolean isPrivate){
+		return NewPost(PostType.QUESTION, question, imgUrl, address, friends_ids, null, isPrivate);
 	}
 	
-	public static BasicStatus AnswerQuestion(int questionId, String answer, String answerImgUrl, Address address, int[] friends_ids, int[] tags_ids){
+	public static BasicStatus AnswerQuestion(int questionId, String answer, String answerImgUrl, Address address, int[] friends_ids, int[] tags_ids, boolean isPrivate){
 		
 		User currentUser = AccountService.getUser();
 		if(currentUser != null && address != null && questionId > 0){
@@ -171,6 +173,7 @@ public class PostService extends BaseService {
 				String userId = String.valueOf(currentUser.getId());
 				String sLatitude = String.valueOf(latitude);
 				String sLongitude = String.valueOf(longitude);
+				String privacy = String.valueOf(isPrivate);
 				reqEntity.addPart(Constants.requestParameter_UserId, new StringBody(userId));
 		        reqEntity.addPart(Constants.requestParameter_Caption, new StringBody(answer));
 		        reqEntity.addPart(Constants.requestParameter_PostType, new StringBody(Enumerations.PostType.ANSWER.value()));
@@ -179,6 +182,7 @@ public class PostService extends BaseService {
 		        reqEntity.addPart(Constants.requestParameter_Locality, new StringBody(locality));
 		        reqEntity.addPart(Constants.requestParameter_AdminArea, new StringBody(adminArea));
 		        reqEntity.addPart(Constants.requestParameter_CountryCode, new StringBody(countryCode));
+		        reqEntity.addPart(Constants.requestParameter_IsPrivate, new StringBody(privacy));
 		        if(!Utility.IsNullOrEmpty(tagsJsonString)){
 		        	reqEntity.addPart(Constants.requestParameter_Tags, new StringBody(tagsJsonString));
 		        }
@@ -358,5 +362,95 @@ public class PostService extends BaseService {
 		}
 		
 		return questions;
+	}
+	
+	public static List<Post> GetAnswersForQuestion(int questionId){
+		List<Post> answers = new ArrayList<Post>();
+		User currentUser = AccountService.getUser();
+		if(currentUser != null && questionId > 0){
+			HttpGet getAnswers = new HttpGet(Utility.GetAnswersByQuestionUrl(questionId));
+			try {
+				HttpResponse response = GetHttpClient().execute(getAnswers);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					JsonElement answersJson = resultJson.get(Constants.jsonParameter_Answers);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					
+					if(status == Enumerations.BasicStatus.SUCCESS.value()){
+						Post[] answerPosts = gson.fromJson(answersJson, Post[].class);
+						answers = new ArrayList<Post>(Arrays.asList(answerPosts));
+					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+						
+					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+						
+					}else{ //error case
+						
+					}
+					
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return answers;
+	}
+	
+	public static List<Post> GetQuestionsFromFriends(int userId){
+		List<Post> questionsFromFriends = new ArrayList<Post>();
+		User currentUser = AccountService.getUser();
+		if(currentUser != null && userId > 0 && userId == currentUser.getId()){
+			HttpGet getQuestions = new HttpGet(Constants.GetQuestionsFromFriendsUrl);
+			try {
+				HttpResponse response = GetHttpClient().execute(getQuestions);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					JsonElement questionsJson = resultJson.get(Constants.jsonParameter_Questions);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					
+					if(status == Enumerations.BasicStatus.SUCCESS.value()){
+						Post[] answerPosts = gson.fromJson(questionsJson, Post[].class);
+						questionsFromFriends = new ArrayList<Post>(Arrays.asList(answerPosts));
+					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+						
+					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+						
+					}else{ //error case
+						
+					}
+					
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return questionsFromFriends;
 	}
  }
