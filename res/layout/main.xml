@@ -27,9 +27,4 @@
     	android:layout_height="wrap_content"
     	/>
     <Button android:layout_width="fill_parent" android:id="@+id/login_btn_signup" android:layout_height="wrap_content" android:text="@string/login_label_signup"></Button>
-    <ImageView
-    	android:id="@+id/img_web"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	/>
 </LinearLayout>

@@ -13,7 +13,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistrationActivity"
-				  android:label="@string/registration_name">
+				  android:label="@string/registration_name"
+				  android:windowSoftInputMode="adjustResize">
 		</activity>
 		<activity android:name=".StatusFeed"
 				  android:label="@string/statusfeed_name">

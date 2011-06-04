@@ -48,7 +48,7 @@ public class StatusFeed extends Activity{
 	List<Post> mPosts;
 	List<Group> mGroups;
 	Gallery g1, g2;
-	LoadStatusFeed task;	
+	LoadStatusFeed task;
 	
 	String mGroupCacheKey = "ck_StatusFeedActivity_mGroups";
 	String mPostsCacheKey = "ck_StatusFeedActivity_mPosts";
