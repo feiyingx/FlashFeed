@@ -16,6 +16,21 @@ public class Enumerations {
 		}
 	}
 	
+	public enum RegisterStatus{
+		SUCCESS(1),
+		FAILED_EXISTS(0),
+		ERROR(-1);
+		
+		final int value;
+		RegisterStatus(int val){
+			this.value = val;
+		}
+		
+		public int value(){
+			return value;
+		}
+	}
+	
 	public enum BasicStatus{
 		SUCCESS(1),
 		NO_RESULTS(0),

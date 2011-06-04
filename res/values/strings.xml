@@ -25,4 +25,11 @@
     <string name="btn_ask_question">Ask</string>
     <string name="post_detail_add_comment">Feed it</string>
     <string name="photo_confirm_tags">Tags</string>
+    <string name="error_req_fname">What is your first name?</string>
+    <string name="error_last_name">What is your last name?</string>
+    <string name="error_req_email">Please enter your favorite email.</string>
+    <string name="error_req_pass">Please enter a password, make it long and hard to guess.</string>
+    <string name="error_email_dup">Someone is using this email already.</string>
+    <string name="error_pass_min_length">Aw your password is too short. (That\'s what she..)</string>
+    <string name="error_email_format">Invalid email</string>
 </resources>

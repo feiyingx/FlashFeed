@@ -42,40 +42,12 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         
         View signinBtn = findViewById(R.id.login_btn_signup);
         signinBtn.setOnClickListener(this);
-        /*       
-        ImageView i = (ImageView) findViewById(R.id.img_web);
-        Bitmap imgBitmap = Utility.GetImageBitmapFromUrl("http://192.168.1.4:3000/images/mine.jpg");
-        i.setImageBitmap(imgBitmap);
-        */
-        
+
+        /*
         Intent i = new Intent(this, StatusFeed.class);
 		startActivity(i);
-        
-        /*
-        File cacheDir = myContext.getCacheDir();
-        if(new File(cacheDir, "mine.jpg").exists()){
-        	System.out.println("yay exists");
-        }else{
-        	Bitmap imgBitmap2 = Utility.GetImageBitmapFromUrl("http://192.168.1.4:3000/images/mine.jpg");
-        	FileOutputStream fos = null;
-        	try {
-				fos = new FileOutputStream(new File(cacheDir, "mine.jpg"));
-				imgBitmap2.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-	        	fos.flush();
-	        	fos.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	
-        }
-        
-        boolean cachedPhotoExists = (new File(cacheDir, "mine.jpg")).exists();
-        System.out.println("done");
         */
+        
         //Intent i = new Intent(this, TestHttpRequest.class);
         //startActivity(i);
 		/*

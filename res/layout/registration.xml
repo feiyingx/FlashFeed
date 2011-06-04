@@ -4,66 +4,34 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  
-  <EditText 
-  	android:id="@+id/reg_email"
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	android:hint="@string/email"
-  	android:maxLength="25"
-  	/> 
-  <EditText 
-  	android:id="@+id/reg_first_name"
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	android:hint="@string/first_name"
-  	android:maxLength="25"
-  	/>
-  <EditText 
-  	android:id="@+id/reg_last_name"
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	android:hint="@string/last_name"
-  	android:maxLength="25"
-  	/>
-  	
-  <LinearLayout
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:orientation="horizontal">
-	  <TextView  
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="@string/sex"
-	    />
-	  <RadioGroup
-	  	android:layout_width="fill_parent"
-	  	android:layout_height="wrap_content"
-	  	android:orientation="horizontal">
-	  	<RadioButton android:id="@+id/radio_male"
-	  		android:layout_width="wrap_content"
-	  		android:layout_height="wrap_content"
-	  		android:text="Male" />
-	  	<RadioButton android:id="@+id/radio_female"
-	  		android:layout_width="wrap_content"
-	  		android:layout_height="wrap_content"
-	  		android:text="Female" />
-	  	</RadioGroup>
-  </LinearLayout>
-  
-  <LinearLayout
-	  android:layout_width="wrap_content"
-	  android:layout_height="wrap_content"
-	  android:orientation="horizontal">
-	  <TextView
-	  	android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content"
-	    android:text="@string/DOB"
-	    />
-	  <DatePicker
-	  	android:id="@+id/date_dob"
-	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content" />
-  </LinearLayout>
+    <ScrollView android:layout_height="match_parent" 
+    android:id="@+id/scrollView1" 
+    android:layout_width="match_parent"
+    android:layout_weight="1"
+    android:scrollbarStyle="outsideInset">
+        <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical" android:id="@+id/reg_linlay_errors">
+                <TextView android:text="@string/error_req_fname" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtFnameReq"></TextView>
+                <TextView android:text="@string/error_last_name" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtLnameReq"></TextView>
+                <TextView android:text="@string/error_req_email" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtEmailReq"></TextView>
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/reg_txtEmailFormat" android:visibility="gone" android:text="@string/error_email_format"></TextView>
+                <TextView android:text="@string/error_req_pass" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtPassReq"></TextView>
+                <TextView android:text="@string/error_email_dup" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtEmailExists"></TextView>
+                <TextView android:text="@string/error_pass_min_length" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtPassShort"></TextView>
+            </LinearLayout>
+            <EditText android:layout_height="wrap_content" android:id="@+id/reg_first_name" android:maxLength="25" android:layout_width="fill_parent" android:hint="@string/first_name" android:inputType="text|textPersonName"></EditText>
+            <EditText android:inputType="textPersonName" android:layout_height="wrap_content" android:id="@+id/reg_last_name" android:maxLength="25" android:layout_width="fill_parent" android:hint="@string/last_name"></EditText>
+            <EditText android:inputType="textEmailAddress" android:layout_height="wrap_content" android:id="@+id/reg_email" android:maxLength="25" android:layout_width="fill_parent" android:hint="@string/email"></EditText>
+            <EditText android:layout_height="wrap_content" android:id="@+id/reg_etxt_username" android:layout_width="match_parent" android:hint="Cool Alias"></EditText>
+            <EditText android:inputType="textVisiblePassword" android:layout_height="wrap_content" android:id="@+id/reg_etxt_password" android:layout_width="match_parent" android:hint="Password"></EditText>
+        </LinearLayout>
+    </ScrollView>
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    	<Button android:layout_height="wrap_content" android:id="@+id/reg_btn_register" 
+    	android:layout_width="match_parent" android:text="Let's go!"
+    	android:layout_alignParentTop="true"></Button>
+    </RelativeLayout>
   
 </LinearLayout>

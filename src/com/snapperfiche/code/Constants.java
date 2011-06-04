@@ -10,6 +10,7 @@ public class Constants {
 	public static final String LoginUrl = BaseUrl + "sessions.json";
 	public static final String LogoutUrl = BaseUrl + "signout.json";
 	public static final String IsAuthenticatedUrl = BaseUrl + "sessions/authenticated.json";
+	public static final String RegisterUrl = BaseUrl + "users.json";
 	
 	/* Post urls */
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";
