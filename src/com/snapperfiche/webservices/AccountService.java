@@ -27,6 +27,7 @@ import com.google.gson.JsonParser;
 import com.snapperfiche.code.Constants;
 import com.snapperfiche.code.Enumerations;
 import com.snapperfiche.code.Enumerations.LoginStatus;
+import com.snapperfiche.code.Enumerations.RegisterStatus;
 import com.snapperfiche.code.Utility;
 import com.snapperfiche.data.User;
 
@@ -133,5 +134,59 @@ public class AccountService extends BaseService {
 		}
 		
 		return isAuthenticated;
+	}
+	
+	public static RegisterStatus Register(String username, String password, String firstName, String lastName, String alias){
+		HttpPost post = new HttpPost(Constants.RegisterUrl);
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("user[email]", username));
+		nvps.add(new BasicNameValuePair("user[password]", password));
+		nvps.add(new BasicNameValuePair("user[password_confirmation]", password));
+		nvps.add(new BasicNameValuePair("user[alias]", alias));
+		nvps.add(new BasicNameValuePair("user[accounttype]", "default"));
+		
+		try {
+			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			HttpResponse registerResponse = GetHttpClient().execute(post);
+			HttpEntity entity = registerResponse.getEntity();
+			if(entity != null){				
+				InputStream stream = entity.getContent();
+				String jsonResultString = Utility.ConvertStreamToString(stream);
+				JsonParser parser = new JsonParser();
+				JsonElement resultElement = parser.parse(jsonResultString);
+				JsonObject resultJson = resultElement.getAsJsonObject();
+				JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+				JsonElement userJson = resultJson.get(Constants.jsonParameter_User);
+				
+				Gson gson = new Gson();
+				int status = gson.fromJson(statusJson, int.class);
+				if(status == Enumerations.RegisterStatus.SUCCESS.value()){
+					User currentUser = gson.fromJson(userJson, User.class);
+					setUser(currentUser);
+					List<Cookie> cookies = GetHttpClient().getCookieStore().getCookies();
+					return RegisterStatus.SUCCESS;
+				}else if(status == Enumerations.RegisterStatus.FAILED_EXISTS.value()){
+					return RegisterStatus.FAILED_EXISTS;
+				}
+				
+				entity.consumeContent();
+			}
+			
+			return RegisterStatus.ERROR;
+			
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return RegisterStatus.ERROR;
 	}
 }

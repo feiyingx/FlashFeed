@@ -12,13 +12,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.Camera.AutoFocusCallback;
+import android.hardware.Camera.Size;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -34,6 +38,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,16 +48,30 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.snapperfiche.mobile.custom.TriToggleButton;
+
 public class CameraActivity extends Activity {
+	private final String DEBUGTAG = "flashfeed.camera";
 	private SurfaceView preview=null;
 	private SurfaceHolder previewHolder=null;
+	boolean mPreviewRunning = false;
 	private Camera camera=null;
 	private LayoutInflater mInflater = null;
-	Button takePictureBtn;
 	LocationManager locMgr;
 	String locProvider;
 	private int mOrientation;
 	OrientationEventListener mOrientationEventListener;
+	
+	// For motion detection
+	private SensorManager mSensorMgr;
+	private Sensor mAccelerometer;
+	private long lastUpdate = -1;
+	private float x, y, z;
+	private float last_x, last_y, last_z, last_speed;
+	private boolean performAutoFocus;
+	private static final int SHAKE_THRESHOLD = 40;
+	private static final int SPEED_THRESHOLD = 5;
+	private SensorEventListener mSensorEventListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,13 +82,12 @@ public class CameraActivity extends Activity {
 		previewHolder.addCallback(surfaceCallback);
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
+		////// Orientation changes //////
 		mOrientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
 
 			@Override
 			public void onOrientationChanged(int orientation) {
 				// TODO Auto-generated method stub
-				//TextView top = (TextView) findViewById(R.id.camera_top);
-				//top.setText(String.valueOf(orientation));
 				setDisplayOrientation(orientation);
 			}
 		};
@@ -81,23 +100,75 @@ public class CameraActivity extends Activity {
 			//Toast.makeText(this, "Can't DetectOrientation", Toast.LENGTH_LONG).show();
 			finish();
 		}
+		/////////////////////////////////
 
+		////// Location updates ////////
 		locProvider = LocationManager.NETWORK_PROVIDER;
 		locMgr = (LocationManager)getSystemService(LOCATION_SERVICE);
 		locMgr.requestLocationUpdates(locProvider, 0, 0, onLocationChange);
+		////////////////////////////////
+		
+		////// Motion detection /////////
+		mSensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
+		mAccelerometer = mSensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mSensorEventListener = new SensorEventListener() {
+			
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				// TODO Auto-generated method stub
+				if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+					//Toast.makeText(CameraActivity.this, "Type: Accelerometer", Toast.LENGTH_LONG).show();
+					TextView txtSpeed = (TextView) findViewById(R.id.speed_test);
+					String sSpeed = String.format("(%f,%f,%f", event.values[0],event.values[1],event.values[2]);
+					txtSpeed.setText(String.valueOf(sSpeed));
+					long currentTime = System.currentTimeMillis();
+					// only allow one update every 100ms
+					if ((currentTime - lastUpdate) > 100) {
+						long diffTime = (currentTime - lastUpdate);
+						lastUpdate = currentTime;
+						
+						x = event.values[0];
+						y = event.values[1];
+						z = event.values[2];
+						
+						float speed = Math.abs(x+y+z - last_x - last_y - last_z) / diffTime * 10000;
+						//txtSpeed.setText(String.valueOf(speed));
+						//if (speed > SHAKE_THRESHOLD) {
+						if (speed > SHAKE_THRESHOLD)
+							performAutoFocus = true;
+						
+						if (speed < SPEED_THRESHOLD && last_speed < SPEED_THRESHOLD && performAutoFocus) {
+							Toast.makeText(CameraActivity.this, String.format("shake detected with speed: %f\nlastspeed: %f", speed,last_speed), Toast.LENGTH_SHORT).show();
+							camera.autoFocus(new AutoFocusCallback() {
+								public void onAutoFocus(boolean arg0, Camera arg1) {
+									
+								};
+							});
+							performAutoFocus = false;
+						}
+						last_x = x;
+						last_y = y;
+						last_z = z;
+						last_speed = speed;
+					}
+				}
+			}
+			
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		mSensorMgr.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+		///////////////////////////////////////
 		
 		mOrientation = getWindowManager().getDefaultDisplay().getOrientation();
-		//orientation = getWindowManager().getDefaultDisplay().getRotation();
 
 		mInflater = LayoutInflater.from(this);
 		View overView = mInflater.inflate(R.layout.camera_test_overlay, null);
 		this.addContentView(overView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-		Toast
-		.makeText(CameraActivity.this, String.format("orientation: %d", mOrientation),
-				Toast.LENGTH_LONG)
-				.show();
 
 		setCameraOverlay();
 	}
@@ -127,8 +198,92 @@ public class CameraActivity extends Activity {
 		top.setLayoutParams(sideLayoutParams);
 		cameraOverlay.setLayoutParams(cameraLayoutParams);
 		bottom.setLayoutParams(sideLayoutParams);
+		
+		final TriToggleButton flashButton = (TriToggleButton)findViewById(R.id.ttbFlash);
+		//Toast.makeText(CameraActivity.this, "flash state: " + flashButton.getState(), Toast.LENGTH_SHORT).show();
+		
+		// Flash Button
+		flashButton.setText("flash auto");
+		flashButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				int state = flashButton.getState();
+				//Toast.makeText(CameraActivity.this, "flash state: " + flashButton.getState(), Toast.LENGTH_SHORT).show();
+				Camera.Parameters parameters = camera.getParameters();
+				try {
+					switch (state) {
+					case 0:
+						flashButton.setText("flash auto");
+						parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+						break;
+					case 1:
+						flashButton.setText("flash on");
+						parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+						break;
+					case 2:
+						flashButton.setText("flash off");
+						parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+						break;
+					default:
+						break;							
+					}
+					camera.setParameters(parameters);
+				} catch (Exception e) {
+					Log.e(DEBUGTAG, "ERROR:setCameraOverlay:flashButton:onClick()::  " + e.getMessage());
+				}
+			}
+		});
+		
+		//Auto Focus Button
+		Button btnAutoFocus = (Button) findViewById(R.id.btnAutoFocus);
+		btnAutoFocus.setOnClickListener(new OnClickListener(){
 
+			@Override
+			public void onClick(View v) {
+				//start auto focus
+				camera.autoFocus(new AutoFocusCallback() {
+					public void onAutoFocus(boolean arg0, Camera arg1) {
+						Toast
+						.makeText(CameraActivity.this, String.format("autofocusing: %b", arg0),
+								Toast.LENGTH_LONG)
+								.show();
+					};
+				});
+			}
+        	
+        });
+		
+		//Snap Button
+		Button btnSnap = (Button) findViewById(R.id.btnSnap);		
+		btnSnap.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				/*Toast
+				.makeText(CameraActivity.this, "longclick",
+						Toast.LENGTH_LONG)
+						.show();*/
+				// TODO Auto-generated method stub
+				camera.autoFocus(new AutoFocusCallback() {
+					public void onAutoFocus(boolean arg0, Camera arg1) {
+						
+					};
+				});
+				return false;
+			}
+		});
+		btnSnap.setOnClickListener(new OnClickListener(){
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				takePicture();
+			}
+        	
+        });
+        
 		/*Toast
 		.makeText(CameraActivity.this, String.format("width: %d, height: %d, orientation: %d", width, height, mOrientation),
 				Toast.LENGTH_LONG)
@@ -192,7 +347,7 @@ public class CameraActivity extends Activity {
 			//required for interface
 		}
 	};
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode==KeyEvent.KEYCODE_CAMERA ||
@@ -228,21 +383,24 @@ public class CameraActivity extends Activity {
 				int height) {
 			Log.e("flashfeed.camera", "surfaceChanged");
 			Log.e("flashfeed.camera", "surfaceChanged: {width=" + width + ", height=" + height + "}");
-			Toast
+			
+			if(mPreviewRunning){
+				camera.stopPreview();
+				mPreviewRunning = false;
+			}
+			
+			/*Toast
 			.makeText(CameraActivity.this, String.format("(surfaceChanged) width: %d, height: %d", width, height),
 					Toast.LENGTH_LONG)
-					.show();		
+					.show();*/
 
 			Camera.Parameters parameters=camera.getParameters();
 
-			//int orientation = getResources().getConfiguration().orientation;
 			List<Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
 			List<Size> supportedPictureSizes = parameters.getSupportedPictureSizes();
 
 			Size optimizedPreviewSize, optimizedPictureSize;
 			
-			//optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, width, height);
-			//optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, width, height);
 			optimizedPreviewSize = getOptimalPreviewSize(supportedPreviewSizes, height, width);
 			optimizedPictureSize = getOptimalPictureSize(supportedPictureSizes, height, width);
 
@@ -256,9 +414,29 @@ public class CameraActivity extends Activity {
 			parameters.setPictureSize(optimizedPictureSize.width, optimizedPictureSize.height);
 			parameters.setPictureFormat(PixelFormat.JPEG);
 			parameters.setRotation(90);
+			
+			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+			//parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+			
+			//parameters.set("camera-id", 2);
+			//parameters.set("cam-mode", 1);
+			/*camera.stopPreview();
+			camera.release();
+			camera = null;
+			
+			camera = Camera.open();*/
+			
+			
+			/*Toast
+			.makeText(CameraActivity.this, String.format("autofocus: %s", parameters.getFocusMode()),
+					Toast.LENGTH_LONG)
+					.show();*/
+			
 			camera.setParameters(parameters);
 			camera.startPreview();
+			mPreviewRunning = true;
 		}
+		
 		public void surfaceDestroyed(SurfaceHolder holder) {
 			Log.e("camera_test", "surfaceDestroyed");
 			camera.stopPreview();
@@ -287,14 +465,8 @@ public class CameraActivity extends Activity {
 			int height = picture.getHeight();
 			
 			boolean isOutputPortrait = width < height;
-
-			//boolean isOutputPortrait = width < height;
-			//int offset = Math.abs((width-height))/2;
 			
 			int targetDim = 600;
-			//float scaleFactor = (float)targetDim / height;
-			//int scaledWidth = (int)(width*scaleFactor);
-			//float scaleFactor = 1;
 			int longDim = 0, shortDim = 0;
 			int x = 0, y = 0;		
 
@@ -317,22 +489,6 @@ public class CameraActivity extends Activity {
 				y = 0;
 			}
 			
-			// HTC //
-			/*if (isOutputPortrait) {
-				longDim = height;
-				shortDim = width;
-				scaleFactor = (float)targetDim / shortDim;
-				scaledLongDim = (int)(longDim*scaleFactor);
-				x = 0;
-				y = (scaledLongDim-targetDim)/2;
-			} else {
-				longDim = width;
-				shortDim = height;
-				scaleFactor = (float)targetDim / shortDim;
-				scaledLongDim = (int)(longDim*scaleFactor);
-				x = (scaledLongDim-targetDim)/2;
-				y = 0;
-			}*/
 			Log.e("flashfeed.camera", String.format("(showPicture) w: %d, h: %d, x: %d", width, height, (scaledLongDim-targetDim)/2));
 			Log.e("flashfeed.camera", String.format("(scaled) scaleFactor: %f, scaledHeight %f, (int): %d", scaleFactor, (width*scaleFactor), (int)(width*scaleFactor)));
 			/*Toast
@@ -441,10 +597,9 @@ public class CameraActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		Toast.makeText(CameraActivity.this, "orientation change",Toast.LENGTH_LONG).show();
+		//Toast.makeText(CameraActivity.this, "orientation change",Toast.LENGTH_LONG).show();
 
 		setCameraOverlay();
-		//setCameraDisplayOrientation();
 	}
 
 	/*private void onDestroy() {
@@ -452,11 +607,34 @@ public class CameraActivity extends Activity {
 		mOrientationEventListener.disable();
 		locMgr.removeUpdates(onLocationChange);
 	}*/
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Toast.makeText(CameraActivity.this, "onResume",Toast.LENGTH_LONG).show();
+		if (mOrientationEventListener.canDetectOrientation()){
+			mOrientationEventListener.enable();
+		}
+		locMgr.requestLocationUpdates(locProvider, 0, 0, onLocationChange);
+		mSensorMgr.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Toast.makeText(CameraActivity.this, "onPause",Toast.LENGTH_LONG).show();
+		mOrientationEventListener.disable();
+		locMgr.removeUpdates(onLocationChange);
+		mSensorMgr.unregisterListener(mSensorEventListener);
+	}
 
 	protected void onDestroy() {
 		super.onDestroy();
-
+		Toast.makeText(CameraActivity.this, "onDestroy",Toast.LENGTH_LONG).show();
 		locMgr.removeUpdates(onLocationChange);
+		mPreviewRunning = false;
 	}
 
 	Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
