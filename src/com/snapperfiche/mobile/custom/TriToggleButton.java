@@ -33,7 +33,7 @@ public class TriToggleButton extends Button {
 		super(context);
 		
 		_state = 0;
-		this.setText("1");
+		//this.setText("1");
 	}
 	
 	public TriToggleButton(Context context, AttributeSet attrs)
@@ -41,7 +41,7 @@ public class TriToggleButton extends Button {
 		super(context, attrs);
 		
 		_state = 0;
-		this.setText("1");
+		//this.setText("1");
 	}
 	
 	public TriToggleButton(Context context, AttributeSet attrs, int defStyle)
@@ -49,7 +49,7 @@ public class TriToggleButton extends Button {
 		super(context, attrs, defStyle);
 		
 		_state = 0;
-		this.setText("1");
+		//this.setText("1");
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class TriToggleButton extends Button {
 		if((state > -1) && (state < 3))
 		{
 			_state = state;
-			setButtonText();
+			//setButtonText();
 		}
 	}
 	
@@ -99,7 +99,7 @@ public class TriToggleButton extends Button {
 			_state = 0;
 		}
 		
-		setButtonText();
+		//setButtonText();
 	}
 	
 	private void setButtonText()

@@ -55,7 +55,7 @@ public class QuestionActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent i = new Intent(mContext, CameraTest.class);
+				Intent i = new Intent(mContext, CameraActivity.class);
 				startActivity(i);
 			}
         });
