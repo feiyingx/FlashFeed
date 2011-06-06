@@ -42,10 +42,6 @@
 			android:configChanges="keyboardHidden|orientation"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		</activity>
-		<activity android:name=".CameraView"
-			android:configChanges="keyboardHidden|orientation"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-		</activity>
 		<activity android:name=".ProfileFeedActivity"
 				  android:label="@string/activity_profilefeed_name">
 		</activity>
