@@ -75,8 +75,8 @@ public class CameraActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.camera_test);
-		preview = (SurfaceView) findViewById(R.id.camera_test);
+		setContentView(R.layout.camera_surface);
+		preview = (SurfaceView) findViewById(R.id.camera_surface);
 		previewHolder = preview.getHolder();
 		previewHolder.addCallback(surfaceCallback);
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
