@@ -22,7 +22,7 @@
 		<activity android:name=".StatusDetailActivity"
 				  android:label="@string/statusdetail_name">
 	  	</activity>
-		<activity android:name=".StatusFeed"
+		<activity android:name=".StatusFeedActivity"
 				  android:label="@string/statusfeed_name">
 		</activity>
 		<activity android:name=".PhotoConfirm"

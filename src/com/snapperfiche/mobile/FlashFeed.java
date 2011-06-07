@@ -47,7 +47,11 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         Intent i = new Intent(this, StatusFeed.class);
 		startActivity(i);
         */
-        
+        AccountService.Login("bigfiche@fiche.com", "asdf");
+		Intent i = new Intent(this, StatusFeedActivity.class);
+		startActivity(i);
+		
+		
         //Intent i = new Intent(this, TestHttpRequest.class);
         //startActivity(i);
 		/*
@@ -67,8 +71,8 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
     		thread.start();
     		/*
     		Intent j = new Intent(myContext, StatusFeed.class);
-    		startActivity(j);
-    		break;*/
+    		startActivity(j);*/
+    		break;
     	case R.id.login_btn_signup:
     		Intent i = new Intent(this, RegistrationActivity.class);
     		startActivity(i);
@@ -95,7 +99,7 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
 			*/
 			if(AccountService.IsAuthenticated()){
 				dialog.cancel();
-	    		Intent i = new Intent(myContext,  StatusFeed.class);
+	    		Intent i = new Intent(myContext,  StatusFeedActivity.class);
 	    		startActivity(i);
 	    		Toast.makeText(FlashFeed.this, "Welcome ^^", Toast.LENGTH_LONG).show();
 			}else{

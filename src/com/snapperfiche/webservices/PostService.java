@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class PostService extends BaseService {
 				String userId = String.valueOf(currentUser.getId());
 				String sLatitude = String.valueOf(latitude);
 				String sLongitude = String.valueOf(longitude);
-				String privacy = String.valueOf(isPrivate);
+				String privacy = isPrivate ? "1" : "0";
 				reqEntity.addPart(Constants.requestParameter_UserId, new StringBody(userId));
 		        reqEntity.addPart(Constants.requestParameter_Caption, new StringBody(caption));
 		        reqEntity.addPart(Constants.requestParameter_PostType, new StringBody(postType.value()));
@@ -452,5 +454,65 @@ public class PostService extends BaseService {
 			}
 		}
 		return questionsFromFriends;
+	}
+	
+	public static String getCacheKey_GetGlobalFeed(int daysAgo){
+		SimpleDateFormat dtFormat = new SimpleDateFormat("MM_dd_yyyy");
+		return "GetGloablFeed_" + dtFormat.format(new Date()) + "_" + String.valueOf(daysAgo);
+	}
+	
+	public static List<Post> GetGlobalFeed(int daysAgo, boolean forceCacheRefresh){
+		List<Post> posts = new ArrayList<Post>();
+		if(AccountService.getUser() != null){
+			SimpleDateFormat dtFormat = new SimpleDateFormat("MM_dd_yyyy");
+			String cacheKey = getCacheKey_GetGlobalFeed(daysAgo);
+			Object cacheData = SimpleCache.get(cacheKey);
+			if(!forceCacheRefresh && cacheData != null){
+				posts = (List<Post>)cacheData;
+			}else{
+				String url = Utility.GetGlobalFeedByDayUrl(daysAgo);
+				if(!Utility.IsNullOrEmpty(url)){
+					HttpGet getGlobalFeed = new HttpGet(url);
+					try {
+						HttpResponse response = GetHttpClient().execute(getGlobalFeed);
+						HttpEntity entity = response.getEntity();
+						if(entity != null){
+							InputStream stream = entity.getContent();
+							String jsonResultString = Utility.ConvertStreamToString(stream);
+							entity.consumeContent();
+							
+							JsonParser parser = new JsonParser();
+							JsonElement resultElement = parser.parse(jsonResultString);
+							JsonObject resultJson = resultElement.getAsJsonObject();
+							JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+							JsonElement postsJson = resultJson.get(Constants.jsonParameter_Posts);
+							
+							Gson gson = new Gson();
+							int status = gson.fromJson(statusJson, int.class);
+							
+							if(status == Enumerations.BasicStatus.SUCCESS.value()){
+								Post[] feed = gson.fromJson(postsJson, Post[].class);
+								posts = new ArrayList<Post>(Arrays.asList(feed));
+								SimpleCache.put(cacheKey, posts);
+							}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+								
+							}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+								
+							}else{ //error case
+								
+							}
+							
+						}
+					} catch (ClientProtocolException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return posts;
 	}
  }

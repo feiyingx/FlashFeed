@@ -226,8 +226,8 @@ public class StatusFeed extends Activity{
 			mPosts = PostService.GetLatestPosts();
 			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
 			
-			SimpleCache.put(mPostsCacheKey, mPosts);
-			SimpleCache.put(mGroupCacheKey, mGroups);
+			//SimpleCache.put(mPostsCacheKey, mPosts);
+			//SimpleCache.put(mGroupCacheKey, mGroups);
 			return null;
 		}
 		

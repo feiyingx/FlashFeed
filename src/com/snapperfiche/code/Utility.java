@@ -138,4 +138,13 @@ public class Utility {
 		url = Constants.GetCommentsByPost_Format.replace(":post_id", String.valueOf(postId));
 		return url;
 	}
+	
+	public static String GetGlobalFeedByDayUrl(int daysAgo){
+		String url = "";
+		if(daysAgo < 0)
+			return url;
+		
+		url = Constants.GetGloablFeed_Format.replace(":days_ago", String.valueOf(daysAgo));
+		return url;
+	}
 }
