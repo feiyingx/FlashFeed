@@ -46,12 +46,11 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         /*
         Intent i = new Intent(this, StatusFeed.class);
 		startActivity(i);
-        */
+		*/
+
         AccountService.Login("bigfiche@fiche.com", "asdf");
 		Intent i = new Intent(this, StatusFeedActivity.class);
 		startActivity(i);
-		
-		
         //Intent i = new Intent(this, TestHttpRequest.class);
         //startActivity(i);
 		/*

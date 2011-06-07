@@ -44,7 +44,7 @@ public class ProfileFeedActivity extends Activity
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//Intent i = new Intent(v.getContext(), CameraView.class);
-				Intent i = new Intent(v.getContext(), CameraTest.class);
+				Intent i = new Intent(v.getContext(), CameraActivity.class);
 				startActivity(i);
 			}
         	
