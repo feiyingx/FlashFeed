@@ -14,7 +14,7 @@ public class Post {
 	private String photo_file_name;
 	private String caption;
 	private String created_at;
-	private int is_private; //0 if public, 1 if private
+	private boolean is_private;
 	
 	public Post() {}
 	
@@ -63,6 +63,6 @@ public class Post {
 	}
 	
 	public boolean getIsPrivate(){
-		return is_private == 1;
+		return is_private;
 	}
 }

@@ -26,6 +26,7 @@ import org.apache.http.protocol.HttpContext;
 
 import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -154,8 +155,8 @@ public class PhotoConfirm extends Activity {
 			@Override
 			public void onClick(View v) {
 				BasicStatus status = PostService.Post(etxtCaption.getText().toString(), cameraImageUrl, addr, null, null, false);
-				
-				Intent i = new Intent(v.getContext(), StatusFeed.class);
+				SimpleCache.remove(PostService.getCacheKey_GetGlobalFeed(0));
+				Intent i = new Intent(v.getContext(), StatusFeedActivity.class);
 				i.putExtra("reloadFeed", true);
 				startActivity(i);
 				

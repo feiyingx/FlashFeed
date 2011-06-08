@@ -14,10 +14,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,6 +30,11 @@ import android.widget.TextView;
 
 public class QuestionActivity extends Activity {
 	Context mContext = this;
+	AutoCompleteTextView acTxtQuestion;
+	static final String[] colPresetQuestions = {
+		"What are you doing?", "Who are you with?", "Where are you?", "What are you wearing?",
+		"What are you drinking?", "What are you eating?"
+	};
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +58,10 @@ public class QuestionActivity extends Activity {
         spec.setContent(R.id.questions_global);
         spec.setIndicator("Global");
         tabs.addTab(spec);
+        
+        //find controls
+        acTxtQuestion = (AutoCompleteTextView) findViewById(R.id.question_actxt_ask_question);
+        acTxtQuestion.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, colPresetQuestions));
         
         Button btnAskQuestion = (Button) findViewById(R.id.btn_ask_question);
         btnAskQuestion.setOnClickListener(new OnClickListener(){

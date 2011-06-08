@@ -22,6 +22,7 @@ public class Constants {
 	public static final String NewQuestion = BaseUrl + "questions.json";
 	public static final String GetAnswersUrl_Format = BaseUrl + "post/:id/answers.json";
 	public static final String GetQuestionsFromFriendsUrl = BaseUrl + "questions/friends.json";
+	public static final String GetGloablFeed_Format = BaseUrl + "posts/global/:days_ago.json";
 	
 	/* Comment urls */
 	public static final String NewComment_Format = BaseUrl + "comments/new/:post_id.json";
