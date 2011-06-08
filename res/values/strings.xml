@@ -23,6 +23,7 @@
     <string name="btn_status_feed_add_group">+</string>
     <string name="btn_add_group_confirm">Add</string>
     <string name="btn_ask_question">Ask</string>
+    <string name="btn_snap">Snap</string>
     <string name="post_detail_add_comment">Feed it</string>
     <string name="photo_confirm_tags">Tags</string>
     <string name="error_req_fname">What is your first name?</string>

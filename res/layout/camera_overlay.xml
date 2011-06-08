@@ -22,23 +22,6 @@
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/ttbFlash">
 		</com.snapperfiche.mobile.custom.TriToggleButton>
-		
-		<Button
-		android:id="@+id/btnAutoFocus"
-		android:text="Auto Focus"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_toRightOf="@+id/ttbTimer">
-		</Button>
-		
-		<TextView 
-		android:id="@+id/speed_test"
-	  	android:text="speed"
-	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content"
-	  	android:layout_toRightOf="@id/btnAutoFocus"
-	  	android:textColor="#000000"
-	  	/>
  		
 		<!-- <ImageView
 		android:id="@+id/fr"
@@ -50,14 +33,28 @@
 	  	android:layout_alignParentTop="true"
 	  	/> -->
  	</RelativeLayout> 
-
-	<TextView 
-	android:id="@+id/cameraview_overlay"
-  	android:text="camera"
+ 	
+ 	<LinearLayout
+ 	android:id="@+id/cameraview_overlay"
   	android:background="@android:color/transparent"
   	android:layout_width="0dp"
-  	android:layout_height="0dp"
-  	/>
+  	android:layout_height="0dp">
+  		<ImageView
+		android:id="@+id/img_camera_cursor"
+	  	android:visibility="invisible"
+	  	android:src="@drawable/camera_cursor"
+	  	android:layout_width="match_parent"
+	  	android:layout_height="wrap_content"
+	  	android:layout_gravity="center"
+	  	/>
+  	</LinearLayout>
+
+<!--	<TextView -->
+<!--	android:id="@+id/cameraview_overlay"-->
+<!--  	android:background="@android:color/transparent"-->
+<!--  	android:layout_width="0dp"-->
+<!--  	android:layout_height="0dp"-->
+<!--  	/>-->
   	
   	<RelativeLayout
  	android:id="@+id/camera_bottom"
@@ -69,7 +66,7 @@
   			android:id="@+id/btnSnap"
   			android:layout_width="match_parent"
   			android:layout_height="match_parent"
-  			android:text="Snap!"
+  			android:text="@string/btn_snap"
   			/>
  		
 		<!-- <ImageView

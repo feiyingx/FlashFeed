@@ -14,20 +14,22 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
+import android.hardware.SensorManager;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.Size;
-import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -44,7 +46,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.snapperfiche.mobile.custom.TriToggleButton;
@@ -56,14 +57,22 @@ public class CameraActivity extends Activity {
 	boolean mPreviewRunning = false;
 	private Camera camera = null;
 	private LayoutInflater mInflater = null;
+	private ImageView cameraCursor;
+	private TriToggleButton timerButton;
+	private Button snapButton;
 	LocationManager locMgr;
 	String locProvider;
 	private int mOrientation;
 	OrientationEventListener mOrientationEventListener;
 	private String mFlashMode;
 	private int mTimerDuration;
+	private Handler mHandler = new Handler();
+	private long mStartTime;
+	private boolean isTimerRunning = false;
+	private boolean isTakingPicture = false;
+	private boolean isAutoFocusing = false;
 
-	// For motion detection
+	// For motion detection - May finish implementation later
 	/*
 	 * private SensorManager mSensorMgr; private Sensor mAccelerometer; private
 	 * long lastUpdate = -1; private float x, y, z; private float last_x,
@@ -168,7 +177,8 @@ public class CameraActivity extends Activity {
 		LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.ll_camera_overlay);
 		RelativeLayout top = (RelativeLayout) findViewById(R.id.camera_top);
 		RelativeLayout bottom = (RelativeLayout) findViewById(R.id.camera_bottom);
-		TextView cameraOverlay = (TextView) findViewById(R.id.cameraview_overlay);
+		LinearLayout cameraOverlay = (LinearLayout) findViewById(R.id.cameraview_overlay);
+		cameraCursor = (ImageView) findViewById(R.id.img_camera_cursor);  
 
 		int sideLengths = (int) (Math
 				.ceil((double) (Math.abs(width - height)) / 2));
@@ -182,6 +192,16 @@ public class CameraActivity extends Activity {
 		cameraOverlay.setLayoutParams(cameraLayoutParams);
 		bottom.setLayoutParams(sideLayoutParams);
 		
+		// Click camera screen to focus
+		cameraOverlay.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(CameraActivity.this, "camera overlay click", Toast.LENGTH_LONG);
+				focusCamera();
+			}
+		});
+		
 		// Flash Button
 		final TriToggleButton flashButton = (TriToggleButton) findViewById(R.id.ttbFlash);
 		//set default image
@@ -192,7 +212,6 @@ public class CameraActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				int state = flashButton.getState();
 				Camera.Parameters parameters = camera.getParameters();
 				try {
@@ -226,13 +245,12 @@ public class CameraActivity extends Activity {
 		});
 		
 		// Timer Button
-		final TriToggleButton timerButton = (TriToggleButton) findViewById(R.id.ttbTimer);
+		timerButton = (TriToggleButton) findViewById(R.id.ttbTimer);
 		timerButton.setText("timer off");
 		timerButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				int state = timerButton.getState();
 				try {
 					switch (state) {
@@ -259,59 +277,18 @@ public class CameraActivity extends Activity {
 			}
 		});
 
-		// Auto Focus Button
-		Button btnAutoFocus = (Button) findViewById(R.id.btnAutoFocus);
-		btnAutoFocus.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// set flash mode to off before auto focusing
-				Camera.Parameters parameters = camera.getParameters();
-				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-				camera.setParameters(parameters);
-
-				// start auto focus
-				camera.autoFocus(new AutoFocusCallback() {
-					public void onAutoFocus(boolean arg0, Camera arg1) {
-						Toast.makeText(CameraActivity.this,
-								String.format("autofocusing: %b", arg0),
-								Toast.LENGTH_LONG).show();
-
-					};
-				});
-
-				// reset the flash mode back to original
-				parameters.setFlashMode(mFlashMode);
-				camera.setParameters(parameters);
-			}
-
-		});
-
 		// Snap Button
-		Button btnSnap = (Button) findViewById(R.id.btnSnap);
-		btnSnap.setOnLongClickListener(new OnLongClickListener() {
+		snapButton = (Button) findViewById(R.id.btnSnap);
+		snapButton.setOnLongClickListener(new OnLongClickListener() {
 
 			@Override
 			public boolean onLongClick(View v) {
-				// set flash mode to off before auto focusing
-				Camera.Parameters parameters = camera.getParameters();
-				parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-				camera.setParameters(parameters);
-
-				// start auto focus
-				camera.autoFocus(new AutoFocusCallback() {
-					public void onAutoFocus(boolean arg0, Camera arg1) {
-
-					};
-				});
-
-				// reset the flash mode back to original
-				parameters.setFlashMode(mFlashMode);
-				camera.setParameters(parameters);
+				Toast.makeText(CameraActivity.this, "snap long click", Toast.LENGTH_LONG);
+				focusCamera();
 				return false;
 			}
 		});
-		btnSnap.setOnClickListener(new OnClickListener() {
+		snapButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -321,24 +298,89 @@ public class CameraActivity extends Activity {
 		});
 	}
 	
-	private void cameraClick() {
-		if (mTimerDuration > 0) {
-			Timer cameraTimer = new Timer();
-			cameraTimer.schedule(new TimerTask() {
-				
-				@Override
-				public void run() {
-					takePicture();
-				}
-			}, mTimerDuration);
-		} else {
-			takePicture();
+	private void focusCamera() {
+		if (!isTakingPicture && !isAutoFocusing)
+		{
+			//make sure only one autofocus is happening at once
+			isAutoFocusing = true;
+			// set flash mode to off before auto focusing
+			Camera.Parameters parameters = camera.getParameters();
+			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+			camera.setParameters(parameters);
+			
+			//show camera focus cursor
+			cameraCursor.setVisibility(View.VISIBLE);
+		
+			// start auto focus
+			camera.autoFocus(new AutoFocusCallback() {
+				public void onAutoFocus(boolean arg0, Camera arg1) {
+					//hide camera focus cursor
+					cameraCursor.setVisibility(View.INVISIBLE);
+					
+					// reset the flash mode back to original
+					Camera.Parameters parameters = camera.getParameters();
+					parameters.setFlashMode(mFlashMode);
+					camera.setParameters(parameters);
+					
+					isAutoFocusing = false;
+				};
+			});
 		}
 	}
+	
+	private void cameraClick() {
+		
+		if (isTimerRunning) 
+		{
+			mHandler.removeCallbacks(mUpdateTimeTask);
+			isTimerRunning = false;
+			isTakingPicture = false;
+			snapButton.setText(R.string.btn_snap);
+			timerButton.setEnabled(true);
+		} 
+		else 
+		{
+			isTakingPicture = true;
+			if (mTimerDuration > 0) {
+				isTimerRunning = true;
+				timerButton.setEnabled(false);
+				
+				mStartTime = System.currentTimeMillis();
+				mHandler.removeCallbacks(mUpdateTimeTask);
+				mHandler.post(mUpdateTimeTask);
+				
+			} else {
+				takePicture();
+				snapButton.setEnabled(false);
+			}
+		}
+	}
+	
+	private Runnable mUpdateTimeTask = new Runnable() {
+		public void run() {
+			final long start = mStartTime;
+			long millis = System.currentTimeMillis() - start;
+			int seconds = (int) (millis / 1000);
+			int timerDurationSeconds = mTimerDuration / 1000;
+			
+			if (seconds < timerDurationSeconds) {
+				int countdown = (mTimerDuration/1000) - seconds;
+				snapButton.setText("" + countdown);
+				mHandler.post(this);
+			} else if (seconds == timerDurationSeconds) {
+				snapButton.setText(R.string.btn_snap);
+				mHandler.removeCallbacks(this);
+				isTimerRunning = false;
+				takePicture();
+				snapButton.setEnabled(false);
+			} else {
+				mHandler.removeCallbacks(this);
+				isTimerRunning = false;
+			}
+		}
+	};
 
 	private void setDisplayOrientation(int orientation) {
-		int currentOrientation = mOrientation;
-
 		// absolute cases
 		if ((orientation >= 0 && orientation < 30) || orientation >= 330) {
 			mOrientation = Surface.ROTATION_0;
