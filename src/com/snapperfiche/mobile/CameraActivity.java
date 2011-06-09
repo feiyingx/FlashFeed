@@ -71,6 +71,7 @@ public class CameraActivity extends Activity {
 	private boolean isTimerRunning = false;
 	private boolean isTakingPicture = false;
 	private boolean isAutoFocusing = false;
+	private float topOverlayRatio;
 
 	// For motion detection - May finish implementation later
 	/*
@@ -173,12 +174,16 @@ public class CameraActivity extends Activity {
 		Display display = getWindowManager().getDefaultDisplay();
 		int width = display.getWidth();
 		int height = display.getHeight();
+		
+		Log.e(DEBUGTAG, String.format("(display) w: %d, h: %d", width, height));
 
 		LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.ll_camera_overlay);
 		RelativeLayout top = (RelativeLayout) findViewById(R.id.camera_top);
 		RelativeLayout bottom = (RelativeLayout) findViewById(R.id.camera_bottom);
 		LinearLayout cameraOverlay = (LinearLayout) findViewById(R.id.cameraview_overlay);
-		cameraCursor = (ImageView) findViewById(R.id.img_camera_cursor);  
+		cameraCursor = (ImageView) findViewById(R.id.img_camera_cursor);
+		int topOverlayHeight = top.getLayoutParams().height;
+		topOverlayRatio = (float) topOverlayHeight / height;
 
 		int sideLengths = (int) (Math
 				.ceil((double) (Math.abs(width - height)) / 2));
@@ -188,9 +193,9 @@ public class CameraActivity extends Activity {
 				LayoutParams.FILL_PARENT, sideLengths);
 		LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, width);
-		top.setLayoutParams(sideLayoutParams);
+		//top.setLayoutParams(sideLayoutParams);
 		cameraOverlay.setLayoutParams(cameraLayoutParams);
-		bottom.setLayoutParams(sideLayoutParams);
+		//bottom.setLayoutParams(sideLayoutParams);
 		
 		// Click camera screen to focus
 		cameraOverlay.setOnClickListener(new OnClickListener() {
@@ -485,6 +490,8 @@ public class CameraActivity extends Activity {
 
 			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
 			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+			
+			Toast.makeText(CameraActivity.this, "quality: " + parameters.getJpegQuality(), Toast.LENGTH_LONG).show();
 
 			camera.setParameters(parameters);
 			camera.startPreview();
@@ -532,13 +539,22 @@ public class CameraActivity extends Activity {
 
 			float scaleFactor = (float) targetDim / shortDim;
 			int scaledLongDim = (int) (longDim * scaleFactor);
-
-			if (mOrientation == Surface.ROTATION_0
-					|| mOrientation == Surface.ROTATION_180) { // portrait
+			int offset = (int) (scaledLongDim * topOverlayRatio);
+			
+			if (mOrientation == Surface.ROTATION_0) {
 				x = 0;
-				y = (scaledLongDim - targetDim) / 2;
-			} else { // landscape
-				x = (scaledLongDim - targetDim) / 2;
+				y = offset;
+			} 
+			else if (mOrientation == Surface.ROTATION_90) {
+				x = offset;
+				y = 0;
+			}
+			else if (mOrientation == Surface.ROTATION_180) {
+				x = 0;
+				y = scaledLongDim - targetDim - offset;
+			}
+			else if (mOrientation == Surface.ROTATION_270) {
+				x = scaledLongDim - targetDim - offset;;
 				y = 0;
 			}
 
@@ -550,9 +566,11 @@ public class CameraActivity extends Activity {
 					scaleFactor, (width * scaleFactor),
 					(int) (width * scaleFactor)));
 			Log.e("flashfeed.camera", "saving bitmaps");
-			Log.e("flashfeed.camera", String.format(
+			/*Log.e("flashfeed.camera", String.format(
 					"(x,y)=(%d,%d), targetHeight=%d", 0,
-					(scaledLongDim - targetDim) / 2, targetDim));
+					(scaledLongDim - targetDim) / 2, targetDim));*/
+			Log.e("flashfeed.camera", String.format(
+					"(x,y)=(%d,%d), targetHeight=%d", x, y, targetDim));
 
 			Matrix matrix = new Matrix();
 			matrix.preScale(scaleFactor, scaleFactor);
@@ -574,7 +592,9 @@ public class CameraActivity extends Activity {
 					matrix.postRotate(180);
 			}
 
+			//scale and rotate (if needed) image first
 			Bitmap targetBitmap = Bitmap.createBitmap(picture, 0, 0, width, height, matrix, false);
+			//cut out the rest of the image making image a square
 			Bitmap finalBitmap = Bitmap.createBitmap(targetBitmap, x, y, targetDim, targetDim);
 
 			Address addr = getAddress();
