@@ -182,6 +182,8 @@ public class StatusDetailActivity extends Activity {
 		protected BasicStatus doInBackground(Void... params) {
 			String comment = txtCommentBox.getText().toString();
 			BasicStatus status = CommentService.CreateComment(currentUser.getId(), mPostId, comment);
+			//update post cache so that it reflects the comment update
+			SimpleCache.remove("GetPostById_" + String.valueOf(mPostId));
 			mRefreshComments = true;
 			return status;
 		}

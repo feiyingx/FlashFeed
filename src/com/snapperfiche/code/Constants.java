@@ -16,13 +16,15 @@ public class Constants {
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";
 	public static final String NewDefaultPost = BaseUrl + "posts.json";
 	public static final String UserLatestPosts = BaseUrl + "posts/latest.json";
-	public static final String PostDetail = BaseUrl + "posts/";
+	public static final String PostDetail_Format = BaseUrl + "post_detail/:id.json";
 	public static final String NewAnswer = BaseUrl + "answer/";
 	public static final String GetUserQuestions_Format = BaseUrl + "questions/:id.json";
 	public static final String NewQuestion = BaseUrl + "questions.json";
 	public static final String GetAnswersUrl_Format = BaseUrl + "post/:id/answers.json";
 	public static final String GetQuestionsFromFriendsUrl = BaseUrl + "questions/friends.json";
 	public static final String GetGloablFeed_Format = BaseUrl + "posts/global/:days_ago.json";
+	public static final String FavPost_Format = BaseUrl + "fav/:post_id.json";
+	public static final String UnfavPost_Format = BaseUrl + "unfav/:post_id.json";
 	
 	/* Comment urls */
 	public static final String NewComment_Format = BaseUrl + "comments/new/:post_id.json";
@@ -36,6 +38,10 @@ public class Constants {
 	/* Group urls */
 	public static final String NewGroup = BaseUrl + "groups.json";
 	public static final String GetGroupsByUser_Format = BaseUrl + "groups/byuser/:id/:group_type.json";
+	
+	/* Like urls */
+	public static final String LikePost_Format = BaseUrl + "like/:post_id.json";
+	public static final String UnlikePost_Format = BaseUrl + "unlike/:post_id.json";
 	
 	/* json parameters, route keys, querystring keys, request key */
 	public static final String urlParameter_Email = "email";

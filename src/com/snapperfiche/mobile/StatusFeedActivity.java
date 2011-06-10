@@ -7,10 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.github.droidfu.widgets.WebImageView;
+import com.snapperfiche.code.Enumerations.GroupType;
+import com.snapperfiche.data.Group;
 import com.snapperfiche.data.Post;
 import com.snapperfiche.mobile.RegistrationActivity.RegistrationActivityDataHolder;
 import com.snapperfiche.mobile.StatusFeed.StatusFeedGalleryViewHolder;
 import com.snapperfiche.webservices.AccountService;
+import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
 
 import android.app.Activity;
@@ -23,11 +26,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class StatusFeedActivity extends Activity {
 	LayoutInflater mInflater;
@@ -39,6 +44,7 @@ public class StatusFeedActivity extends Activity {
 	TextView txtLoadFeed;
 	GetGlobalFeedTask task;
 	List<List<Post>> colPostsData;
+	List<Group> mGroups;
 	
 	//override events
 	@Override
@@ -135,6 +141,7 @@ public class StatusFeedActivity extends Activity {
 		
 		if(feedPosts != null && !feedPosts.isEmpty()){
 			dataHolder.gallery.setAdapter(new FeedImageAdapter(mContext, feedPosts));
+			dataHolder.gallery.setOnItemClickListener(statusImageItemClickListener);
 			dataHolder.gallery.setVisibility(Gallery.VISIBLE);
 		}else{
 			//if there are no posts, then hide the gallery and display the emptyFeed textview
@@ -154,7 +161,7 @@ public class StatusFeedActivity extends Activity {
 	}
 	
 	private class GetGlobalFeedTask extends AsyncTask<Integer, Integer, List<List<Post>>>{
-		StatusFeedActivity activity;
+		StatusFeedActivity activity = null;
 		int rowIndex;
 		
 		@Override
@@ -164,7 +171,7 @@ public class StatusFeedActivity extends Activity {
 			for(int i = 0; i < length; i++){
 				colPostList.add(PostService.GetGlobalFeed(i, mIsCacheRefresh));
 			}
-			
+			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
 			return colPostList; 
 		}
 		
@@ -182,6 +189,22 @@ public class StatusFeedActivity extends Activity {
 			this.activity = activity;
 		}
 	}
+	
+	//event handlers
+	private OnItemClickListener statusImageItemClickListener = new OnItemClickListener() {
+    	public void onItemClick(AdapterView parent, View v, int position, long id) {
+    		//Toast.makeText(StatusFeed.this, "" + position, Toast.LENGTH_SHORT).show();
+    		//Toast.makeText(StatusFeed.this, "" + id, Toast.LENGTH_SHORT).show();
+    		StatusFeedGalleryViewHolder holder = (StatusFeedGalleryViewHolder) v.getTag();
+    		Intent i = new Intent(StatusFeedActivity.this, PostDetailActivity.class);				
+			if(holder != null){
+				if(holder.post != null){
+					i.putExtra("post_id", holder.post.getId());
+				}
+    		}
+			startActivity(i);
+    	}
+	};
 	
 	static class StatusFeedActivityDataHolder{
 		GetGlobalFeedTask task;

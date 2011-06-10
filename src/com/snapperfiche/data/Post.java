@@ -15,6 +15,12 @@ public class Post {
 	private String caption;
 	private String created_at;
 	private boolean is_private;
+	private int num_comments;
+	private int num_likes;
+	private boolean is_like;
+	private boolean is_favorite;
+	private String locality;
+	private String admin_area;
 	
 	public Post() {}
 	
@@ -31,7 +37,7 @@ public class Post {
 	}
 	
 	public String getPhotoUrl(){
-		return Utility.GetAbsoluteUrl(photo_file_name);
+		return Utility.GetAbsoluteUrl(photo_file_name.replace(".jpg", "_original.jpg"));
 	}
 	
 	public String getPhotoThumbUrl(){
@@ -64,5 +70,29 @@ public class Post {
 	
 	public boolean getIsPrivate(){
 		return is_private;
+	}
+	
+	public int getNumComments(){
+		return num_comments;
+	}
+	
+	public int getNumLikes(){
+		return num_likes;
+	}
+	
+	public boolean isLike(){
+		return is_like;
+	}
+	
+	public boolean isFav(){
+		return is_favorite;
+	}
+	
+	public String getLocality(){
+		return locality;
+	}
+	
+	public String getAdminArea(){
+		return admin_area;
 	}
 }
