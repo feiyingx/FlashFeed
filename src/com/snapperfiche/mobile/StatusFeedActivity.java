@@ -11,6 +11,7 @@ import com.snapperfiche.code.Enumerations.GroupType;
 import com.snapperfiche.data.Group;
 import com.snapperfiche.data.Post;
 import com.snapperfiche.mobile.RegistrationActivity.RegistrationActivityDataHolder;
+import com.snapperfiche.mobile.StatusFeed.FeedGroupItemViewHolder;
 import com.snapperfiche.mobile.StatusFeed.StatusFeedGalleryViewHolder;
 import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.GroupService;
@@ -109,7 +110,7 @@ public class StatusFeedActivity extends Activity {
         }else{
         	if(dataHolder.colPosts != null){
         		colPostsData = dataHolder.colPosts;
-        		displayAllFeeds(colPostsData);
+        		displayAllFeeds();
         	}else if(dataHolder.task != null){
         		task = dataHolder.task;
             	task.attach(this);
@@ -126,6 +127,7 @@ public class StatusFeedActivity extends Activity {
 		StatusFeedActivityDataHolder dataHolder = new StatusFeedActivityDataHolder();
 		if(colPostsData != null){
 			dataHolder.colPosts = colPostsData;
+			if(task != null) task.detach(); 
 			dataHolder.task = task;
 		}else if(task != null){
 			task.detach();
@@ -151,34 +153,36 @@ public class StatusFeedActivity extends Activity {
 		
 	}
 	
-	private void displayAllFeeds(List<List<Post>> allFeeds){
-		int length = allFeeds.size();
+	private void displayAllFeeds(){
+		BindGroupsList();
+		int length = colPostsData.size();
 		for(int i = 0; i < length; i++){
-			displayFeed(i, allFeeds.get(i));
+			displayFeed(i, colPostsData.get(i));
 		}
 		txtLoadFeed.setVisibility(TextView.GONE);
 		linlay_feed.setVisibility(LinearLayout.VISIBLE);
 	}
 	
-	private class GetGlobalFeedTask extends AsyncTask<Integer, Integer, List<List<Post>>>{
+	private class GetGlobalFeedTask extends AsyncTask<Integer, Integer, Void>{
 		StatusFeedActivity activity = null;
 		int rowIndex;
 		
 		@Override
-		protected List<List<Post>> doInBackground(Integer... args) {
+		protected Void doInBackground(Integer... args) {
 			List<List<Post>> colPostList = new ArrayList<List<Post>>();
 			int length = args.length;
 			for(int i = 0; i < length; i++){
 				colPostList.add(PostService.GetGlobalFeed(i, mIsCacheRefresh));
 			}
-			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
-			return colPostList; 
+			activity.colPostsData = colPostList;
+			activity.mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+			return null; 
 		}
 		
 		@Override
-		protected void onPostExecute(List<List<Post>> result){
-			activity.colPostsData = result;
-			activity.displayAllFeeds(result);
+		protected void onPostExecute(Void result){
+			//activity.colPostsData = result;
+			activity.displayAllFeeds();
 		}
 		
 		void detach(){
@@ -268,5 +272,87 @@ public class StatusFeedActivity extends Activity {
 			convertView.setTag(holder);
 			return convertView;
 		}    	
+    }
+	
+	static class FeedGroupItemViewHolder{
+    	int groupId;
+    }
+    
+    public void BindGroupsList(){
+    	LinearLayout groupsList = (LinearLayout) findViewById(R.id.ll_status_feed_groups);
+    	
+    	int i;
+    	List<Group> groups = new ArrayList<Group>();
+    	groups.add(new Group(-1, "Global"));
+    	groups.add(new Group(-2, "Friends"));
+    	if(mGroups != null)
+			groups.addAll(mGroups);
+    	int count = groups.size();
+    	for(i = 0; i < count; i++){
+    		Group currentGroup = groups.get(i);
+    		View childView = getLayoutInflater().inflate(R.layout.status_feed_groups_item, null);
+	    	Button btn = (Button) childView.findViewById(R.id.btn_status_feed_group_item);
+	    	btn.setText(currentGroup.getName());
+	    	btn.setTag(currentGroup.getId());
+	    	groupsList.addView(childView);
+    	}
+    }
+    
+    public class FeedGroupItemAdapter extends BaseAdapter{
+    	private LayoutInflater mInflater;
+    	private List<Group> galleryItems = new ArrayList<Group>();
+    	public FeedGroupItemAdapter(Context c, List<Group> groups){
+    		galleryItems.add(new Group(-1, "Global"));
+    		galleryItems.add(new Group(-2, "Friends"));
+    		if(groups != null)
+    			galleryItems.addAll(groups);
+    		
+    		mInflater = LayoutInflater.from(c);
+    	}
+    	
+		@Override
+		public int getCount() {
+			return galleryItems.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			if(position <= galleryItems.size()){
+				return galleryItems.get(position);
+			}
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			if(position <= galleryItems.size()){
+				return galleryItems.get(position).getId();
+			}
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			FeedGroupItemViewHolder holder;
+			Group currentGroup = (Group) getItem(position);
+			if(currentGroup == null)
+				return null;
+			
+			if(convertView == null){
+				convertView = mInflater.inflate(R.layout.status_feed_groups_item, parent, false);
+				holder = new FeedGroupItemViewHolder();
+				holder.groupId = currentGroup.getId();
+				convertView.setTag(holder);
+			}else{
+				holder = (FeedGroupItemViewHolder) convertView.getTag();
+			}
+			
+			Button btn = (Button) convertView.findViewById(R.id.btn_status_feed_group_item);
+			btn.setText(currentGroup.getName());
+			holder.groupId = currentGroup.getId();
+			
+			return convertView;
+		}
+    	
     }
 }
