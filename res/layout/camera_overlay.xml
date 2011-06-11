@@ -4,25 +4,6 @@
   android:id="@+id/ll_camera_overlay"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-<!-- 	<RelativeLayout-->
-<!-- 	android:id="@+id/camera_top"-->
-<!-- 	android:layout_width="0dp"-->
-<!-- 	android:layout_height="0dp"-->
-<!-- 	android:background="#cccccc"	-->
-<!-- 	>-->
-<!-- 		<com.snapperfiche.mobile.custom.TriToggleButton-->
-<!--		android:id="@+id/ttbFlash"-->
-<!--		android:layout_width="106dp"-->
-<!--		android:layout_height="wrap_content">-->
-<!--		</com.snapperfiche.mobile.custom.TriToggleButton>-->
-<!--		-->
-<!--		<com.snapperfiche.mobile.custom.TriToggleButton-->
-<!--		android:id="@+id/ttbTimer"-->
-<!--		android:layout_width="106dp"-->
-<!--		android:layout_height="wrap_content"-->
-<!--		android:layout_toRightOf="@id/ttbFlash">-->
-<!--		</com.snapperfiche.mobile.custom.TriToggleButton>-->
-<!-- 	</RelativeLayout> -->
 
 	<RelativeLayout
  	android:id="@+id/camera_top"
@@ -58,20 +39,6 @@
 	  	android:layout_gravity="center"
 	  	/>
   	</LinearLayout>
-  	
-<!--  	<RelativeLayout-->
-<!-- 	android:id="@+id/camera_bottom"-->
-<!-- 	android:layout_width="0dp"-->
-<!-- 	android:layout_height="0dp"-->
-<!-- 	android:background="#cccccc"	-->
-<!-- 	>-->
-<!-- 		<Button-->
-<!--		android:id="@+id/btnSnap"-->
-<!--		android:layout_width="match_parent"-->
-<!--		android:layout_height="match_parent"-->
-<!--		android:text="@string/btn_snap"-->
-<!--		/>-->
-<!-- 	</RelativeLayout> -->
 
 	<RelativeLayout
  	android:id="@+id/camera_bottom"
@@ -83,7 +50,8 @@
  		android:id="@+id/txtLocation"
  		android:layout_width="match_parent"
  		android:layout_height="wrap_content"
- 		android:text="Location"
+ 		android:text="Searching for location..."
+ 		android:textColor="#0000ff"
  		/>
  	
  		<Button
