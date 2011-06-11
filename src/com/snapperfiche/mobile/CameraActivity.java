@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +27,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -39,6 +36,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -46,6 +45,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.snapperfiche.mobile.custom.TriToggleButton;
@@ -90,6 +90,8 @@ public class CameraActivity extends Activity {
 		previewHolder = preview.getHolder();
 		previewHolder.addCallback(surfaceCallback);
 		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		initializeScreenBrightness();
 
 		// //// Orientation changes //////
 		mOrientationEventListener = new OrientationEventListener(this,
@@ -361,6 +363,13 @@ public class CameraActivity extends Activity {
 		}
 	}
 	
+	public void initializeScreenBrightness() {
+		Window win = getWindow();
+		WindowManager.LayoutParams winParams = win.getAttributes();
+		winParams.screenBrightness = 0.7f;
+		win.setAttributes(winParams);
+	}
+	
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
 			final long start = mStartTime;
@@ -401,6 +410,21 @@ public class CameraActivity extends Activity {
 	private LocationListener onLocationChange = new LocationListener() {
 		public void onLocationChanged(Location location) {
 			// required for interface
+			Geocoder gc = new Geocoder(CameraActivity.this);
+			try {
+				List<Address> addresses = gc.getFromLocation(location.getLatitude(),
+						location.getLongitude(), 1);
+				Address addr = null;
+				if (addresses != null) {
+					addr = addresses.get(0);
+					if (addr != null) {
+						TextView txtLocation = (TextView) findViewById(R.id.txtLocation);
+						txtLocation.setText(String.format("%s, %s", addr.getLocality(), addr.getAdminArea()));
+					}
+				}
+			} catch (Exception ex) {
+				
+			}
 		}
 
 		public void onProviderDisabled(String provider) {
@@ -490,8 +514,6 @@ public class CameraActivity extends Activity {
 
 			parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
 			parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-			
-			Toast.makeText(CameraActivity.this, "quality: " + parameters.getJpegQuality(), Toast.LENGTH_LONG).show();
 
 			camera.setParameters(parameters);
 			camera.startPreview();
@@ -593,12 +615,12 @@ public class CameraActivity extends Activity {
 			}
 
 			//scale and rotate (if needed) image first
-			Bitmap targetBitmap = Bitmap.createBitmap(picture, 0, 0, width, height, matrix, false);
+			Bitmap targetBitmap = Bitmap.createBitmap(picture, 0, 0, width, height, matrix, true);
 			//cut out the rest of the image making image a square
 			Bitmap finalBitmap = Bitmap.createBitmap(targetBitmap, x, y, targetDim, targetDim);
 
 			Address addr = getAddress();
-			String currentAddr = "";
+			/*String currentAddr = "";
 			if (addr != null) {
 				currentAddr = String
 						.format("Address: %s\nLocality: %s\nAdmin: %s\nPostal: %s\nCountry: %s\nFeature: %s\nPremises: %s",
@@ -606,7 +628,7 @@ public class CameraActivity extends Activity {
 								addr.getAdminArea(), addr.getPostalCode(),
 								addr.getCountryCode(), addr.getFeatureName(),
 								addr.getPremises());
-			}
+			}*/
 
 			File myDir = new File("/sdcard/fichey_images");
 			myDir.mkdirs();
@@ -623,7 +645,7 @@ public class CameraActivity extends Activity {
 			
 			try {
 				fos = new FileOutputStream(file);
-				finalBitmap.compress(CompressFormat.JPEG, 100, fos);
+				finalBitmap.compress(CompressFormat.JPEG, 75, fos);
 
 				fos.close();
 			} catch (Throwable ex) {
@@ -649,18 +671,18 @@ public class CameraActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		Toast.makeText(CameraActivity.this,
-		 "orientation change",Toast.LENGTH_LONG).show();
+		/*Toast.makeText(CameraActivity.this,
+		 "orientation change",Toast.LENGTH_LONG).show();*/
 
-		setCameraOverlay();
+		//setCameraOverlay();
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Toast.makeText(CameraActivity.this, "onResume", Toast.LENGTH_LONG)
-				.show();
+		/*Toast.makeText(CameraActivity.this, "onResume", Toast.LENGTH_LONG)
+				.show();*/
 		if (mOrientationEventListener.canDetectOrientation()) {
 			mOrientationEventListener.enable();
 		}
@@ -673,19 +695,21 @@ public class CameraActivity extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Toast.makeText(CameraActivity.this, "onPause", Toast.LENGTH_LONG)
-				.show();
+		/*Toast.makeText(CameraActivity.this, "onPause", Toast.LENGTH_LONG)
+				.show();*/
 		mOrientationEventListener.disable();
 		locMgr.removeUpdates(onLocationChange);
+		mHandler.removeCallbacks(mUpdateTimeTask);
 		// mSensorMgr.unregisterListener(mSensorEventListener);
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
-		Toast.makeText(CameraActivity.this, "onDestroy", Toast.LENGTH_LONG)
-				.show();
+		/*Toast.makeText(CameraActivity.this, "onDestroy", Toast.LENGTH_LONG)
+				.show();*/
 		mOrientationEventListener.disable();
 		locMgr.removeUpdates(onLocationChange);
+		mHandler.removeCallbacks(mUpdateTimeTask);
 		mPreviewRunning = false;
 	}
 
