@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/relativeLayout1" android:layout_gravity="center">
+    <ImageView android:layout_height="wrap_content" android:src="@drawable/icon" android:layout_width="wrap_content" android:id="@+id/friend_list_item_img"></ImageView>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="TextView" android:id="@+id/friend_list_item_txt_name" android:layout_toRightOf="@+id/friend_list_item_img" android:layout_alignTop="@+id/friend_list_item_img"></TextView>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Friends for" android:layout_below="@+id/friend_list_item_txt_name" android:layout_alignLeft="@+id/friend_list_item_txt_name" android:id="@+id/friend_list_item_txt_friend_for"></TextView>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="TextView" android:id="@+id/friend_list_item_txt_time" android:layout_below="@+id/friend_list_item_txt_friend_for" android:layout_alignLeft="@+id/friend_list_item_txt_friend_for"></TextView>
+    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/friend_list_item_txt_time" android:text="Remove Friend" android:layout_alignLeft="@+id/friend_list_item_txt_time" android:id="@+id/friend_list_item_btn_remove"></Button>
+</RelativeLayout>

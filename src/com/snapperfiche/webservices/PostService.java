@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -272,9 +273,15 @@ public class PostService extends BaseService {
 		return posts;
 	}
 	
-	public static Post GetPostById(int id){
+	public static Post GetPostById(int id, boolean forceCacheRefresh){
 		User currentUser = AccountService.getUser();
 		if(currentUser != null){
+			String cacheKey = "GetPostById_" + String.valueOf(id);
+			Post cacheData = (Post)SimpleCache.get(cacheKey);
+			if(!forceCacheRefresh && cacheData != null){
+				return cacheData;
+			}
+			
 			String postDetailUrl = Utility.GetPostDetailUrl(id);
 			if(Utility.IsNullOrEmpty(postDetailUrl))
 				return null;
@@ -298,6 +305,7 @@ public class PostService extends BaseService {
 					
 					if(status == Enumerations.BasicStatus.SUCCESS.value()){
 						Post userPost = gson.fromJson(postJson, Post.class);
+						SimpleCache.put(cacheKey, userPost);
 						return userPost;
 					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
 						
@@ -514,5 +522,73 @@ public class PostService extends BaseService {
 			}
 		}
 		return posts;
+	}
+	
+	public static BasicStatus SetFavorite(int postId){
+		if(AccountService.getUser() != null){
+			String favUrl = Utility.GetSaveFavPostUrl(postId);
+			if(Utility.IsNullOrEmpty(favUrl)) return BasicStatus.ERROR;
+			
+			HttpPost favRequest = new HttpPost(favUrl);
+			try {
+				HttpResponse response = GetHttpClient().execute(favRequest);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					return BasicStatus.getStatus(status);
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return BasicStatus.ERROR_NOT_AUTHENTICATED;
+	}
+	
+	public static BasicStatus UndoFavorite(int postId){
+		if(AccountService.getUser() != null){
+			String unfavUrl = Utility.GetRemoveFavPostUrl(postId);
+			if(Utility.IsNullOrEmpty(unfavUrl)) return BasicStatus.ERROR;
+			
+			HttpDelete unfavRequest = new HttpDelete(unfavUrl);
+			try {
+				HttpResponse response = GetHttpClient().execute(unfavRequest);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					return BasicStatus.getStatus(status);
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return BasicStatus.ERROR_NOT_AUTHENTICATED;
 	}
  }

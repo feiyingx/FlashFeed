@@ -6,6 +6,7 @@ import java.util.List;
 import com.snapperfiche.code.Enumerations.GroupType;
 import com.snapperfiche.data.Group;
 import com.snapperfiche.data.User;
+import com.snapperfiche.data.User.Friend;
 import com.snapperfiche.mobile.FriendTaggerActivity.ViewHolder;
 import com.snapperfiche.mobile.StatusFeed.FeedGroupItemViewHolder;
 import com.snapperfiche.webservices.AccountService;
@@ -32,17 +33,17 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class AddUserGroupActivity extends Activity {
-	private List<User> mUsers;
+	private List<Friend> mUsers;
 	private Context mContext = this;
 	EditText txtGroupName;
-	private List<User> mSelectedUsers;
+	private List<Friend> mSelectedUsers;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_user_group_layout);
         
-        mSelectedUsers = new ArrayList<User>();
+        mSelectedUsers = new ArrayList<Friend>();
         
         TabHost tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
@@ -74,7 +75,7 @@ public class AddUserGroupActivity extends Activity {
 			}
         });
         
-        mUsers = FriendService.GetFriends(AccountService.getUser().getId());
+        mUsers = FriendService.GetFriends(false);
         ListView lvFriends = (ListView) findViewById(R.id.lv_new_group_friends);
         lvFriends.setAdapter(new FriendItemAdapter(this, mUsers));
 		
@@ -111,8 +112,8 @@ public class AddUserGroupActivity extends Activity {
 	
 	public class FriendItemAdapter extends BaseAdapter{
     	private LayoutInflater mInflater;
-    	private List<User> users = new ArrayList<User>();
-    	public FriendItemAdapter(Context c, List<User> u){
+    	private List<Friend> users = new ArrayList<Friend>();
+    	public FriendItemAdapter(Context c, List<Friend> u){
     		this.users = u;
     		mInflater = LayoutInflater.from(c);
     		for(int i = 0; i < users.size(); i++){

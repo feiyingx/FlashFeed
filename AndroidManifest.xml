@@ -25,6 +25,12 @@
 		<activity android:name=".StatusFeedActivity"
 				  android:label="@string/statusfeed_name">
 		</activity>
+		<activity android:name=".PostDetailActivity">
+		</activity>
+		<activity android:name=".ProfileActivity">
+		</activity>
+		<activity android:name=".FriendActivity">
+		</activity>
 		<activity android:name=".PhotoConfirm"
 				  android:label="@string/photoconfirm_name">
 		</activity>
