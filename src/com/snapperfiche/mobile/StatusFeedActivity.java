@@ -62,18 +62,9 @@ public class StatusFeedActivity extends Activity {
 		txtLoadFeed = (TextView) findViewById(R.id.status_feed_txt_fetching);
 		
 		mInflater = LayoutInflater.from(this);
-		
-		Button cameraBtn = (Button) findViewById(R.id.cameraBtn);
-        cameraBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//Intent i = new Intent(v.getContext(), CameraView.class);
-				Intent i = new Intent(v.getContext(), CameraActivity.class);
-				startActivity(i);
-			}
-        });
+        
+        bindTopNav();
+        
       //set to 7 right now, since each row is broken up into a day (instead of hour for now)
         //7 days a week, so 7 is a good number
         int numOfRows = 7; 
@@ -138,6 +129,17 @@ public class StatusFeedActivity extends Activity {
 	}
 	
 	//helpers	
+	private void bindTopNav(){
+    	Button btnQuestion = (Button) findViewById(R.id.btn_top_nav_question);
+    	btnQuestion.setOnClickListener(onClick_Questions);
+    	
+    	Button btnProfile = (Button) findViewById(R.id.btn_top_nav_profile);
+    	btnProfile.setOnClickListener(onClick_Profile);
+    	
+    	Button cameraBtn = (Button) findViewById(R.id.cameraBtn);
+        cameraBtn.setOnClickListener(onClick_Camera);
+    }
+	
 	private void displayFeed(int rowIndex, List<Post> feedPosts){
 		FeedRowDataHolder dataHolder = colFeedRowViewData.get(rowIndex);
 		
@@ -209,6 +211,36 @@ public class StatusFeedActivity extends Activity {
 			startActivity(i);
     	}
 	};
+	
+	OnClickListener onClick_Questions = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			//Intent i = new Intent(v.getContext(), CameraView.class);
+			Intent i = new Intent(v.getContext(), QuestionActivity.class);
+			startActivity(i);
+		}
+    };
+    
+    OnClickListener onClick_Profile = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			//Intent i = new Intent(v.getContext(), CameraView.class);
+			Intent i = new Intent(mContext, ProfileActivity.class);
+			startActivity(i);
+		}
+    };
+    
+    OnClickListener onClick_Camera = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			//Intent i = new Intent(v.getContext(), CameraView.class);
+			Intent i = new Intent(v.getContext(), CameraActivity.class);
+			startActivity(i);
+		}
+    };
 	
 	static class StatusFeedActivityDataHolder{
 		GetGlobalFeedTask task;

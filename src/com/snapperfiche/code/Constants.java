@@ -33,7 +33,8 @@ public class Constants {
 	/* Follow urls */
 	
 	/* Friend urls */
-	public static final String GetFriendsByUser_Format = BaseUrl + "friends/:user_id.json";
+	//public static final String GetFriendsByUser_Format = BaseUrl + "friends/:user_id.json";
+	public static final String GetFriendsUrl = BaseUrl + "friends_date.json";
 	
 	/* Group urls */
 	public static final String NewGroup = BaseUrl + "groups.json";

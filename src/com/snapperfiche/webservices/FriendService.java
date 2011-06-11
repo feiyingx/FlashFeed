@@ -20,17 +20,14 @@ import com.snapperfiche.code.Enumerations;
 import com.snapperfiche.code.Utility;
 import com.snapperfiche.data.Post;
 import com.snapperfiche.data.User;
+import com.snapperfiche.data.User.Friend;
 
 public class FriendService extends BaseService {
-	public static List<User> GetFriends(int userId){
-		List<User> friends = new ArrayList<User>();
-		if(userId < 0)
-			return friends;
-		
+	public static List<Friend> GetFriends(boolean forceCacheReload){
+		List<Friend> friends = new ArrayList<Friend>();
 		User currentUser = AccountService.getUser();
 		if(currentUser != null){
-			String getFriendsUrl = Utility.GetFriendsByUserUrl(userId);
-			HttpGet getFriends = new HttpGet(getFriendsUrl);
+			HttpGet getFriends = new HttpGet(Constants.GetFriendsUrl);
 			try {
 				HttpResponse response = GetHttpClient().execute(getFriends);
 				HttpEntity entity = response.getEntity();
@@ -50,8 +47,8 @@ public class FriendService extends BaseService {
 					int status = gson.fromJson(statusJson, int.class);
 					
 					if(status == Enumerations.BasicStatus.SUCCESS.value()){
-						User[] userFriends = gson.fromJson(friendsJson, User[].class);
-						friends = new ArrayList<User>(Arrays.asList(userFriends));
+						Friend[] userFriends = gson.fromJson(friendsJson, Friend[].class);
+						friends = new ArrayList<Friend>(Arrays.asList(userFriends));
 					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
 						
 					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){

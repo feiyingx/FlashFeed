@@ -23,4 +23,13 @@ public class User {
 	public String getAccountType(){
 		return accounttype;
 	}
+	
+	public class Friend extends User {
+		private String friend_time;
+		public Friend(){}
+		
+		public String getFriendTime(){
+			return friend_time;
+		}
+	}
 }
