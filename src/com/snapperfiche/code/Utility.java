@@ -183,4 +183,13 @@ public class Utility {
 		url = Constants.UnfavPost_Format.replace(":post_id", String.valueOf(postId));
 		return url;
 	}
+	
+	public static String GetPostsByTagUrl(int tagId){
+		String url = "";
+		if(tagId < 0)
+			return url;
+		
+		url = Constants.GetPostsByTag_Format.replace(":tag_id", String.valueOf(tagId));
+		return url;
+	}
 }

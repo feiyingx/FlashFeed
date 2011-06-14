@@ -25,6 +25,7 @@ public class Constants {
 	public static final String GetGloablFeed_Format = BaseUrl + "posts/global/:days_ago.json";
 	public static final String FavPost_Format = BaseUrl + "fav/:post_id.json";
 	public static final String UnfavPost_Format = BaseUrl + "unfav/:post_id.json";
+	public static final String GetPostsByTag_Format = BaseUrl + "posts/tag/:tag_id.json";
 	
 	/* Comment urls */
 	public static final String NewComment_Format = BaseUrl + "comments/new/:post_id.json";
@@ -44,6 +45,10 @@ public class Constants {
 	public static final String LikePost_Format = BaseUrl + "like/:post_id.json";
 	public static final String UnlikePost_Format = BaseUrl + "unlike/:post_id.json";
 	
+	/* Tag urls */
+	public static final String GetTagsUrl = BaseUrl + "mytags.json";
+	public static final String NewTagUrl = BaseUrl + "tags.json";
+	
 	/* json parameters, route keys, querystring keys, request key */
 	public static final String urlParameter_Email = "email";
 	public static final String urlParameter_Password = "password";
@@ -57,6 +62,7 @@ public class Constants {
 	public static final String jsonParameter_Questions = "questions";
 	public static final String jsonParameter_Answers = "answers";
 	public static final String jsonParameter_Comments = "comments";
+	public static final String jsonParameter_Tags = "tags";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";

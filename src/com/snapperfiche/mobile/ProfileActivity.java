@@ -17,6 +17,9 @@ public class ProfileActivity extends Activity{
 		
 		Button btnFriends = (Button)findViewById(R.id.profile_layout_btn_friend);
 		btnFriends.setOnClickListener(onClick_Friends);
+		
+		Button btnTags = (Button)findViewById(R.id.profile_layout_btn_tags);
+		btnTags.setOnClickListener(onClick_Tags);
 	}
 
 	//event handlers
@@ -24,6 +27,14 @@ public class ProfileActivity extends Activity{
 		@Override
 		public void onClick(View v) {
 			Intent i = new Intent(mContext, FriendActivity.class);
+			startActivity(i);
+		}
+	};
+	
+	OnClickListener onClick_Tags = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			Intent i = new Intent(mContext, ProfileTagsActivity.class);
 			startActivity(i);
 		}
 	};

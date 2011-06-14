@@ -591,4 +591,68 @@ public class PostService extends BaseService {
 		}
 		return BasicStatus.ERROR_NOT_AUTHENTICATED;
 	}
+	
+	public static List<Post> GetPostsByTagId(int tagId, boolean forceCacheRefresh){
+		User currentUser = AccountService.getUser();
+		List<Post> posts = new ArrayList<Post>();
+		if(currentUser != null){
+			String cacheKey = "GetPostByTagId_" + String.valueOf(tagId);
+			List<Post> cacheData = (List<Post>)SimpleCache.get(cacheKey);
+			if(!forceCacheRefresh && cacheData != null){
+				return cacheData;
+			}
+			
+			String url = Utility.GetPostsByTagUrl(tagId);
+			if(Utility.IsNullOrEmpty(url))
+				return null;
+			HttpGet getPosts = new HttpGet(url);
+			try {
+				HttpResponse response = GetHttpClient().execute(getPosts);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					JsonElement postsJson = resultJson.get(Constants.jsonParameter_Posts);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					
+					if(status == Enumerations.BasicStatus.SUCCESS.value()){
+						Post[] userPosts = gson.fromJson(postsJson, Post[].class);
+						posts = new ArrayList<Post>(Arrays.asList(userPosts));
+						SimpleCache.put(cacheKey, posts);
+					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+						
+					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+						
+					}else{ //error case
+						
+					}
+					/*
+					for(int i = 0; i < userPosts.length; i++){
+						Post p = userPosts[i];
+						int id = p.getId();
+						Enumerations.PostType postType = p.getPostType();
+						Date time = p.getDate();
+						String caption = p.getCaption();
+					}*/
+					//posts = new ArrayList<Post>(Arrays.asList(userPosts));
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return posts;
+	}
  }
