@@ -7,6 +7,7 @@ import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.code.Utility;
 import com.snapperfiche.data.Tag;
 import com.snapperfiche.mobile.StatusFeed.StatusFeedGalleryViewHolder;
+import com.snapperfiche.mobile.custom.SectionedAdapter;
 import com.snapperfiche.mobile.custom.SeparatedListAdapter;
 import com.snapperfiche.webservices.SimpleCache;
 import com.snapperfiche.webservices.TagService;
@@ -35,7 +36,8 @@ public class ProfileTagsActivity extends Activity{
 	Button mBtnAdd;
 	EditText mTxtName;
 	List<Tag> mTags;
-	SeparatedListAdapter mAdapter;
+	//SeparatedListAdapter mAdapter;
+	SectionedAdapter mAdapter2;
 	GetTagsTask mTask;
 	AddTagTask mAddTagTask;
 	ProfileTagsActivity mActivity = this;
@@ -88,7 +90,23 @@ public class ProfileTagsActivity extends Activity{
 	
 	//helpers
 	private void loadData(){
-		mAdapter = new SeparatedListAdapter(mContext);
+		if(mAdapter2 == null){
+			mAdapter2 = new SectionedAdapter(){
+	
+				@Override
+				protected View getHeaderView(String caption, int index,
+						View convertView, ViewGroup parent) {
+					TextView result = (TextView)convertView;
+					if(convertView == null){
+						result = (TextView)getLayoutInflater().inflate(R.layout.list_header, null);
+					}
+					result.setText(caption);
+					return result;
+				}
+				
+			};
+		}
+		
 		int count = mTags.size();
 		Tag prev = null;
 		List<Tag> tempList = new ArrayList<Tag>();
@@ -105,7 +123,7 @@ public class ProfileTagsActivity extends Activity{
 					String prevLetter = prev.getName().substring(0,1);
 					String currentLetter = current.getName().substring(0,1); 
 					if(!prevLetter.equalsIgnoreCase(currentLetter)){
-						mAdapter.addSection(sectionName, new TagListAdapter(mContext, tempList));
+						mAdapter2.addSection(sectionName, new TagListAdapter(mContext, tempList));
 						sectionName = currentLetter;
 						//reset tempList
 						tempList = new ArrayList<Tag>();
@@ -113,13 +131,13 @@ public class ProfileTagsActivity extends Activity{
 					tempList.add(current);
 					
 					if(i == count - 1){
-						mAdapter.addSection(sectionName, new TagListAdapter(mContext, tempList));
+						mAdapter2.addSection(sectionName, new TagListAdapter(mContext, tempList));
 					}
 				}
 			}
 			prev = current;
 		}
-		mLvTags.setAdapter(mAdapter);
+		mLvTags.setAdapter(mAdapter2);
 		mLvTags.setOnItemClickListener(tagItemClickListener);
 	}
 	
