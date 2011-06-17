@@ -4,7 +4,9 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:orientation="vertical">
-  <include layout="@layout/main_top_nav"  android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+<!--  <include layout="@layout/main_top_nav"  android:layout_width="fill_parent" android:layout_height="wrap_content"/>-->
+<!--  <include layout="@layout/ui_logo"  android:layout_width="fill_parent" android:layout_height="wrap_content"/>-->
+	
   <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
   </LinearLayout>
   <ScrollView

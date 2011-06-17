@@ -33,4 +33,11 @@
     <string name="error_email_dup">Someone is using this email already.</string>
     <string name="error_pass_min_length">Aw your password is too short. (That\'s what she..)</string>
     <string name="error_email_format">Invalid email</string>
+	<string name="mock">This is just a mock activity.</string>
+	<string name="tab_1">Friends</string>
+	<string name="tab_2">Groups</string>
+	<string name="tab_3">Categories</string>
+	<string name="my">My</string>
+	<string name="friends">Friends</string>
+	<string name="global">Global</string>
 </resources>

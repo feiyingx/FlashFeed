@@ -72,15 +72,8 @@ public class CameraActivity extends Activity {
 	private boolean isTakingPicture = false;
 	private boolean isAutoFocusing = false;
 	private float topOverlayRatio;
-
-	// For motion detection - May finish implementation later
-	/*
-	 * private SensorManager mSensorMgr; private Sensor mAccelerometer; private
-	 * long lastUpdate = -1; private float x, y, z; private float last_x,
-	 * last_y, last_z, last_speed; private boolean performAutoFocus; private
-	 * static final int SHAKE_THRESHOLD = 40; private static final int
-	 * SPEED_THRESHOLD = 5; private SensorEventListener mSensorEventListener;
-	 */
+	private float cameraBorderRatio;
+	private int cameraSideBorderLength;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,56 +108,11 @@ public class CameraActivity extends Activity {
 		locProvider = LocationManager.NETWORK_PROVIDER;
 		locMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 		locMgr.requestLocationUpdates(locProvider, 0, 0, onLocationChange);
-		// //////////////////////////////
-
-		// //// Motion detection /////////
-		/*
-		 * mSensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
-		 * mAccelerometer =
-		 * mSensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		 * mSensorEventListener = new SensorEventListener() {
-		 * 
-		 * @Override public void onSensorChanged(SensorEvent event) { // TODO
-		 * Auto-generated method stub if (event.sensor.getType() ==
-		 * Sensor.TYPE_ACCELEROMETER) { //Toast.makeText(CameraActivity.this,
-		 * "Type: Accelerometer", Toast.LENGTH_LONG).show(); TextView txtSpeed =
-		 * (TextView) findViewById(R.id.speed_test); String sSpeed =
-		 * String.format("(%f,%f,%f",
-		 * event.values[0],event.values[1],event.values[2]);
-		 * txtSpeed.setText(String.valueOf(sSpeed)); long currentTime =
-		 * System.currentTimeMillis(); // only allow one update every 100ms if
-		 * ((currentTime - lastUpdate) > 100) { long diffTime = (currentTime -
-		 * lastUpdate); lastUpdate = currentTime;
-		 * 
-		 * x = event.values[0]; y = event.values[1]; z = event.values[2];
-		 * 
-		 * float speed = Math.abs(x+y+z - last_x - last_y - last_z) / diffTime *
-		 * 10000; //txtSpeed.setText(String.valueOf(speed)); //if (speed >
-		 * SHAKE_THRESHOLD) { if (speed > SHAKE_THRESHOLD) performAutoFocus =
-		 * true;
-		 * 
-		 * if (speed < SPEED_THRESHOLD && last_speed < SPEED_THRESHOLD &&
-		 * performAutoFocus) { Toast.makeText(CameraActivity.this,
-		 * String.format("shake detected with speed: %f\nlastspeed: %f",
-		 * speed,last_speed), Toast.LENGTH_SHORT).show(); camera.autoFocus(new
-		 * AutoFocusCallback() { public void onAutoFocus(boolean arg0, Camera
-		 * arg1) {
-		 * 
-		 * }; }); performAutoFocus = false; } last_x = x; last_y = y; last_z =
-		 * z; last_speed = speed; } } }
-		 * 
-		 * @Override public void onAccuracyChanged(Sensor sensor, int accuracy)
-		 * { // TODO Auto-generated method stub
-		 * 
-		 * } }; mSensorMgr.registerListener(mSensorEventListener,
-		 * mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-		 */
-		// /////////////////////////////////////
 
 		mOrientation = getWindowManager().getDefaultDisplay().getOrientation();
 
 		mInflater = LayoutInflater.from(this);
-		View overView = mInflater.inflate(R.layout.camera_overlay, null);
+		View overView = mInflater.inflate(R.layout.ui_camera_overlay, null);
 		this.addContentView(overView, new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -181,20 +129,24 @@ public class CameraActivity extends Activity {
 
 		LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.ll_camera_overlay);
 		RelativeLayout top = (RelativeLayout) findViewById(R.id.camera_top);
-		RelativeLayout bottom = (RelativeLayout) findViewById(R.id.camera_bottom);
-		LinearLayout cameraOverlay = (LinearLayout) findViewById(R.id.cameraview_overlay);
+		//RelativeLayout bottom = (RelativeLayout) findViewById(R.id.camera_bottom);
+		RelativeLayout cameraOverlay = (RelativeLayout) findViewById(R.id.cameraview_overlay);
 		cameraCursor = (ImageView) findViewById(R.id.img_camera_cursor);
-		int topOverlayHeight = top.getLayoutParams().height;
+		TextView sideBorder = (TextView) findViewById(R.id.camera_side_border);
+		cameraSideBorderLength = sideBorder.getLayoutParams().width;
+		
+		int topOverlayHeight = top.getLayoutParams().height + cameraSideBorderLength;
 		topOverlayRatio = (float) topOverlayHeight / height;
-
-		int sideLengths = (int) (Math
-				.ceil((double) (Math.abs(width - height)) / 2));
+		cameraBorderRatio = (float) cameraSideBorderLength / width;
+		int cameraDimension = width - (cameraSideBorderLength*2);
 
 		overlayLayout.setOrientation(LinearLayout.VERTICAL);
-		LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(
+		/*LinearLayout.LayoutParams sideLayoutParams = new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, sideLengths);
 		LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, width);
+				LayoutParams.FILL_PARENT, width);*/
+		LinearLayout.LayoutParams cameraLayoutParams = new LinearLayout.LayoutParams(
+				LayoutParams.FILL_PARENT, cameraDimension);
 		//top.setLayoutParams(sideLayoutParams);
 		cameraOverlay.setLayoutParams(cameraLayoutParams);
 		//bottom.setLayoutParams(sideLayoutParams);
@@ -210,12 +162,12 @@ public class CameraActivity extends Activity {
 		});
 		
 		// Flash Button
-		final TriToggleButton flashButton = (TriToggleButton) findViewById(R.id.ttbFlash);
+		/*final TriToggleButton flashButton = (TriToggleButton) findViewById(R.id.ttbFlash);
 		//set default image
 		flashButton.setText("flash auto");
-		flashButton.setBackgroundResource(R.drawable.icon);
+		flashButton.setBackgroundResource(R.drawable.icon);*/
 		mFlashMode = Camera.Parameters.FLASH_MODE_AUTO;
-		flashButton.setOnClickListener(new View.OnClickListener() {
+		/*flashButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -282,7 +234,7 @@ public class CameraActivity extends Activity {
 									+ e.getMessage());
 				}
 			}
-		});
+		});*/
 
 		// Snap Button
 		snapButton = (Button) findViewById(R.id.btnSnap);
@@ -548,6 +500,8 @@ public class CameraActivity extends Activity {
 			boolean isOutputPortrait = width < height;
 
 			int targetDim = 600;
+			//int scaleToDim = targetDim + (cameraSideBorderLength*2);
+			int scaleToDim = (int)(targetDim / (1-2*cameraBorderRatio));
 			int longDim = 0, shortDim = 0;
 			int x = 0, y = 0;
 
@@ -559,30 +513,30 @@ public class CameraActivity extends Activity {
 				shortDim = height;
 			}
 
-			float scaleFactor = (float) targetDim / shortDim;
+			float scaleFactor = (float) scaleToDim / shortDim;
 			int scaledLongDim = (int) (longDim * scaleFactor);
 			int offset = (int) (scaledLongDim * topOverlayRatio);
 			
 			if (mOrientation == Surface.ROTATION_0) {
-				x = 0;
+				x = (int) (cameraBorderRatio * scaleToDim);
 				y = offset;
 			} 
 			else if (mOrientation == Surface.ROTATION_90) {
 				x = offset;
-				y = 0;
+				y = (int) (cameraBorderRatio * scaleToDim);
 			}
 			else if (mOrientation == Surface.ROTATION_180) {
-				x = 0;
+				x = (int) (cameraBorderRatio * scaleToDim);
 				y = scaledLongDim - targetDim - offset;
 			}
 			else if (mOrientation == Surface.ROTATION_270) {
 				x = scaledLongDim - targetDim - offset;;
-				y = 0;
+				y = (int) (cameraBorderRatio * scaleToDim);
 			}
 
 			Log.e("flashfeed.camera", String.format(
 					"(showPicture) w: %d, h: %d, x: %d", width, height,
-					(scaledLongDim - targetDim) / 2));
+					(scaledLongDim - scaleToDim) / 2));
 			Log.e("flashfeed.camera", String.format(
 					"(scaled) scaleFactor: %f, scaledHeight %f, (int): %d",
 					scaleFactor, (width * scaleFactor),
@@ -592,7 +546,7 @@ public class CameraActivity extends Activity {
 					"(x,y)=(%d,%d), targetHeight=%d", 0,
 					(scaledLongDim - targetDim) / 2, targetDim));*/
 			Log.e("flashfeed.camera", String.format(
-					"(x,y)=(%d,%d), targetHeight=%d", x, y, targetDim));
+					"(x,y)=(%d,%d), targetHeight=%d", x, y, scaleToDim));
 
 			Matrix matrix = new Matrix();
 			matrix.preScale(scaleFactor, scaleFactor);
@@ -613,7 +567,7 @@ public class CameraActivity extends Activity {
 				else
 					matrix.postRotate(180);
 			}
-
+			
 			//scale and rotate (if needed) image first
 			Bitmap targetBitmap = Bitmap.createBitmap(picture, 0, 0, width, height, matrix, true);
 			//cut out the rest of the image making image a square
@@ -643,13 +597,20 @@ public class CameraActivity extends Activity {
 			String fullpath = file.getAbsolutePath();
 			FileOutputStream fos = null;
 			
+			
+			String fnamescaled = username + formatter.format(new Date()) + "_scaled.jpg";
+			File filescaled = new File(myDir, fnamescaled);
+			
 			try {
+				fos = new FileOutputStream(filescaled);
+				targetBitmap.compress(CompressFormat.JPEG, 75, fos);
+				
 				fos = new FileOutputStream(file);
 				finalBitmap.compress(CompressFormat.JPEG, 75, fos);
 
 				fos.close();
 			} catch (Throwable ex) {
-
+				
 			}
 			picture.recycle();
 			targetBitmap.recycle();

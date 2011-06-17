@@ -45,6 +45,7 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
 
         
         Intent i = new Intent(this, StatusFeed.class);
+        //Intent i = new Intent(this, CameraActivity.class);
 			startActivity(i);
 			
 		

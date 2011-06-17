@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+android:id="@+id/activityfeed"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:background="@color/bgcolor"
+xmlns:android="http://schemas.android.com/apk/res/android"
+>
+	<ImageView 
+	android:id="@+id/imageactivityfeed"
+	android:layout_width="96dip"
+	android:layout_height="96dip"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentLeft="true"
+	android:layout_marginLeft="10dip"
+	android:src="@drawable/terran"
+	android:scaleType="fitXY"
+	></ImageView>
+	<TextView
+	android:id="@+id/textline1"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_toRightOf="@id/imageactivityfeed"
+	android:layout_alignTop="@id/imageactivityfeed"
+	android:layout_marginTop="10dip"
+	android:layout_marginLeft="10dip"
+	android:text="Jaewoo Asked"
+	android:textSize="12dip"
+	android:textColor="@color/textgray"
+	android:textStyle="bold"
+	></TextView>
+	<TextView
+	android:id="@+id/textline2"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_toRightOf="@id/imageactivityfeed"
+	android:layout_below="@id/textline1"
+	android:layout_marginTop="5dip"
+	android:layout_marginBottom="5dip"
+	android:layout_marginLeft="10dip"
+	android:layout_marginRight="10dip"
+	android:text="&quot;What's your favorite pair of shoes testestset?&quot;"
+	android:textSize="12dip"
+	android:textColor="@color/textgray"
+	></TextView>	
+	<TextView
+	android:id="@+id/textline3"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_toRightOf="@id/imageactivityfeed"
+	android:layout_below="@id/textline2"
+	android:layout_marginLeft="10dip"
+	android:layout_marginRight="10dip"
+	android:text="8:05PM @Pasadena, CA"
+	android:textSize="10dip"
+	android:textColor="@color/textgray"
+	></TextView>		
+</RelativeLayout>
