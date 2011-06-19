@@ -49,6 +49,10 @@ public class Constants {
 	public static final String GetTagsUrl = BaseUrl + "mytags.json";
 	public static final String NewTagUrl = BaseUrl + "tags.json";
 	
+	/* User Notification urls */
+	public static final String NewNotificationUrl = BaseUrl + "notifications.json";
+	public static final String GetReceivedNotifications_Format = BaseUrl + "notifications/received/:user_id.json";
+	
 	/* json parameters, route keys, querystring keys, request key */
 	public static final String urlParameter_Email = "email";
 	public static final String urlParameter_Password = "password";

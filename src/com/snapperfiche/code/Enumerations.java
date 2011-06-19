@@ -116,4 +116,32 @@ public class Enumerations {
 			return NONE;
 		}
 	}
+	
+	public enum NotificationType{
+		NEW_POST(1),
+		NEW_QUESTION(2),
+		NEW_ANSWER(3);
+		
+		final int value;
+		NotificationType(int val){
+			this.value = val;
+		}
+		
+		public int value(){
+			return value;
+		}
+		
+		public static NotificationType getType(int val){
+			switch(val){
+				case 1:
+					return NEW_POST;
+				case 2:
+					return NEW_QUESTION;
+				case 3:
+					return NEW_ANSWER;
+				default:
+					return NEW_POST;
+			}
+		}
+	}
 }
