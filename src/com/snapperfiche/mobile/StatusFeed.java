@@ -1,5 +1,6 @@
 package com.snapperfiche.mobile;
 
+import com.snapperfiche.mobile.custom.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class StatusFeed extends Activity{
+public class StatusFeed extends BaseActivity{
 	ProgressDialog dialog;
 	Context myContext = this;
 	List<Post> mPosts;
@@ -73,6 +74,7 @@ public class StatusFeed extends Activity{
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusfeed);
         
@@ -155,7 +157,7 @@ public class StatusFeed extends Activity{
         gallery8.setAdapter(new ImageAdapter(this));
         gallery8.setOnItemClickListener(statusImageItemClickListener);
         */
-        Button cameraBtn = (Button) findViewById(R.id.cameraBtn);
+        /*Button cameraBtn = (Button) findViewById(R.id.cameraBtn);
         cameraBtn.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -166,7 +168,7 @@ public class StatusFeed extends Activity{
 				startActivity(i);
 			}
         	
-        });
+        });*/
         
         //add new group feed button
         Button btnAddGroupFeed = (Button) findViewById(R.id.btn_status_feed_add_group);
@@ -178,7 +180,7 @@ public class StatusFeed extends Activity{
 			}
         });
         
-        BindTopNav();
+        //BindTopNav();
     }
     
     @Override
@@ -390,7 +392,7 @@ public class StatusFeed extends Activity{
     	
     }
     
-    public void BindTopNav(){
+    /*public void BindTopNav(){
     	Button btnQuestion = (Button) findViewById(R.id.btn_top_nav_question);
     	btnQuestion.setOnClickListener(new OnClickListener(){
 			@Override
@@ -401,7 +403,7 @@ public class StatusFeed extends Activity{
 				startActivity(i);
 			}
         });
-    }
+    }*/
     
     public void BindGroupsGallery(){
     	//Gallery groupGallery = (Gallery) findViewById(R.id.gallery_status_feed_groups);
