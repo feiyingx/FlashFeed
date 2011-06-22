@@ -12,7 +12,5 @@ public class UserNotification {
 	public int getId(){
 		return id;
 	}
-	
-	
 }
 	

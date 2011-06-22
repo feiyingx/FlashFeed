@@ -144,4 +144,30 @@ public class Enumerations {
 			}
 		}
 	}
+	
+	public enum AudienceType{
+		ALL(0),
+		FRIENDS(1),
+		SELECT(2);
+		
+		final int value;
+		AudienceType(int val){
+			this.value = val;
+		}
+		
+		public int value(){
+			return value;
+		}
+		
+		public static AudienceType getType(int val){
+			switch(val){
+				case 0:
+					return ALL;
+				case 1:
+					return FRIENDS;
+				default:
+					return SELECT;
+			}
+		}
+	}
 }

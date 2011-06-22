@@ -52,6 +52,8 @@ public class Constants {
 	/* User Notification urls */
 	public static final String NewNotificationUrl = BaseUrl + "notifications.json";
 	public static final String GetReceivedNotifications_Format = BaseUrl + "notifications/received/:user_id.json";
+	public static final String NewNotificationsToCommunityUrl = BaseUrl + "notifications/mycommunity.json";
+	public static final String UpdateNotificationsViewedUrl = BaseUrl + "notifications/updateviewed.json";
 	
 	/* json parameters, route keys, querystring keys, request key */
 	public static final String urlParameter_Email = "email";
@@ -67,6 +69,7 @@ public class Constants {
 	public static final String jsonParameter_Answers = "answers";
 	public static final String jsonParameter_Comments = "comments";
 	public static final String jsonParameter_Tags = "tags";
+	public static final String jsonParameter_Notifications = "notifications";
 	
 	public static final String requestParameter_Photo = "photo";
 	public static final String requestParameter_UserId = "user_id";
@@ -83,6 +86,11 @@ public class Constants {
 	public static final String requestParameter_PostId = "post_id";
 	public static final String requestParameter_Content = "content";
 	public static final String requestParameter_IsPrivate = "is_private";
+	public static final String requestParameter_UserIds = "user_ids";
+	public static final String requestParameter_AudienceType = "audience_type";
+	public static final String requestParameter_NotificationType = "notification_type";
+	public static final String requestParameter_FromUserId = "from_user_id";
+	public static final String requestParameter_Ids = "ids";
 	//for groups
 	public static final String requestParameter_Name = "name";
 	public static final String requestParameter_GroupType = "group_type";
