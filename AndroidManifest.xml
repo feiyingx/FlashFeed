@@ -36,6 +36,8 @@
 		</activity>
 		<activity android:name=".TaggedPostsActivity">
 		</activity>
+		<activity android:name=".UserTaggerActivity">
+		</activity>
 		<activity android:name=".PhotoConfirm"
 				  android:label="@string/photoconfirm_name">
 		</activity>

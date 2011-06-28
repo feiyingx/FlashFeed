@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 public class QuestionActivity extends Activity {
 	Context mContext = this;
@@ -35,6 +37,11 @@ public class QuestionActivity extends Activity {
 		"What are you doing?", "Who are you with?", "Where are you?", "What are you wearing?",
 		"What are you drinking?", "What are you eating?"
 	};
+	
+	List<QuestionPost> mMyQuestions, mFriendQuestions, mGlobalQuestions;
+	ListView mLvMyQuestions, mLvFriendsQuestions, mLvGlobalQuestions;
+	ViewSwitcher mVsMyQuestions;
+	GetQuestionsAsyncTask mMyQuestionsTask;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,22 +75,92 @@ public class QuestionActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent i = new Intent(mContext, CameraActivity.class);
+				Intent i = new Intent(mContext, UserTaggerActivity.class);
 				startActivity(i);
 			}
         });
         
-        List<QuestionPost> questions = PostService.GetQuestionsByUser(AccountService.getUser().getId(), 20, 1);
-        ListView lvMyQuestions = (ListView) findViewById(R.id.lv_questions_mine);
-        lvMyQuestions.setAdapter(new MyQuestionAdapter(this, questions));
+        //List<QuestionPost> questions = PostService.GetQuestionsByUser(AccountService.getUser().getId(), 20, 1);
+        mLvMyQuestions = (ListView) findViewById(R.id.lv_questions_mine);
         
-        ListView lvFriendsQuestions = (ListView) findViewById(R.id.lv_questions_friends);
+        mLvFriendsQuestions = (ListView) findViewById(R.id.lv_questions_friends);
         
-        ListView lvGlobalQuestions = (ListView) findViewById(R.id.lv_questions_global);
+        mLvGlobalQuestions = (ListView) findViewById(R.id.lv_questions_global);
+        
+        mVsMyQuestions = (ViewSwitcher) findViewById(R.id.questions_layout_vs_my_questions);
+        
+        mMyQuestionsTask = new GetQuestionsAsyncTask(this, 0);
+        GetQuestionsParam myQuestionParams = new GetQuestionsParam();
+        myQuestionParams.numPerPage = 20;
+        myQuestionParams.pageNum = 1;
+        myQuestionParams.userId = AccountService.getUser().getId();
+        mMyQuestionsTask.execute(myQuestionParams);
+	}
+	
+	private void loadQuestions(int loadType){
+		switch(loadType){
+			case 0:
+				mLvMyQuestions.setAdapter(new MyQuestionAdapter(mContext,mMyQuestions));
+				mVsMyQuestions.showNext();
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			default:
+				break;
+		}
 	}
 	
 	static class QuestionRowViewHolder{
 		QuestionPost question;
+		TextView tvQuestion, tvQuestionTime;
+	}
+	
+	static class GetQuestionsParam{
+		int userId, numPerPage, pageNum;
+	}
+	
+	public class GetQuestionsAsyncTask extends AsyncTask<GetQuestionsParam, Integer, Void>{
+		QuestionActivity activity = null;
+		int loadType;
+		
+		//loadType: 0 = my questions, 1 = friends, 2 = global
+		public GetQuestionsAsyncTask(QuestionActivity activity, int loadType){
+			this.activity = activity;
+			this.loadType = loadType;
+		}
+		
+		@Override
+		protected Void doInBackground(GetQuestionsParam... params) {
+			if(params[0] != null){
+				switch(this.loadType){
+					case 0:
+						activity.mMyQuestions = PostService.GetQuestionsByUser(params[0].userId, params[0].numPerPage, params[0].pageNum);
+						break;
+					case 1:
+						break;
+					case 2:
+						break;
+					default:
+						break;
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result){
+			activity.loadQuestions(loadType);
+		}
+		
+		void attach(QuestionActivity activity){
+			this.activity = activity;
+		}
+		
+		void detach(){
+			this.activity = null;
+		}
 	}
 	
 	public class MyQuestionAdapter extends BaseAdapter{
@@ -124,19 +201,21 @@ public class QuestionActivity extends Activity {
 			
 			if(convertView == null){
 				convertView = mInflater.inflate(R.layout.question_mine_row, null);
+				TextView tvQuestion = (TextView) convertView.findViewById(R.id.tv_my_question);
+				TextView tvQuestionTime = (TextView) convertView.findViewById(R.id.tv_my_question_time);
 				holder = new QuestionRowViewHolder();
 				holder.question = q;
+				holder.tvQuestion = tvQuestion;
+				holder.tvQuestionTime = tvQuestionTime;
 				convertView.setTag(holder);
 			}else{
 				holder = (QuestionRowViewHolder) convertView.getTag();
 			}
 			
 			holder.question = q;
-			TextView tvQuestion = (TextView) convertView.findViewById(R.id.tv_my_question);
-			TextView tvQuestionTime = (TextView) convertView.findViewById(R.id.tv_my_question_time);
 			
-			tvQuestion.setText(q.getCaption());
-			tvQuestionTime.setText(String.valueOf(q.getDate().getHours()) + ":" + String.valueOf(q.getDate().getMinutes()));
+			holder.tvQuestion.setText(q.getCaption());
+			holder.tvQuestionTime.setText(String.valueOf(q.getDate().getHours()) + ":" + String.valueOf(q.getDate().getMinutes()));
 			
 			return convertView;
 		}

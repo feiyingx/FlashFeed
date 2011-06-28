@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:id="@+id/linlay_tabs" android:layout_height="wrap_content" android:layout_width="match_parent">
+        <Button android:text="Friends" android:layout_weight="1" android:id="@+id/btn_friends_tab" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+        <Button android:text="Groups" android:layout_weight="1" android:id="@+id/btn_groups_tab" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linlay_content" 
+    android:layout_above="@+id/linlay_done" 
+    android:layout_below="@+id/linlay_tabs" 
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <ListView android:visibility="gone" android:id="@+id/lv_selected" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="3"></ListView>
+    <ViewFlipper android:id="@+id/vf_content" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+    	<ViewSwitcher android:id="@+id/vs_friends_loading"
+    		android:layout_width="match_parent"
+    		android:layout_height="match_parent">
+    		<TextView android:layout_height="match_parent" android:layout_width="match_parent" android:gravity="center" android:text="Grabbing your friends"></TextView>
+    		<ListView android:id="@+id/lv_friends" android:layout_height="match_parent" android:layout_width="match_parent"/>
+    	</ViewSwitcher>
+    	<ViewSwitcher android:id="@+id/vs_groups_loading"
+    		android:layout_width="match_parent"
+    		android:layout_height="match_parent">
+    		<TextView android:layout_height="match_parent" android:layout_width="match_parent" android:gravity="center" android:text="Getting your groups"></TextView>
+    		<ListView android:id="@+id/lv_groups" android:layout_height="match_parent" android:layout_width="match_parent"/>
+    	</ViewSwitcher>
+    </ViewFlipper>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linlay_done" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_width="match_parent" android:orientation="vertical">
+        <CheckBox android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Create group with selected users on done" android:textSize="14sp" android:id="@+id/cb_create_group"></CheckBox>
+        <EditText android:visibility="gone" android:layout_height="wrap_content" android:id="@+id/etxt_group_name" android:hint="*Group name" android:layout_width="match_parent"></EditText>
+        <Button android:text="Done" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btn_done"></Button>
+    </LinearLayout>
+</RelativeLayout>
