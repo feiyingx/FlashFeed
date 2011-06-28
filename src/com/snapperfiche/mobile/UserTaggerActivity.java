@@ -125,9 +125,9 @@ public class UserTaggerActivity extends Activity{
 			if(dataHolder.mAddGroupTask != null){
 				dataHolder.mAddGroupTask.attach(this);
 				mAddGroupTask = dataHolder.mAddGroupTask;
-				if(mGetFriendsTask.getStatus() == Status.PENDING){
-	        		mGetFriendsTask.execute();
-	        	}else if(mGetFriendsTask.getStatus() == Status.FINISHED){
+				if(mAddGroupTask.getStatus() == Status.PENDING){
+					mAddGroupTask.execute();
+	        	}else if(mAddGroupTask.getStatus() == Status.FINISHED){
 	        		onComplete_addGroup(BasicStatus.SUCCESS);
 	        	}
 			}
