@@ -192,4 +192,12 @@ public class Utility {
 		url = Constants.GetPostsByTag_Format.replace(":tag_id", String.valueOf(tagId));
 		return url;
 	}
+	
+	public static String GetReceivedNotificationsUrl(int userId){
+		String url = "";
+		if(userId < 0)
+			return url;
+		
+		return Constants.GetReceivedNotifications_Format.replace(":user_id", String.valueOf(userId));
+	}
 }

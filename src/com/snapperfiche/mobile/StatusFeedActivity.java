@@ -178,7 +178,7 @@ public class StatusFeedActivity extends BaseActivity {
 				colPostList.add(PostService.GetGlobalFeed(i, mIsCacheRefresh));
 			}
 			activity.colPostsData = colPostList;
-			activity.mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
+			activity.mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER);
 			return null; 
 		}
 		
