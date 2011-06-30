@@ -16,6 +16,7 @@ import com.snapperfiche.mobile.StatusFeed.StatusFeedGalleryViewHolder;
 import com.snapperfiche.webservices.AccountService;
 import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.mobile.custom.BaseActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,7 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class StatusFeedActivity extends Activity {
+public class StatusFeedActivity extends BaseActivity {
 	LayoutInflater mInflater;
 	Context mContext = this;
 	List<FeedRowDataHolder> colFeedRowViewData;
@@ -63,7 +64,7 @@ public class StatusFeedActivity extends Activity {
 		
 		mInflater = LayoutInflater.from(this);
         
-        bindTopNav();
+        //bindTopNav();
         
       //set to 7 right now, since each row is broken up into a day (instead of hour for now)
         //7 days a week, so 7 is a good number
@@ -201,7 +202,7 @@ public class StatusFeedActivity extends Activity {
     	public void onItemClick(AdapterView parent, View v, int position, long id) {
     		//Toast.makeText(StatusFeed.this, "" + position, Toast.LENGTH_SHORT).show();
     		//Toast.makeText(StatusFeed.this, "" + id, Toast.LENGTH_SHORT).show();
-    		StatusFeedGalleryViewHolder holder = (StatusFeedGalleryViewHolder) v.getTag();
+    		FeedItemViewHolder holder = (FeedItemViewHolder) v.getTag();
     		Intent i = new Intent(StatusFeedActivity.this, PostDetailActivity.class);				
 			if(holder != null){
 				if(holder.post != null){
@@ -258,6 +259,13 @@ public class StatusFeedActivity extends Activity {
 		}
 	}
 	
+	static class FeedItemViewHolder {
+		Post post;
+		WebImageView imgPost;
+		TextView txtUsername;
+		TextView txtLocation;
+	}
+	
 	public class FeedImageAdapter extends BaseAdapter {
     	int mGalleryItemBackground;
     	private Context mContext;
@@ -289,7 +297,7 @@ public class StatusFeedActivity extends Activity {
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent){
-			Post post = (Post)getItem(position);
+			/*Post post = (Post)getItem(position);
 			if(post == null){
 				return convertView;
 			}
@@ -302,6 +310,34 @@ public class StatusFeedActivity extends Activity {
 			StatusFeedGalleryViewHolder holder = new StatusFeedGalleryViewHolder();
 			holder.post = post;
 			convertView.setTag(holder);
+			return convertView;*/
+			
+			FeedItemViewHolder viewHolder;
+			
+			if(convertView == null){
+				convertView = mInflater.inflate(R.layout.status_feed_list_item, parent, false);
+				viewHolder = new FeedItemViewHolder();
+				viewHolder.imgPost = (WebImageView) convertView.findViewById(R.id.img_post_thumb);
+				viewHolder.txtUsername = (TextView) convertView.findViewById(R.id.text_username);
+				viewHolder.txtLocation = (TextView) convertView.findViewById(R.id.text_location);
+				convertView.setTag(viewHolder);
+			}
+			else {
+				viewHolder = (FeedItemViewHolder) convertView.getTag();
+			}
+			
+			Post post = (Post)getItem(position);
+			if (post != null) {
+				String url = post.getPhotoThumbUrl();
+				//Drawable loader = mContext.getResources().getDrawable(R.drawable.loader);
+				
+				viewHolder.post = post;
+				viewHolder.imgPost.setImageUrl(url);
+				viewHolder.imgPost.loadImage();
+				//viewHolder.imgPost.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
+				//viewHolder.txtUsername.setText(post.getUsername());
+				//viewHolder.txtLocation.setText(String.format("%s, %s", post.getLocality(), post.getAdminArea()));
+			}
 			return convertView;
 		}    	
     }

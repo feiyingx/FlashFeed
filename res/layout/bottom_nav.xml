@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/darkgray">
+    <HorizontalScrollView android:layout_height="match_parent" android:layout_width="match_parent" android:scrollbars="none">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/linearLayout1" android:orientation="horizontal">
+            <Button style="@style/BottomNavItem" android:id="@+id/profile_layout_btn_posts" android:background="@drawable/posts"></Button>
+            <Button style="@style/BottomNavItem" android:id="@+id/profile_layout_btn_questions" android:background="@drawable/questions"></Button>
+            <Button style="@style/BottomNavItem" android:id="@+id/profile_layout_btn_friend" android:background="@drawable/friends"></Button>
+            <Button style="@style/BottomNavItem" android:id="@+id/profile_layout_btn_fav" android:background="@drawable/favorites"></Button>
+            <Button style="@style/BottomNavItem" android:id="@+id/profile_layout_btn_tags" android:background="@drawable/tags"></Button>
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>

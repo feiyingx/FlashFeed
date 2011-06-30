@@ -3,32 +3,29 @@ package com.snapperfiche.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.snapperfiche.data.QuestionPost;
-import com.snapperfiche.data.User;
-import com.snapperfiche.mobile.AddUserGroupActivity.FriendItemViewHolder;
-import com.snapperfiche.webservices.AccountService;
-import com.snapperfiche.webservices.PostService;
-
-import android.app.Activity;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
-public class QuestionActivity extends Activity {
+import com.snapperfiche.mobile.custom.BaseActivity;
+import com.snapperfiche.data.QuestionPost;
+import com.snapperfiche.webservices.AccountService;
+import com.snapperfiche.webservices.PostService;
+
+public class QuestionActivity extends BaseActivity {
 	Context mContext = this;
 	AutoCompleteTextView acTxtQuestion;
 	static final String[] colPresetQuestions = {
@@ -41,7 +38,7 @@ public class QuestionActivity extends Activity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.question_layout);
         
-        TabHost tabs = (TabHost) findViewById(R.id.tabhost);
+        /*TabHost tabs = (TabHost) findViewById(R.id.tabhost);
         tabs.setup();
         
         TabHost.TabSpec spec = tabs.newTabSpec("tag1");
@@ -57,7 +54,8 @@ public class QuestionActivity extends Activity {
         spec = tabs.newTabSpec("tag3");
         spec.setContent(R.id.questions_global);
         spec.setIndicator("Global");
-        tabs.addTab(spec);
+        tabs.addTab(spec);*/
+        initTabs();
         
         //find controls
         acTxtQuestion = (AutoCompleteTextView) findViewById(R.id.question_actxt_ask_question);
@@ -142,4 +140,51 @@ public class QuestionActivity extends Activity {
 		}
     	
     }
+	
+	/**********************************************/
+	/** Helpers **/
+	/**********************************************/
+	private void initTabs() {
+		TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
+		tabHost.setup();
+		
+		addTab(tabHost, R.string.my, R.drawable.tab_info);
+		addTab(tabHost, R.string.friends, R.drawable.tab_info);
+		addTab(tabHost, R.string.global, R.drawable.tab_info);
+	}
+	
+	private void addTab(TabHost tabHost, int labelId, int drawableId) {
+		
+		TabHost.TabSpec spec = tabHost.newTabSpec("tab" + labelId);
+		
+		switch (labelId) {
+		case R.string.global:
+			spec.setContent(R.id.questions_global);
+			break;
+		case R.string.friends:
+			spec.setContent(R.id.questions_friends);
+			break;
+		case R.string.my:
+		default:
+			spec.setContent(R.id.questions_mine);
+			break;
+		}
+		
+		//Intent intent = new Intent(this, tagsfriends.class);
+		//TabHost.TabSpec spec = tabHost.newTabSpec("tab" + labelId);		
+		//TabWidget tabWidget = (TabWidget)findViewById(R.id.tab)
+		
+		View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, tabHost.getTabWidget(), false);
+			
+		TextView title = (TextView) tabIndicator.findViewById(R.id.title);
+		title.setText(labelId);
+/*		ImageView icon = (ImageView) tabIndicator.findViewById(R.id.icon);
+		icon.setImageResource(drawableId); */
+	
+		spec.setIndicator(tabIndicator);
+		//spec.setContent(intent);
+		tabHost.addTab(spec);
+		
+		
+	}
 }

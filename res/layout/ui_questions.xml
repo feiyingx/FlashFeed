@@ -1,0 +1,53 @@
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:id="@android:id/tabhost" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" >
+	<RelativeLayout android:id="@+id/tab_relative_layout"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		
+		<LinearLayout
+		android:id="@+id/logotop"
+		android:layout_height="wrap_content" 
+		android:layout_width="fill_parent"
+		>
+			<include layout="@layout/main_nav" />
+		</LinearLayout>
+		<TextView
+		android:id="@+id/textquestions"
+		android:layout_width="fill_parent"
+		android:layout_height="25dip"
+		android:paddingLeft="10dip"
+		android:layout_alignParentLeft="true"
+		android:layout_below="@id/logotop"
+		android:gravity="center_vertical"
+		android:text="Questions"
+		android:textColor="#ffffff"
+		android:background="#676767"
+		></TextView>
+		<TextView
+		android:id="@+id/textnewquestions"
+		android:layout_width="fill_parent"
+		android:layout_height="50dip"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true"
+		android:gravity="center_vertical|center_horizontal"
+		android:text="New Question"
+		android:textSize="16dip"
+		android:textStyle="bold"
+		android:textColor="#FFFFFF"
+		android:background="@drawable/backgroundgradient"
+		></TextView>	
+<!--  To remove the right tab right border, use a background that has a color of the tab background on the right side only. -->		
+		<TabWidget 
+		android:id="@android:id/tabs"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:layout_below="@id/textquestions"
+		></TabWidget>
+		<FrameLayout android:id="@android:id/tabcontent"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent"
+			android:layout_marginBottom="50dip"
+			android:layout_below="@android:id/tabs"></FrameLayout>
+	</RelativeLayout>
+</TabHost>

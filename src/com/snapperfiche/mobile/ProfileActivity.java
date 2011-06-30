@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ProfileActivity extends Activity{
+import com.snapperfiche.mobile.custom.BaseActivity;
+
+public class ProfileActivity extends BaseActivity{
 	Context mContext = this;
 	@Override
 	public void onCreate(Bundle savedInstanceState){

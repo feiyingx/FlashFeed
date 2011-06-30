@@ -360,8 +360,8 @@ public class PostService extends BaseService {
 				
 				Gson gson = new Gson();
 				QuestionPost[] questionPosts = gson.fromJson(questionsJson, QuestionPost[].class);
-
-				questions = new ArrayList<QuestionPost>(Arrays.asList(questionPosts));
+				if (questionPosts != null)
+					questions = new ArrayList<QuestionPost>(Arrays.asList(questionPosts));
 			}
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block

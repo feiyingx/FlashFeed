@@ -1,28 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:droidfu="http://github.com/droidfu/schema"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
 <LinearLayout
-  
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:droidfu="http://github.com/droidfu/schema"
   android:layout_width="match_parent"
-  android:layout_height="match_parent" android:orientation="vertical">
-  	<com.github.droidfu.widgets.WebImageView 
-  		android:layout_height="wrap_content" 
-  		android:layout_width="match_parent" 
-  		android:id="@+id/post_detail_imgPost"
-  	 	droidfu:autoLoad="true">
-  	</com.github.droidfu.widgets.WebImageView>
-    <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="center_horizontal" android:id="@+id/post_detail_txtCaption"></TextView>
-    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1" android:orientation="horizontal">
-        <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/post_detail_txtTime"></TextView>
-        <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/post_detail_txtLocation"></TextView>
-    </LinearLayout>
-    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout2" android:orientation="horizontal" android:gravity="center_horizontal">
-        <Button android:layout_height="wrap_content" android:id="@+id/post_detail_btn_comments" android:layout_width="wrap_content" android:text="Button"></Button>
-        <Button android:layout_height="wrap_content" android:id="@+id/post_detail_btn_likes" android:layout_width="wrap_content" android:text="Button"></Button>
-        <Button android:layout_height="wrap_content" android:id="@+id/post_detail_btn_fav" android:layout_width="wrap_content" android:text="Button"></Button>
-    </LinearLayout>
+  android:layout_height="match_parent" 
+  android:orientation="vertical">
+  
+  <com.snapperfiche.mobile.custom.UserInfoView 
+	android:layout_width="match_parent" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/userInfo" />
+	<ScrollView
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent">
+	<!--  	<com.github.droidfu.widgets.WebImageView -->
+	<!--  		android:layout_height="wrap_content" -->
+	<!--  		android:layout_width="match_parent" -->
+	<!--  		android:id="@+id/post_detail_imgPost"-->
+	<!--  	 	droidfu:autoLoad="true">-->
+	<!--  	</com.github.droidfu.widgets.WebImageView>-->
+	<!--    <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="center_horizontal" android:id="@+id/post_detail_txtCaption"></TextView>-->
+	<!--    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1" android:orientation="horizontal">-->
+	<!--        <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/post_detail_txtTime"></TextView>-->
+	<!--        <TextView android:text="TextView" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/post_detail_txtLocation"></TextView>-->
+	<!--    </LinearLayout>-->
+	<!--    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout2" android:orientation="horizontal" android:gravity="center_horizontal">-->
+	<!--        <Button android:layout_height="wrap_content" android:id="@+id/post_detail_btn_comments" android:layout_width="wrap_content" android:text="Button"></Button>-->
+	<!--        <Button android:layout_height="wrap_content" android:id="@+id/post_detail_btn_likes" android:layout_width="wrap_content" android:text="Button"></Button>-->
+	<!--        <Button android:layout_height="wrap_content" android:id="@+id/post_detail_btn_fav" android:layout_width="wrap_content" android:text="Button"></Button>-->
+	<!--    </LinearLayout>-->
+	
+		<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#e5e4df"
+		android:paddingBottom="10dip"
+		>
+			<com.github.droidfu.widgets.WebImageView 
+			android:id="@+id/post_detail_imgPost"
+	  		android:layout_width="320dip"
+			android:layout_height="320dip"
+			android:layout_centerHorizontal="true"
+			android:layout_marginBottom="5dip"
+			android:scaleType="fitXY"
+	  	 	droidfu:autoLoad="true">
+	  	 	</com.github.droidfu.widgets.WebImageView>
+	  	 	<TextView 
+	  	 	android:id="@+id/post_detail_txtCaption"
+	  	 	android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/post_detail_imgPost"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:text="No Caption" 
+			android:textSize="12dip"
+			android:textColor="@color/textgray"
+	  	 	>
+	  	 	</TextView>	
+	  	 	<TextView 
+	  	 	android:id="@+id/post_detail_txtTime"
+	  	 	android:layout_height="wrap_content" 
+	  	 	android:layout_width="wrap_content" 
+	  	 	android:layout_below="@id/post_detail_txtCaption"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+			android:layout_marginBottom="3dip"
+			android:text="Time"
+			android:textSize="10dip"
+			android:textColor="@color/textgray">
+	  	 	</TextView>
+	  	 	<TextView 
+	  	 	android:id="@+id/post_detail_txtLocation"
+	  	 	android:layout_width="wrap_content" 
+	  	 	android:layout_height="wrap_content"
+	  	 	android:layout_below="@id/post_detail_txtCaption"
+	  	 	android:layout_toRightOf="@id/post_detail_txtTime"
+	  	 	android:text="Location" 
+	  	 	android:textSize="10dip"
+			android:textColor="@color/textgray">
+	  	 	</TextView>
+	  	 	<Button 
+	  	 	android:id="@+id/post_detail_btn_likes"
+	  	 	android:layout_width="90dip" 
+	  	 	android:layout_height="wrap_content"
+	  	 	android:layout_centerHorizontal="true"
+			android:layout_below="@id/post_detail_txtTime"
+			android:layout_marginLeft="10dip"
+			android:layout_marginBottom="10dip"
+			android:text="Like"
+			android:textSize="10dip"
+			android:background="@drawable/textbutton"
+			android:textColor="#ffffff">
+			</Button>
+	  	 	<Button 
+	  	 	android:id="@+id/post_detail_btn_comments" 
+	  	 	android:layout_width="90dip" 
+	  	 	android:layout_height="wrap_content"
+	  	 	android:layout_below="@id/post_detail_txtTime"
+			android:layout_toLeftOf="@id/post_detail_btn_likes"
+			android:layout_marginLeft="10dip"
+			android:layout_marginBottom="10dip"
+			android:text="Comment"
+			android:textSize="10dip"
+			android:background="@drawable/textbutton"
+			android:textColor="#ffffff">
+	  	 	</Button>
+	  	 	<Button 
+	  	 	android:id="@+id/post_detail_btn_fav" 
+	  	 	android:layout_width="90dip" 
+	  	 	android:layout_height="wrap_content"
+	  	 	android:layout_below="@id/post_detail_txtTime"
+			android:layout_toRightOf="@id/post_detail_btn_likes"
+			android:layout_marginLeft="10dip"
+			android:layout_marginBottom="10dip"
+			android:text="Favorite"
+			android:textSize="10dip"
+			android:background="@drawable/textbutton"
+			android:textColor="#ffffff">
+	  	 	</Button>
+		</RelativeLayout>
+	</ScrollView>
 </LinearLayout>
-</ScrollView>
