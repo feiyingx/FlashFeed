@@ -7,6 +7,7 @@ import com.snapperfiche.data.Post;
 import com.snapperfiche.webservices.LikeService;
 import com.snapperfiche.webservices.PostService;
 import com.snapperfiche.webservices.SimpleCache;
+import com.snapperfiche.mobile.custom.BaseActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PostDetailActivity extends Activity {
+public class PostDetailActivity extends BaseActivity {
 	//variables
 	WebImageView mImgPost;
 	TextView mTxtCaption, mTxtTime, mTxtLocation;

@@ -597,14 +597,7 @@ public class CameraActivity extends Activity {
 			String fullpath = file.getAbsolutePath();
 			FileOutputStream fos = null;
 			
-			
-			String fnamescaled = username + formatter.format(new Date()) + "_scaled.jpg";
-			File filescaled = new File(myDir, fnamescaled);
-			
-			try {
-				fos = new FileOutputStream(filescaled);
-				targetBitmap.compress(CompressFormat.JPEG, 75, fos);
-				
+			try {				
 				fos = new FileOutputStream(file);
 				finalBitmap.compress(CompressFormat.JPEG, 75, fos);
 

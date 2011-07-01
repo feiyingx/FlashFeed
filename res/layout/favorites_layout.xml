@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:background="#e5e4df">
+  
+<!--	  <include layout="@layout/user_info" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/userInfo" />-->
+<!--<include layout="@layout/bottom_nav" android:layout_width="match_parent" android:layout_height="50dp" android:layout_alignParentBottom="true" android:id="@+id/bottomnav" />-->
+
+	<com.snapperfiche.mobile.custom.UserInfoView 
+	android:layout_width="match_parent" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/userInfo" />
+
+	<com.snapperfiche.mobile.custom.ProfileNavigationView 
+	android:layout_width="match_parent" 
+	android:layout_height="50dp" 
+	android:layout_alignParentBottom="true" 
+	android:id="@+id/bottomnav" />
+
+	  
+	  
+	  <LinearLayout
+	  android:id="@+id/linFavorites"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_below="@id/userInfo"
+	  android:layout_above="@id/bottomnav">
+		  <GridView
+		  android:id="@+id/gvFavorites"
+		  android:layout_width="match_parent"
+		  android:layout_height="match_parent"
+		  android:numColumns="3"
+		  android:verticalSpacing="10dp"
+		  android:horizontalSpacing="10dp"
+		  android:stretchMode="columnWidth"
+		  android:gravity="center"
+		  android:scrollbars="vertical">
+		  </GridView>
+	  </LinearLayout>
+</RelativeLayout>

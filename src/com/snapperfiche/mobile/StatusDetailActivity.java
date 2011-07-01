@@ -16,6 +16,7 @@ import com.snapperfiche.webservices.CommentService;
 import com.snapperfiche.webservices.GroupService;
 import com.snapperfiche.webservices.PostService;
 import com.snapperfiche.webservices.SimpleCache;
+import com.snapperfiche.mobile.custom.BaseActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -36,7 +37,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StatusDetailActivity extends Activity {
+public class StatusDetailActivity extends BaseActivity {
 	ListView mLvComments;
 	List<Comment> mComments;
 	Context mContext;

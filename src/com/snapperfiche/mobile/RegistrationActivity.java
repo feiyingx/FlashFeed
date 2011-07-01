@@ -43,9 +43,9 @@ public class RegistrationActivity extends Activity {
 		mContext = this;
 		
 		//find controls
-		etxtFirstName = (EditText) findViewById(R.id.reg_first_name);
-		etxtLastName = (EditText) findViewById(R.id.reg_last_name);
-		etxtEmail = (EditText) findViewById(R.id.reg_email);
+		etxtFirstName = (EditText) findViewById(R.id.reg_etxt_fname);
+		etxtLastName = (EditText) findViewById(R.id.reg_etxt_lname);
+		etxtEmail = (EditText) findViewById(R.id.reg_etxt_email);
 		etxtAlias = (EditText) findViewById(R.id.reg_etxt_username);
 		etxtPassword = (EditText) findViewById(R.id.reg_etxt_password);
 		btnRegister = (Button) findViewById(R.id.reg_btn_register);

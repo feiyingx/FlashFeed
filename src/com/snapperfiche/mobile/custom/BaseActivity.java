@@ -15,6 +15,7 @@ import com.snapperfiche.mobile.CameraActivity;
 import com.snapperfiche.mobile.ProfileActivity;
 import com.snapperfiche.mobile.QuestionActivity;
 import com.snapperfiche.mobile.R;
+import com.snapperfiche.mobile.StatusFeedActivity;
 
 public class BaseActivity extends Activity {
 	
@@ -37,7 +38,17 @@ public class BaseActivity extends Activity {
 	}
 	
 	private void initializeTopNav() {
-		/*ImageButton btnQuestion = (ImageButton) findViewById(R.id.question);
+		ImageButton btnHome = (ImageButton) findViewById(R.id.logo);
+		btnHome.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(BaseActivity.this, StatusFeedActivity.class);
+				startActivity(i);
+			}
+		});
+		
+		ImageButton btnQuestion = (ImageButton) findViewById(R.id.question);
 		btnQuestion.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -45,7 +56,7 @@ public class BaseActivity extends Activity {
 				Intent i = new Intent(BaseActivity.this, QuestionActivity.class);
 				startActivity(i);
 			}
-		});*/
+		});
 		
 		ImageButton btnProfile = (ImageButton) findViewById(R.id.profile);
 		btnProfile.setOnClickListener(new OnClickListener() {

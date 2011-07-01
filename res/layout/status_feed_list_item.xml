@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:droidfu="http://github.com/droidfu/schema"
+     android:layout_width="164px"
+     android:layout_height="214px"
+     android:padding="7px"
+     android:orientation="vertical"
+     android:background="@color/darkgray"
+     >
+	    <com.github.droidfu.widgets.WebImageView 
+	   	android:id="@+id/img_post_thumb"
+	    android:layout_width="150px"
+	    android:layout_height="150px"
+	    />
+		<TextView 
+		android:id="@+id/text_username"
+		android:layout_width="fill_parent"
+		android:layout_height="25px"
+		android:paddingLeft="10px"
+		android:text="Ken W"
+		android:textStyle="bold"
+		android:textSize="14px"
+		android:textColor="@color/textwhite"
+		android:gravity="center_vertical|bottom"
+		android:background="@color/black"
+		/>
+		<TextView 
+		android:id="@+id/text_location"
+		android:layout_width="fill_parent"
+		android:layout_height="25px"
+		android:paddingLeft="5dip"
+		android:text="Cerritos, CA"
+		android:textSize="13px"
+		android:textColor="@color/textwhite"
+		android:gravity="center_vertical"
+		android:background="@color/black"
+		
+		/>
+</LinearLayout>

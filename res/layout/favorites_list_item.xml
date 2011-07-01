@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:droidfu="http://github.com/droidfu/schema"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+  
+<!--  	<com.github.droidfu.widgets.WebImageView-->
+<!--  	android:id="@+id/favoriteItem_image"-->
+<!--  	android:layout_width="wrap_content"-->
+<!--  	android:layout_height="wrap_content">-->
+<!--  	</com.github.droidfu.widgets.WebImageView>-->
+
+	<TextView
+	android:id="@+id/favoriteItem_test"
+  	android:layout_width="150px"
+  	android:layout_height="150px"
+  	android:background="@color/yellow1">
+	</TextView>
+  	
+  	<TextView
+  	android:id="@+id/favoriteItem_username"
+  	android:layout_width="150px"
+  	android:layout_height="wrap_content"
+  	android:background="@color/black"
+  	android:textColor="@color/textwhite">
+  	</TextView>
+  
+</LinearLayout>

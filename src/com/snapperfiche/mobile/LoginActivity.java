@@ -1,48 +1,41 @@
 package com.snapperfiche.mobile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import com.snapperfiche.code.Utility;
-import com.snapperfiche.webservices.AccountService;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.Toast;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 
-public class FlashFeed extends Activity implements OnClickListener, Runnable{
+import com.snapperfiche.webservices.AccountService;
+
+public class LoginActivity extends Activity implements OnClickListener, Runnable{
     /** Called when the activity is first created. */
 	EditText txtUsername;
 	EditText txtPassword;
 	ProgressDialog dialog;
 	Context myContext = this;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.login);
         
-        txtUsername = (EditText) findViewById(R.id.login_txtBox_username);
-        txtPassword = (EditText) findViewById(R.id.login_txtBox_password);
+        txtUsername = (EditText) findViewById(R.id.edittextusername);
+        txtPassword = (EditText) findViewById(R.id.edittextpassword);
         
-        View loginBtn = findViewById(R.id.login_btn_login);
+        View loginBtn = findViewById(R.id.buttonlogin);
         loginBtn.setOnClickListener(this);
         
+        /*
         View signinBtn = findViewById(R.id.login_btn_signup);
         signinBtn.setOnClickListener(this);
-
+         */
         /*
         Intent i = new Intent(this, StatusFeed.class);
         //Intent i = new Intent(this, CameraActivity.class);
@@ -60,12 +53,15 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
         startActivity(intent);
         */
         
+
+        /*View signinBtn = findViewById(R.id.butt);
+        signinBtn.setOnClickListener(this);*/
     }
     
     public void onClick(View v){
     	switch(v.getId()){
-    	case R.id.login_btn_login:
-    		dialog = ProgressDialog.show(FlashFeed.this, "", 
+    	case R.id.buttonlogin:
+    		dialog = ProgressDialog.show(LoginActivity.this, "", 
                     "Loading... Here's a smile while you wait ^^", true);
     		
     		Thread thread = new Thread(this);
@@ -74,10 +70,10 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
     		Intent j = new Intent(myContext, StatusFeed.class);
     		startActivity(j);*/
     		break;
-    	case R.id.login_btn_signup:
+    	/*case R.id.login_btn_signup:
     		Intent i = new Intent(this, RegistrationActivity.class);
     		startActivity(i);
-    		break;
+    		break;*/
     	}
     }
 
@@ -102,10 +98,10 @@ public class FlashFeed extends Activity implements OnClickListener, Runnable{
 				dialog.cancel();
 	    		Intent i = new Intent(myContext,  StatusFeedActivity.class);
 	    		startActivity(i);
-	    		Toast.makeText(FlashFeed.this, "Welcome ^^", Toast.LENGTH_LONG).show();
+	    		Toast.makeText(LoginActivity.this, "Welcome ^^", Toast.LENGTH_LONG).show();
 			}else{
 				dialog.cancel();
-				Toast.makeText(FlashFeed.this, "Ruh-roh, we couldn't find your fiche <-< Please try again.", Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, "Ruh-roh, we couldn't find your fiche <-< Please try again.", Toast.LENGTH_LONG).show();
 			}
 		}
 	};
