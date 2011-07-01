@@ -30,6 +30,6 @@
     <LinearLayout android:id="@+id/linlay_done" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_width="match_parent" android:orientation="vertical">
         <CheckBox android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Create group with selected users on done" android:textSize="14sp" android:id="@+id/cb_create_group"></CheckBox>
         <EditText android:visibility="gone" android:layout_height="wrap_content" android:id="@+id/etxt_group_name" android:hint="*Group name" android:layout_width="match_parent"></EditText>
-        <Button android:text="Done" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btn_done"></Button>
+        <Button android:text="Next" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btn_done"></Button>
     </LinearLayout>
 </RelativeLayout>
