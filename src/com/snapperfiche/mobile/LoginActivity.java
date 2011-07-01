@@ -44,7 +44,7 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
 		
 
         AccountService.Login("bigfiche@fiche.com", "asdf");
-		Intent i = new Intent(this, PostTaggerActivity.class);
+		Intent i = new Intent(this, StatusFeedActivity.class);
 		startActivity(i);
         //Intent i = new Intent(this, TestHttpRequest.class);
         //startActivity(i);
