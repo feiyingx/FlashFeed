@@ -32,6 +32,28 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
         View loginBtn = findViewById(R.id.buttonlogin);
         loginBtn.setOnClickListener(this);
         
+        /*
+        View signinBtn = findViewById(R.id.login_btn_signup);
+        signinBtn.setOnClickListener(this);
+         */
+        /*
+        Intent i = new Intent(this, StatusFeed.class);
+        //Intent i = new Intent(this, CameraActivity.class);
+			startActivity(i);
+		*/
+		
+
+        AccountService.Login("bigfiche@fiche.com", "asdf");
+		Intent i = new Intent(this, StatusFeedActivity.class);
+		startActivity(i);
+        //Intent i = new Intent(this, TestHttpRequest.class);
+        //startActivity(i);
+		/*
+        Intent intent = new Intent(this, TestActivity.class);
+        startActivity(intent);
+        */
+        
+
         /*View signinBtn = findViewById(R.id.butt);
         signinBtn.setOnClickListener(this);*/
     }
