@@ -8,6 +8,7 @@
 	  android:layout_width="match_parent"
 	  android:layout_height="wrap_content"
 	  android:id="@+id/gallery_feed"
+	  android:spacing="0dip"
 	  android:visibility="gone"
 	  />
 	 <TextView android:text="Hey, there is nothing to see here.." android:layout_height="100px" android:layout_width="match_parent" android:id="@+id/txt_feed_empty" android:visibility="gone" android:gravity="center"></TextView>

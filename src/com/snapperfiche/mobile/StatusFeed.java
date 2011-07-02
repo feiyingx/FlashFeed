@@ -78,7 +78,7 @@ public class StatusFeed extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statusfeed);
         
-        /*final Object data = getLastNonConfigurationInstance();
+        final Object data = getLastNonConfigurationInstance();
         if(data != null){
         	//cast it into the data holder obj
         	StatusFeedDataHolder dataHolder = (StatusFeedDataHolder) data;
@@ -114,7 +114,7 @@ public class StatusFeed extends BaseActivity{
 		        task = new LoadStatusFeed();
 		        task.execute();
         	}
-        }*/
+        }
         //loadStatusFeed();
         /*
         AccountService.Login("bigfiche@fiche.com", "asdf");		
