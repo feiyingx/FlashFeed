@@ -1,32 +1,6 @@
 package com.snapperfiche.mobile;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.FormBodyPart;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-
-import com.snapperfiche.code.Enumerations.BasicStatus;
-import com.snapperfiche.webservices.PostService;
-import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,13 +11,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.snapperfiche.code.Enumerations.BasicStatus;
+import com.snapperfiche.webservices.PostService;
+import com.snapperfiche.webservices.SimpleCache;
 
 public class PhotoConfirm extends Activity {
 	String cameraImageUrl;
 	
-	Button btnTags;
+	ImageButton btnTags;
 	EditText etxtCaption;
 	TextView txtLocation;
 	TextView txtAM_PM;
@@ -58,13 +37,13 @@ public class PhotoConfirm extends Activity {
         setContentView(R.layout.photoconfirm);
         
         //find controls
-        ImageView imgPreview = (ImageView) findViewById(R.id.picPreview);
-        btnTags = (Button) findViewById(R.id.btn_photo_confirm_tags);
-        etxtCaption = (EditText) findViewById(R.id.etxt_photo_confirm_caption);
-        txtLocation = (TextView) findViewById(R.id.txt_photo_confirm_location);
-        txtAM_PM = (TextView) findViewById(R.id.txt_photo_confirm_ampm);
-        txtTime = (TextView) findViewById(R.id.txt_photo_confirm_time);
-        txtDate = (TextView) findViewById(R.id.txt_photo_confirm_date);
+        ImageView imgPreview = (ImageView) findViewById(R.id.img_preview);
+        btnTags = (ImageButton) findViewById(R.id.btn_tags);
+        etxtCaption = (EditText) findViewById(R.id.edit_caption);
+        txtLocation = (TextView) findViewById(R.id.text_location);
+        //txtAM_PM = (TextView) findViewById(R.id.txt_photo_confirm_ampm);
+        txtTime = (TextView) findViewById(R.id.text_timeanddate);
+        //txtDate = (TextView) findViewById(R.id.txt_photo_confirm_date);
         
         Bundle cameraBundle = this.getIntent().getExtras();
         String imgUrl = (String) cameraBundle.get("fullpathSkewed");
@@ -149,7 +128,7 @@ public class PhotoConfirm extends Activity {
 			e.printStackTrace();
 		}*/
         
-		Button btnTagFriend = (Button) findViewById(R.id.btnTagFriend);
+		Button btnTagFriend = (Button) findViewById(R.id.btn_share);
 		btnTagFriend.setOnClickListener(new OnClickListener(){
 
 			@Override

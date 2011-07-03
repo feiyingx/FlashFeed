@@ -3,26 +3,130 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:orientation="vertical" android:layout_height="wrap_content">
-  <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout2" android:layout_width="match_parent">
-      <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btn_photo_confirm_tags" android:text="@string/photo_confirm_tags"></Button>
-  </LinearLayout>
-  <ImageView android:layout_height="wrap_content" android:id="@+id/picPreview" android:layout_width="wrap_content"></ImageView>
-  <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent">
-      <TextView android:id="@+id/txt_photo_confirm_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>
-      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView" android:id="@+id/txt_photo_confirm_time"></TextView>
-      <TextView android:id="@+id/txt_photo_confirm_ampm" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>
-      <TextView android:id="@+id/txt_photo_confirm_date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>
-  </LinearLayout>
-  <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/etxt_photo_confirm_caption" android:hint="Say something (optional)"></EditText>
+<!--<LinearLayout-->
+<!--  android:layout_width="fill_parent"-->
+<!--  android:layout_height="wrap_content"-->
+<!--  android:orientation="vertical"-->
+<!--  android:background="#ffffff">-->
+<!--  <LinearLayout android:id="@+id/linearLayout2" android:layout_width="match_parent" android:layout_height="wrap_content">-->
+<!--      <Button android:id="@+id/btn_photo_confirm_tags" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/photo_confirm_tags"></Button>-->
+<!--  </LinearLayout>-->
+<!--  <ImageView android:id="@+id/picPreview" android:layout_width="wrap_content" android:layout_height="wrap_content"></ImageView>-->
+<!--  <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">-->
+<!--      <TextView android:id="@+id/txt_photo_confirm_location" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>-->
+<!--      <TextView android:id="@+id/txt_photo_confirm_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>-->
+<!--      <TextView android:id="@+id/txt_photo_confirm_ampm" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>-->
+<!--      <TextView android:id="@+id/txt_photo_confirm_date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TextView"></TextView>-->
+<!--  </LinearLayout>-->
+<!--  <EditText android:id="@+id/etxt_photo_confirm_caption" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Say something (optional)"></EditText>-->
+<!---->
+<!--	<Button-->
+<!--		android:id="@+id/btnTagFriend"-->
+<!--		android:layout_width="wrap_content"-->
+<!--		android:layout_height="wrap_content"-->
+<!--		android:text="Ready to go!"/>-->
+<!--</LinearLayout>-->
 
-	<Button
-		android:id="@+id/btnTagFriend"
-		android:layout_width="wrap_content"
+	<RelativeLayout
+	android:layout_height="fill_parent" 
+	android:layout_width="fill_parent"
+	android:background="#ffffff"
+>
+		<TextView
+		android:id="@+id/backgroundgray"
+		android:layout_width="fill_parent"
+		android:layout_height="70dip"
+		android:background="@drawable/bggradient"
+		></TextView>
+		<ToggleButton
+		android:id="@+id/btn_private"
+		android:layout_width="105dip"
+		android:layout_height="70dip"
+		android:background="@drawable/button_private_state"
+		android:padding="0px"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentTop="true"
+		android:scaleType="fitXY"
+		android:textOn=""
+		android:textOff=""
+		></ToggleButton>
+		<ImageButton
+		android:id="@+id/btn_retake"
+		android:layout_width="118dip"
+		android:layout_height="70dip"
+		android:background="@drawable/button_retake_state"
+		android:padding="0px"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentTop="true"
+		android:scaleType="fitXY"
+		></ImageButton>
+		<ImageButton
+		android:id="@+id/btn_tags"
+		android:layout_width="106dip"
+		android:layout_height="70dip"
+		android:background="@drawable/button_tags_state"
+		android:padding="0px"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentTop="true"
+		android:scaleType="fitXY"
+		></ImageButton>
+		<ImageView
+		android:id="@+id/img_preview"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:text="Ready to go!"/>
-</LinearLayout>
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="5dip"
+		android:scaleType="fitXY"
+		android:layout_below="@id/btn_private"
+		android:src="@drawable/terran"
+		></ImageView>
+		<TextView
+		android:id="@+id/text_location"
+		android:layout_width="150dip"
+		android:layout_height="20dip"
+		android:layout_marginLeft="10dip"
+		android:layout_below="@id/img_preview"
+		android:textSize="14dip"
+		android:textColor="#646464"
+		android:text="Location"
+		></TextView>
+		<TextView
+		android:id="@+id/text_timeanddate"
+		android:layout_width="150dip"
+		android:layout_height="20dip"
+		android:layout_marginRight="10dip"
+		android:layout_below="@id/img_preview"
+		android:layout_toRightOf="@id/text_location"
+		android:textSize="14dip"
+		android:textColor="#646464"
+		android:text="Time | Date"
+		android:gravity="right"
+		></TextView>
+		<EditText
+		android:id="@+id/edit_caption"
+		android:layout_width="fill_parent"
+		android:layout_height="40dip"
+		android:layout_below="@id/text_location"
+		android:layout_alignLeft="@id/text_location"
+		android:layout_marginTop="5dip"
+		android:layout_marginRight="5dip"
+		android:hint="Caption (Optional)"
+		android:textColorHint="@color/red"
+		android:textSize="14dip"
+		android:gravity="center"
+		></EditText>
+		<Button
+		android:id="@+id/btn_share"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/edit_caption"
+		android:layout_alignParentLeft="true"
+		android:gravity="center_vertical|center_horizontal"
+		android:text="Share"
+		android:textSize="20dip"
+		android:textStyle="bold"
+		android:textColor="@color/textwhite"
+		android:background="@drawable/textbutton"
+		></Button>
+	</RelativeLayout>
 </ScrollView>
