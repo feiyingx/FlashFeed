@@ -5,7 +5,8 @@ public class Constants {
 	//public static final String BaseUrl = "http://10.0.2.2:3000/";
 	// use this baseurl to test on device and localhost, this url depends on the computer that is running the localhost server, it makes use of the computer's internal ip within the network
 	//public static final String BaseUrl = "http://192.168.1.4:3000/";  //kens
-	public static final String BaseUrl = "http://192.168.1.2:3000/"; //jerms
+	//public static final String BaseUrl = "http://192.168.1.2:3000/"; //jerms
+	public static final String BaseUrl = "http://192.168.1.127:3000/"; //god dad
 	
 	/* Account urls */
 	public static final String LoginUrl = BaseUrl + "sessions.json";
@@ -96,4 +97,7 @@ public class Constants {
 	public static final String requestParameter_Name = "name";
 	public static final String requestParameter_GroupType = "group_type";
 	public static final String requestParameter_GroupMembers = "group_members";
+	
+	//request codes
+	public static final int REQCODE_GET_POST_TAGS = 1337;
 }

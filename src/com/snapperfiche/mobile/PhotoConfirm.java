@@ -24,11 +24,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import com.snapperfiche.code.Constants;
 import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.webservices.PostService;
 import com.snapperfiche.webservices.SimpleCache;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.net.Uri;
@@ -51,6 +53,11 @@ public class PhotoConfirm extends Activity {
 	TextView txtDate;
 	Address addr;
 	Date date;
+	
+	int[] mTagIds;
+	
+	Context mContext = this;
+	
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,7 @@ public class PhotoConfirm extends Activity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a | MM.dd.yyyy");
         date = new Date();
         txtTime.setText(dateFormat.format(date));
+        
         
         /*
         File pic = new File(imgUrl);
@@ -154,7 +162,7 @@ public class PhotoConfirm extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				BasicStatus status = PostService.Post(etxtCaption.getText().toString(), cameraImageUrl, addr, null, null, false);
+				BasicStatus status = PostService.Post(etxtCaption.getText().toString(), cameraImageUrl, addr, null, mTagIds, false);
 				SimpleCache.remove(PostService.getCacheKey_GetGlobalFeed(0));
 				Intent i = new Intent(v.getContext(), StatusFeedActivity.class);
 				i.putExtra("reloadFeed", true);
@@ -164,5 +172,24 @@ public class PhotoConfirm extends Activity {
         	
         });
     }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode == RESULT_OK && requestCode == Constants.REQCODE_GET_POST_TAGS){
+			mTagIds = data.getIntArrayExtra("tag_ids");
+		}
+	}
+	
+	//events
+	OnClickListener onClick_addTags = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			Intent i = new Intent(mContext, PostTaggerActivity.class);
+			startActivityForResult(i, Constants.REQCODE_GET_POST_TAGS);
+		}
+		
+	};
 }
 
