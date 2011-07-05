@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/guava-r09-gwt.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="lib/easyfacebookandroidsdk_2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

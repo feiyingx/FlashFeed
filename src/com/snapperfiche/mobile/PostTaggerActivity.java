@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.snapperfiche.code.Constants;
 import com.snapperfiche.code.Enumerations;
 import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.code.Utility;
@@ -15,6 +16,7 @@ import com.snapperfiche.webservices.TagService;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Bundle;
@@ -36,7 +38,7 @@ import android.widget.ViewSwitcher;
 
 public class PostTaggerActivity extends Activity{
 	ListView mLvTags;
-	Button mBtnAdd;
+	Button mBtnAdd, mBtnCancel, mBtnDone;
 	EditText mEtxtTagName;
 	ViewSwitcher mVwswLoadingTags;
 	List<Tag> mTags;
@@ -56,6 +58,8 @@ public class PostTaggerActivity extends Activity{
 		mBtnAdd = (Button)findViewById(R.id.btn_add);
 		mEtxtTagName = (EditText)findViewById(R.id.etxt_tag_name);
 		mVwswLoadingTags = (ViewSwitcher)findViewById(R.id.vwsw_loading_tags);
+		mBtnCancel = (Button)findViewById(R.id.btn_cancel);
+		mBtnDone = (Button)findViewById(R.id.btn_done);
 		
 		mSelectedTagIds = new ArrayList<Integer>();
 		mSelectedStates = new HashMap();
@@ -158,6 +162,48 @@ public class PostTaggerActivity extends Activity{
 				mAddTagTask = new AddTagAsyncTask();
 				mAddTagTask.attach(PostTaggerActivity.this);
 				mAddTagTask.execute(tagName);
+			}
+		}
+		
+	};
+	
+	OnClickListener onClick_cancel = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			Intent parentIntent = getIntent();
+			if(parentIntent != null){
+				//since we're canceling out of the tag activity, just return
+				//to the parent with empty data
+				parentIntent.putExtra("tag_ids", new int[0]);
+				setResult(RESULT_OK, parentIntent);
+				finish();
+			}
+		}
+		
+	};
+	
+	OnClickListener onClick_done = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			Intent parentIntent = getIntent();
+			if(parentIntent != null){
+				//since we're canceling out of the tag activity, just return
+				//to the parent with empty data
+				int[] tagIdArray;
+				if(mTags != null){
+					int size = mTags.size();
+					tagIdArray = new int[size];
+					for(int i = 0; i < size; i++){
+						tagIdArray[i] = ((Tag)mTags.get(i)).getId();
+					}
+				}else{
+					tagIdArray = new int[0];
+				}
+				parentIntent.putExtra("tag_ids", tagIdArray);
+				setResult(RESULT_OK, parentIntent);
+				finish();
 			}
 		}
 		
