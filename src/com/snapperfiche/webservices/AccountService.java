@@ -100,6 +100,7 @@ public class AccountService extends BaseService {
 		try {
 			HttpResponse logoutResponse = GetHttpClient().execute(logoutRequest);
 			StatusLine status = logoutResponse.getStatusLine();
+			currentUser = null; //set user to null
 			if(status.getStatusCode() != HttpStatus.SC_OK){
 				//TODO handle a bad status code
 			}

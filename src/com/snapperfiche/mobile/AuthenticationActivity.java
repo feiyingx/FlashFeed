@@ -18,6 +18,9 @@ public class AuthenticationActivity extends TabActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.authentication);
+        //check to see if uesr is already logged in
+        //if so, skip this view and take them to the status feed
+        checkUserAuthenticated();
         initTabs();
         
         //Intent i = new Intent(this, FavoritesActivity.class);
@@ -32,6 +35,13 @@ public class AuthenticationActivity extends TabActivity {
         startActivity(i);
         */
     }
+	
+	private void checkUserAuthenticated(){
+		if(AccountService.IsAuthenticated()){
+			Intent i = new Intent(this, StatusFeedActivity.class);
+			startActivity(i);
+		}
+	}
 	
 	private void initTabs() {
 		//TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
