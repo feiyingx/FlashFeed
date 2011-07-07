@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.snapperfiche.code.Enumerations.AccountType;
 import com.snapperfiche.code.Enumerations.RegisterStatus;
 import com.snapperfiche.webservices.AccountService;
 
@@ -136,7 +137,7 @@ public class RegistrationActivity extends Activity {
 		protected RegisterStatus doInBackground(RegistrationFormDataHolder... args) {
 			// TODO Auto-generated method stub
 			RegistrationFormDataHolder form = args[0];
-			return AccountService.Register(form.email, form.password, form.firstName, form.lastName, form.alias);
+			return AccountService.Register(form.email, form.password, form.firstName, form.lastName, form.alias, AccountType.DEFAULT);
 		}
 		
 		@Override

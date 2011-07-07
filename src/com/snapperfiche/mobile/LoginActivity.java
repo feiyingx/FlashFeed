@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
 	EditText txtPassword;
 	ProgressDialog dialog;
 	Context myContext = this;
+	Button mBtnFb;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,9 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
         View loginBtn = findViewById(R.id.buttonlogin);
         loginBtn.setOnClickListener(this);
         
+        mBtnFb = (Button)findViewById(R.id.buttonfb);
+        mBtnFb.setOnClickListener(onClick_fb);
+        
         /*
         View signinBtn = findViewById(R.id.login_btn_signup);
         signinBtn.setOnClickListener(this);
@@ -42,12 +47,15 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
 			startActivity(i);
 		*/
 		
-
+        /*
         AccountService.Login("bigfiche@fiche.com", "asdf");
 		Intent i = new Intent(this, StatusFeedActivity.class);
 		startActivity(i);
-        //Intent i = new Intent(this, TestHttpRequest.class);
-        //startActivity(i);
+		*/
+        /*
+        Intent i = new Intent(this, FacebookConnect.class);
+        startActivity(i);
+        */
 		/*
         Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
@@ -104,5 +112,16 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
 				Toast.makeText(LoginActivity.this, "Ruh-roh, we couldn't find your fiche <-< Please try again.", Toast.LENGTH_LONG).show();
 			}
 		}
+	};
+	
+	//events
+	OnClickListener onClick_fb = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			Intent i = new Intent(getApplicationContext(), FacebookConnect.class);
+			startActivity(i);
+		}
+		
 	};
 }

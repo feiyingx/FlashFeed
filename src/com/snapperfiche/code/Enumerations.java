@@ -170,4 +170,29 @@ public class Enumerations {
 			}
 		}
 	}
+	
+	public enum AccountType{
+		DEFAULT(0),
+		FACEBOOK(1);
+		
+		final int value;
+		AccountType(int val){
+			this.value = val;
+		}
+		
+		public int value(){
+			return value;
+		}
+		
+		public static AccountType getType(int val){
+			switch(val){
+				case 0:
+					return DEFAULT;
+				case 1:
+					return FACEBOOK;
+				default:
+					return DEFAULT;
+			}
+		}
+	}
 }

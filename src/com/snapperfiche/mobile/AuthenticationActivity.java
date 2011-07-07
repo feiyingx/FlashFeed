@@ -22,12 +22,15 @@ public class AuthenticationActivity extends TabActivity {
         
         //Intent i = new Intent(this, FavoritesActivity.class);
 		//startActivity(i);
-        
+        /*
         AccountService.Login("bigfiche@fiche.com", "asdf");
 		Intent i = new Intent(this, StatusFeedActivity.class);
 		startActivity(i);
-        //Intent i = new Intent(this, TestHttpRequest.class);
-        //startActivity(i);
+		*/
+        /*
+        Intent i = new Intent(this, FacebookConnect.class);
+        startActivity(i);
+        */
     }
 	
 	private void initTabs() {

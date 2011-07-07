@@ -5,6 +5,8 @@ public class User {
 	private String email;
 	private String alias;
 	private String accounttype;
+	private String first_name;
+	private String last_name;
 	
 	public User(){}
 	
@@ -31,5 +33,13 @@ public class User {
 		public String getFriendTime(){
 			return friend_time;
 		}
+	}
+	
+	public String getFirstName(){
+		return first_name;
+	}
+	
+	public String getLastName(){
+		return last_name;
 	}
 }
