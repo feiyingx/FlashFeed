@@ -7,6 +7,7 @@ public class Constants {
 	public static final String BaseUrl = "http://192.168.1.4:3000/";  //kens
 	//public static final String BaseUrl = "http://192.168.1.2:3000/"; //jerms
 	//public static final String BaseUrl = "http://192.168.1.127:3000/"; //god dad
+	//public static final String BaseUrl = "http://quiet-flower-675.heroku.com/"; //heroku dev
 	
 	/* Account urls */
 	public static final String LoginUrl = BaseUrl + "sessions.json";

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical">
+	<ViewSwitcher
+	android:id="@+id/vs_loading"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent">
+	<TextView
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:gravity="center"
+	android:text="Fetching your friends...">
+	</TextView>
+	<RelativeLayout
+	  xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent">
+	    <Button 
+	    android:id="@+id/btn_add" 
+	    android:layout_height="wrap_content" 
+	    android:layout_alignParentBottom="true" 
+	    android:text="Add" 
+	    android:layout_width="match_parent">
+	    </Button>
+	    <EditText 
+	    android:layout_height="wrap_content" 
+	    android:layout_width="match_parent" 
+	    android:id="@+id/etxt_name" 
+	    android:layout_above="@+id/btn_add" 
+	    android:hint="Enter Group Name...">
+	    </EditText>
+	    <LinearLayout
+	    	android:orientation="horizontal"
+	    	android:layout_height="match_parent"
+	    	android:layout_width="match_parent"
+	    	android:layout_above="@+id/etxt_name">
+	    	<ListView 
+	    	android:layout_height="match_parent" 
+	    	android:layout_width="match_parent" 
+	    	android:id="@+id/lv_selected"
+	    	android:layout_weight="2"
+	    	android:visibility="gone">
+	    	</ListView>
+	    	<ListView 
+		    android:layout_height="match_parent" 
+		    android:layout_width="match_parent" 
+		    android:id="@+id/lv_friends"
+		    android:layout_weight="1">
+		    </ListView>
+	    </LinearLayout>
+	</RelativeLayout>
+
+</ViewSwitcher>
+</LinearLayout>
+

@@ -49,6 +49,7 @@ public class StatusFeedActivity extends BaseActivity {
 	GetGlobalFeedTask task;
 	List<List<Post>> colPostsData;
 	List<Group> mGroups;
+	Button mBtnAddFeed;
 	
 	//override events
 	@Override
@@ -66,6 +67,8 @@ public class StatusFeedActivity extends BaseActivity {
 		
 		mInflater = LayoutInflater.from(this);
         
+		mBtnAddFeed = (Button)findViewById(R.id.btn_status_feed_add_group);
+		
         //bindTopNav();
         
       //set to 7 right now, since each row is broken up into a day (instead of hour for now)
@@ -241,6 +244,14 @@ public class StatusFeedActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			//Intent i = new Intent(v.getContext(), CameraView.class);
 			Intent i = new Intent(v.getContext(), CameraActivity.class);
+			startActivity(i);
+		}
+    };
+    
+    OnClickListener onClick_AddFeed = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			Intent i = new Intent(v.getContext(), AddFeedActivity.class);
 			startActivity(i);
 		}
     };

@@ -11,6 +11,7 @@ import com.snapperfiche.webservices.AccountService;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -31,7 +32,7 @@ public class RegistrationActivity extends Activity {
 	boolean rfvLastName = false;
 	boolean rfvEmail = false;
 	boolean rfvPassword = false;
-	Context mContext;
+	Context mContext = this;
 	TextView txtReqFirstName, txtReqLastName, txtReqEmail, txtReqPassword, txtPassMin, txtEmailDup, txtEmailFormat;
 	RegisterUserTask registrationTask;
 	ProgressDialog dialog;
@@ -63,8 +64,8 @@ public class RegistrationActivity extends Activity {
 		if(dataHolder != null){
 			if(dataHolder.task != null){
 				registrationTask = dataHolder.task;
-				initiateRegistrationState();
 				registrationTask.attach(this);
+				initiateRegistrationState();
 			}
 		}
 	}
@@ -116,6 +117,7 @@ public class RegistrationActivity extends Activity {
 			if(isValid){
 				RegistrationFormDataHolder form = new RegistrationFormDataHolder(etxtFirstName.getText().toString(), etxtLastName.getText().toString(), etxtEmail.getText().toString(), etxtAlias.getText().toString(), etxtPassword.getText().toString());
 				registrationTask = new RegisterUserTask();
+				registrationTask.attach(RegistrationActivity.this);
 				registrationTask.execute(form);
 				initiateRegistrationState();
 				/*
@@ -201,6 +203,9 @@ public class RegistrationActivity extends Activity {
 	private void restoreDefaultState(){
 		if(dialog != null)
 			dialog.dismiss();
+		
+		Intent i = new Intent(mContext, StatusFeedActivity.class);
+		startActivity(i);
 	}
 	
 	private void afterRegistration(RegisterStatus status){

@@ -31,11 +31,21 @@ import com.snapperfiche.data.UserNotification;
 import com.google.gson.Gson;
 
 public class UserNotificationService extends BaseService{
+	public static String CacheKey_GetReceivedNotifications(){
+		User currentUser = AccountService.getUser();
+		if(currentUser == null) return "";
+		return "GetReceivedNotifications_" + String.valueOf(currentUser.getId());
+	}
+	
+	public static void CacheKeyReset_GetReceivedNotifications(){
+		SimpleCache.remove(CacheKey_GetReceivedNotifications());
+	}
+	
 	public static List<UserNotification> GetReceivedNotifications(boolean forceCacheRefresh){
 		List<UserNotification> notifications = new ArrayList<UserNotification>();
 		User currentUser = AccountService.getUser();
 		if(currentUser != null){
-			String cacheKey = "GetReceivedNotifications_" + String.valueOf(currentUser.getId());
+			String cacheKey = CacheKey_GetReceivedNotifications();
 			List<UserNotification> cacheData = (List<UserNotification>)SimpleCache.get(cacheKey);
 			if(!forceCacheRefresh && cacheData != null){
 				return cacheData;

@@ -146,6 +146,8 @@ public class AccountService extends BaseService {
 		nvps.add(new BasicNameValuePair("user[password_confirmation]", password));
 		nvps.add(new BasicNameValuePair("user[alias]", alias));
 		nvps.add(new BasicNameValuePair("user[accounttype]", String.valueOf(accountType.value())));
+		nvps.add(new BasicNameValuePair("user[first_name]", firstName));
+		nvps.add(new BasicNameValuePair("user[last_name]", lastName));
 		
 		try {
 			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
