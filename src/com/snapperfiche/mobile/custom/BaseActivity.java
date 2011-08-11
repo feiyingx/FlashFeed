@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.snapperfiche.mobile.AuthenticationActivity;
 import com.snapperfiche.mobile.CameraActivity;
+import com.snapperfiche.mobile.EditProfileActivity;
 import com.snapperfiche.mobile.LoginActivity;
 import com.snapperfiche.mobile.ProfileActivity;
 import com.snapperfiche.mobile.QuestionActivity;
@@ -59,6 +60,8 @@ public class BaseActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
 			case R.id.itm_edit_profile:
+				Intent intent = new Intent(this, EditProfileActivity.class);
+		        startActivity(intent);
 				return true;
 			case R.id.itm_settings:
 				return true;

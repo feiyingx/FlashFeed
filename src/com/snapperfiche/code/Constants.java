@@ -15,6 +15,7 @@ public class Constants {
 	public static final String IsAuthenticatedUrl = BaseUrl + "sessions/authenticated.json";
 	public static final String RegisterUrl = BaseUrl + "users.json";
 	public static final String UserExistsUrl = BaseUrl + "users/exists_by_email.json";
+	public static final String EditProfileUrl_Format = BaseUrl + "users/:user_id.json";
 	
 	/* Post urls */
 	public static final String PostsIndexUrl = BaseUrl + "posts.json";

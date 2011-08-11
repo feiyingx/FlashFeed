@@ -42,6 +42,8 @@
 		</activity>
 		<activity android:name=".PostTaggerActivity">
 		</activity>
+		<activity android:name=".EditProfileActivity">
+		</activity>
 		<activity android:name=".PhotoConfirm"
 				  android:label="@string/photoconfirm_name">
 		</activity>

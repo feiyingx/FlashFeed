@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <ScrollView 
+    android:layout_height="match_parent" 
+    android:layout_width="match_parent" 
+    android:layout_alignParentTop="true"
+    android:layout_above="@+id/linlay_complete_btns">
+        <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+            <ImageView 
+            android:id="@+id/img_profile" 
+            android:src="@drawable/icon" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+            </ImageView>
+            <TextView 
+            android:text="(Click photo to edit)" 
+            android:textSize="10sp"
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+            </TextView>
+        	
+            <EditText 
+            android:id="@+id/etxt_fname" 
+            android:layout_width="match_parent" 
+            android:layout_height="wrap_content" 
+            android:hint="First name">
+            </EditText>
+            <EditText 
+            android:id="@+id/etxt_lname" 
+            android:layout_width="match_parent" 
+            android:layout_height="wrap_content" 
+            android:hint="Last name">
+            </EditText>
+            <EditText android:id="@+id/etxt_pw" 
+            android:layout_width="match_parent" 
+            android:layout_height="wrap_content" 
+            android:hint="Password">
+            </EditText>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+    android:id="@+id/linlay_complete_btns"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_alignParentBottom="true">
+    	<Button
+    	android:id="@+id/btn_cancel"
+    	android:text="Cancel"
+    	android:layout_height="wrap_content"
+    	android:layout_width="wrap_content"
+    	android:layout_weight="1">
+    	</Button>
+    	<Button
+    	android:id="@+id/btn_done"
+    	android:text="Done"
+    	android:layout_height="wrap_content"
+    	android:layout_width="wrap_content"
+    	android:layout_weight="1">
+    	</Button>
+    </LinearLayout>
+</RelativeLayout>

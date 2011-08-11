@@ -57,7 +57,8 @@ public class LoginActivity extends Activity implements OnClickListener, Runnable
         startActivity(i);
         */
 		/*
-        Intent intent = new Intent(this, TestActivity.class);
+        AccountService.Login("d@d.com", "asdf");
+        Intent intent = new Intent(this, EditProfileActivity.class);
         startActivity(intent);
         */
         

@@ -66,6 +66,7 @@ public class PostService extends BaseService {
 			File pic = new File(imgUrl);
 	        pic = pic.getAbsoluteFile();
 	        boolean exists = pic.exists();
+	        boolean file = pic.isFile();
 	        
 	        FileBody bin = new FileBody(pic, "image/jpeg");
 	        MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
