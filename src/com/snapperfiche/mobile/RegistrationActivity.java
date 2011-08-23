@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class RegistrationActivity extends Activity {
-	EditText etxtFirstName, etxtLastName, etxtEmail, etxtAlias, etxtPassword;
+	EditText etxtFirstName, etxtLastName, etxtEmail, etxtPassword;
 	Button btnRegister;
 	boolean rfvFirstName = false;
 	boolean rfvLastName = false;
@@ -36,6 +36,7 @@ public class RegistrationActivity extends Activity {
 	TextView txtReqFirstName, txtReqLastName, txtReqEmail, txtReqPassword, txtPassMin, txtEmailDup, txtEmailFormat;
 	RegisterUserTask registrationTask;
 	ProgressDialog dialog;
+	String mErrorMsg = "Please enter your:";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +49,8 @@ public class RegistrationActivity extends Activity {
 		etxtFirstName = (EditText) findViewById(R.id.reg_etxt_fname);
 		etxtLastName = (EditText) findViewById(R.id.reg_etxt_lname);
 		etxtEmail = (EditText) findViewById(R.id.reg_etxt_email);
-		etxtAlias = (EditText) findViewById(R.id.reg_etxt_username);
 		etxtPassword = (EditText) findViewById(R.id.reg_etxt_password);
 		btnRegister = (Button) findViewById(R.id.reg_btn_register);
-		txtReqFirstName = (TextView) findViewById(R.id.reg_txtFnameReq);
-		txtReqLastName = (TextView) findViewById(R.id.reg_txtLnameReq);
-		txtReqEmail = (TextView) findViewById(R.id.reg_txtEmailReq);
-		txtReqPassword = (TextView) findViewById(R.id.reg_txtPassReq);
-		txtEmailDup = (TextView) findViewById(R.id.reg_txtEmailExists);
-		txtPassMin = (TextView) findViewById(R.id.reg_txtPassShort);
-		txtEmailFormat = (TextView) findViewById(R.id.reg_txtEmailFormat);
 		btnRegister.setOnClickListener(submitFormOnClick);
 		
 		final RegistrationActivityDataHolder dataHolder = (RegistrationActivityDataHolder)getLastNonConfigurationInstance();
@@ -70,52 +63,62 @@ public class RegistrationActivity extends Activity {
 		}
 	}
 	
+	private boolean validateForm(){
+		boolean isValid = true;
+		if(isEmpty(etxtFirstName)){
+			isValid = false;
+			mErrorMsg += "\n" + getString(R.string.error_req_first_name);
+		}
+		
+		if(isEmpty(etxtLastName)){
+			isValid = false;
+			mErrorMsg += "\n"+ getString(R.string.error_req_last_name);
+		}
+		
+		if(isEmpty(etxtEmail)){
+			isValid = false;
+			mErrorMsg += "\n"+getString(R.string.error_req_email);
+		}else{
+			if(!isValidEmailFormat(etxtEmail.getText().toString())){
+				isValid = false;
+				mErrorMsg += "\n"+getString(R.string.error_email_format);
+			}else{
+				//check if email exists
+				if(AccountService.IsUserExists(etxtEmail.getText().toString())){
+					isValid = false;
+					mErrorMsg += "\n"+getString(R.string.error_email_dup);
+				}
+			}
+		}
+		
+		if(isEmpty(etxtPassword)){
+			isValid = false;
+			mErrorMsg += "\n"+getString(R.string.error_req_pass);
+		}
+		
+		if(isNotMinLength(etxtPassword, 4)){
+			isValid = false;
+			mErrorMsg += "\n"+getString(R.string.error_pass_min_length);
+		}
+		
+		return isValid;
+	}
+	
+	private void displayErrors(){
+		Toast.makeText(mContext, mErrorMsg, Toast.LENGTH_LONG).show();
+		//after displaying error, reset error msgs
+		mErrorMsg = "Please enter your:";
+	}
+	
 	//listener methods
 	OnClickListener submitFormOnClick = new OnClickListener(){
 
 		@Override
 		public void onClick(View v) {
-			boolean isValid = true;
-			if(isEmpty(etxtFirstName)){
-				isValid = false;
-				txtReqFirstName.setVisibility(EditText.VISIBLE);
-			}else{
-				txtReqFirstName.setVisibility(EditText.GONE);
-			}
-			if(isEmpty(etxtLastName)){
-				isValid = false;
-				txtReqLastName.setVisibility(EditText.VISIBLE);
-			}else
-				txtReqLastName.setVisibility(EditText.GONE);
 			
-			if(isEmpty(etxtEmail)){
-				isValid = false;
-				txtReqEmail.setVisibility(EditText.VISIBLE);
-			}else{
-				txtReqEmail.setVisibility(EditText.GONE);
-				if(!isValidEmailFormat(etxtEmail.getText().toString())){
-					isValid = false;
-					txtEmailFormat.setVisibility(EditText.VISIBLE);
-				}else{
-					txtEmailFormat.setVisibility(EditText.GONE);
-				}
-			}
 			
-			if(isEmpty(etxtPassword)){
-				isValid = false;
-				txtReqPassword.setVisibility(EditText.VISIBLE);
-			}
-			else
-				txtReqPassword.setVisibility(EditText.GONE);
-			
-			if(isNotMinLength(etxtPassword, 4)){
-				isValid = false;
-				txtPassMin.setVisibility(EditText.VISIBLE);
-			}else
-				txtPassMin.setVisibility(EditText.GONE);
-			
-			if(isValid){
-				RegistrationFormDataHolder form = new RegistrationFormDataHolder(etxtFirstName.getText().toString(), etxtLastName.getText().toString(), etxtEmail.getText().toString(), etxtAlias.getText().toString(), etxtPassword.getText().toString());
+			if(validateForm()){
+				RegistrationFormDataHolder form = new RegistrationFormDataHolder(etxtFirstName.getText().toString(), etxtLastName.getText().toString(), etxtEmail.getText().toString(), "", etxtPassword.getText().toString());
 				registrationTask = new RegisterUserTask();
 				registrationTask.attach(RegistrationActivity.this);
 				registrationTask.execute(form);
@@ -126,6 +129,8 @@ public class RegistrationActivity extends Activity {
 				}else{
 					Toast.makeText(mContext, "Success", Toast.LENGTH_SHORT);
 				}*/
+			}else{
+				displayErrors();
 			}
 		}
 		

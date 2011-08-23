@@ -58,7 +58,7 @@
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentTop="true"
 			android:layout_marginLeft="15dip"
-			android:layout_marginTop="65dip"
+			android:layout_marginTop="35dip"
 			android:layout_marginBottom="10dip"
 		  	>
 		  	</Button>
@@ -89,20 +89,11 @@
 		  	android:textSize="12dip"
 		  	>
 		  	</TextView>
-  			<LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical" android:id="@+id/reg_linlay_errors">
-                <TextView android:text="@string/error_req_fname" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtFnameReq"></TextView>
-                <TextView android:text="@string/error_last_name" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtLnameReq"></TextView>
-                <TextView android:text="@string/error_req_email" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtEmailReq"></TextView>
-                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/reg_txtEmailFormat" android:visibility="gone" android:text="@string/error_email_format"></TextView>
-                <TextView android:text="@string/error_req_pass" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtPassReq"></TextView>
-                <TextView android:text="@string/error_email_dup" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtEmailExists"></TextView>
-                <TextView android:text="@string/error_pass_min_length" android:layout_height="wrap_content" android:layout_width="wrap_content" android:visibility="gone" android:id="@+id/reg_txtPassShort"></TextView>
-            </LinearLayout>
             <TextView
 		  	android:id="@+id/reg_lbl_fname"
 		  	android:layout_width="wrap_content"
 		  	android:layout_height="wrap_content"  	  	
-		  	android:text="First Name"
+		  	android:text="First Name*"
 		  	android:textColor="@color/textgray"
 			android:layout_alignParentLeft="true"
 			android:layout_below="@id/buttonsf"
@@ -122,7 +113,7 @@
 		  	android:id="@+id/reg_lbl_lname"
 		  	android:layout_width="wrap_content"
 		  	android:layout_height="wrap_content"  	  	
-		  	android:text="Last Name"
+		  	android:text="Last Name*"
 		  	android:textColor="@color/textgray"
 			android:layout_alignParentLeft="true"
 			android:layout_below="@id/reg_etxt_fname"
@@ -143,7 +134,7 @@
 		  	android:id="@+id/reg_lbl_email"
 		  	android:layout_width="wrap_content"
 		  	android:layout_height="wrap_content"  	  	
-		  	android:text="Email Address"
+		  	android:text="Email*"
 		  	android:textColor="@color/textgray"
 			android:layout_alignParentLeft="true"
 			android:layout_below="@id/reg_etxt_lname"
@@ -158,37 +149,17 @@
 		  	android:layout_below="@id/reg_lbl_email"
 			android:layout_marginLeft="15dip"
 			android:layout_marginRight="15dip"	
-		  	></EditText>  	
-		  	<TextView
-		  	android:id="@+id/reg_lbl_username"
-		  	android:layout_width="wrap_content"
-		  	android:layout_height="wrap_content"  	  	
-		  	android:text="Desired Username"
-		    android:textColor="@color/textgray"	
-			android:layout_alignParentLeft="true"
-			android:layout_below="@id/reg_etxt_email"
-			android:layout_marginLeft="15dip"
-			android:layout_marginTop="0dip"
-		  	>
-		  	</TextView> 	
-		  	<EditText
-		  	android:id="@+id/reg_etxt_username"
-		  	android:layout_width="fill_parent"
-		  	android:layout_height="40dip"
-		  	android:layout_below="@id/reg_lbl_username"
-			android:layout_marginLeft="15dip"
-			android:layout_marginRight="15dip"	
-		  	></EditText>	
+		  	></EditText>  			
 		  	<TextView
 		  	android:id="@+id/reg_lbl_password"
 		  	android:layout_width="wrap_content"
 		  	android:layout_height="wrap_content"  	  	
-		  	android:text="Password"
+		  	android:text="Password* (min 4 characters)"
 		    android:textColor="@color/textgray"	
 			android:layout_alignParentLeft="true"
-			android:layout_below="@id/reg_etxt_username"
+			android:layout_below="@id/reg_etxt_email"
 			android:layout_marginLeft="15dip"
-			android:layout_marginTop="0dip"
+			android:layout_marginTop="10dip"
 		  	>
 		  	</TextView> 	
 		  	<EditText
@@ -198,26 +169,7 @@
 		  	android:layout_below="@id/reg_lbl_password"
 			android:layout_marginLeft="15dip"
 			android:layout_marginRight="15dip"	
-		  	></EditText>	  	  	  	
-			<TextView
-		  	android:id="@+id/reg_lbl_keeplogged"
-		  	android:layout_width="wrap_content"
-		  	android:layout_height="wrap_content"  	
-		  	android:layout_marginTop="10dip" 
-		  	android:layout_marginLeft="15dip"	 	
-		  	android:text="Keep me logged in"
-		    android:textColor="@color/textgray"	
-			android:layout_alignParentLeft="true"
-			android:layout_below="@id/reg_etxt_password"
-		  	></TextView>
-		  	<CheckBox
-		  	android:id="@+id/reg_chk_keeplog"
-		  	android:layout_width="40dip"
-		  	android:layout_height="40dip"
-			android:layout_below="@id/reg_etxt_password"
-			android:layout_alignParentRight="true"
-			android:layout_marginRight="10dip"
-		  	></CheckBox>
+		  	></EditText>
 		</RelativeLayout>
 	</ScrollView>
 	<RelativeLayout

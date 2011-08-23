@@ -90,23 +90,5 @@
 	  	android:layout_below="@+id/textpassword"
 		android:layout_marginLeft="15dip"
 		android:layout_marginRight="15dip"></EditText>	  	
-		<TextView
-	  	android:id="@+id/textkeeplogged"
-	  	android:layout_width="wrap_content"
-	  	android:layout_height="wrap_content"  	
-	  	android:layout_marginTop="10dip" 
-	  	android:layout_marginLeft="15dip"	 	
-	  	android:text="Keep me logged in"
-	    android:textColor="@color/textgray"	
-		android:layout_alignParentLeft="true"
-		android:layout_below="@id/edittextpassword"></TextView>
-	  	<CheckBox
-	  	android:id="@+id/checkboxkeeplog"
-	  	android:layout_width="40dip"
-	  	android:layout_height="40dip"
-		android:layout_below="@id/edittextpassword"
-		android:layout_alignParentRight="true"
-		android:layout_marginRight="10dip"
-	  	></CheckBox>
 </RelativeLayout> 			
   		
