@@ -47,7 +47,7 @@ public class AccountService extends BaseService {
 	public static LoginStatus Login(String username, String password){
 		HttpPost post = new HttpPost(Constants.LoginUrl);
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		nvps.add(new BasicNameValuePair(Constants.urlParameter_Email, username));
+		nvps.add(new BasicNameValuePair(Constants.urlParameter_Email, username.toLowerCase()));
 		nvps.add(new BasicNameValuePair(Constants.urlParameter_Password, password));
 		
 		try {
@@ -141,10 +141,10 @@ public class AccountService extends BaseService {
 	public static RegisterStatus Register(String username, String password, String firstName, String lastName, String alias, AccountType accountType){
 		HttpPost post = new HttpPost(Constants.RegisterUrl);
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-		nvps.add(new BasicNameValuePair("user[email]", username));
+		nvps.add(new BasicNameValuePair("user[email]", username.toLowerCase()));
 		nvps.add(new BasicNameValuePair("user[password]", password));
 		nvps.add(new BasicNameValuePair("user[password_confirmation]", password));
-		nvps.add(new BasicNameValuePair("user[alias]", alias));
+		//nvps.add(new BasicNameValuePair("user[alias]", alias));
 		nvps.add(new BasicNameValuePair("user[accounttype]", String.valueOf(accountType.value())));
 		nvps.add(new BasicNameValuePair("user[first_name]", firstName));
 		nvps.add(new BasicNameValuePair("user[last_name]", lastName));
