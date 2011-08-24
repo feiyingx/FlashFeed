@@ -82,6 +82,15 @@ public class LoginActivity extends Activity {
         signinBtn.setOnClickListener(this);*/
     }
     
+    @Override
+    protected void onResume(){
+    	super.onResume();
+    	if(AccountService.IsAuthenticated()){
+			Intent i = new Intent(this, StatusFeedActivity.class);
+			startActivity(i);
+		}
+    }
+    
   //activity events
 	@Override
 	public Object onRetainNonConfigurationInstance(){

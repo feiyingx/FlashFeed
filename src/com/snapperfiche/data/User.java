@@ -50,7 +50,6 @@ public class User {
 	public String getPhotoUrl(){
 		if(Utility.IsNullOrEmpty(photo_file_name)) return "";
 		
-		String url = "/images/upload/" + AccountService.getUser().getId() + "/" + photo_file_name.replace(".jpg", "_original.jpg");
-		return Utility.GetAbsoluteUrl(url);
+		return Utility.GetAbsoluteUrl(photo_file_name.replace(".jpg", "_original.jpg"));
 	}
 }

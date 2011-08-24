@@ -103,4 +103,5 @@ public class Constants {
 	
 	//request codes
 	public static final int REQCODE_GET_POST_TAGS = 1337;
+	public static final int REQCODE_EDIT_PROFILE = 1338;
 }

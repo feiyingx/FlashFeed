@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.droidfu.widgets.WebImageView;
 import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.data.User;
 import com.snapperfiche.mobile.custom.BaseActivity;
@@ -47,6 +48,7 @@ public class EditProfileActivity extends BaseActivity{
 	Button mBtnDone, mBtnCancel;
 	EditText mEtxtFirstName, mEtxtLastName, mEtxtPassword;
 	ImageView mImgProfile;
+	WebImageView mImgProfileWeb;
 	final String[] mImageSelectListItems = new String[]{"Use camera", "Use gallery"};
 	Context mContext = this;
 	AlertDialog mADiagSelect;
@@ -63,6 +65,7 @@ public class EditProfileActivity extends BaseActivity{
 		mEtxtLastName = (EditText)findViewById(R.id.etxt_lname);
 		mEtxtPassword = (EditText)findViewById(R.id.etxt_pw);
 		mImgProfile = (ImageView)findViewById(R.id.img_profile);
+		mImgProfileWeb = (WebImageView)findViewById(R.id.img_profile_web);
 		
 		//create image uploader/selecter dialog
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.select_dialog_item, mImageSelectListItems);
@@ -104,13 +107,20 @@ public class EditProfileActivity extends BaseActivity{
 		mEtxtLastName.setText(mLastName);
 		if(mProfileImgUrl == ""){
 			//set profile img to default img
+			
 		}else{
 			//set to profile img
+			mImgProfileWeb.setDrawingCacheEnabled(false);
+			mImgProfileWeb.setImageUrl(mProfileImgUrl);
+			mImgProfileWeb.loadImage();
+			
+			mImgProfile.setVisibility(ImageView.GONE); //hide the other img view
 		}
 		
 		mADiagSelect = dialogBuilder.create();
 		
-		mImgProfile.setOnClickListener(onClick_imgProfile);
+		//mImgProfile.setOnClickListener(onClick_imgProfile);
+		mImgProfileWeb.setOnClickListener(onClick_imgProfile);
 		
 		//check rotation chg data holder
 		final EditProfileActivityDataHolder holder = (EditProfileActivityDataHolder)getLastNonConfigurationInstance();
@@ -119,6 +129,8 @@ public class EditProfileActivity extends BaseActivity{
 			if(holder.mProfileImg != null){
 				mNewProfilePhoto = holder.mProfileImg;
 				mImgProfile.setImageBitmap(mNewProfilePhoto);
+				mImgProfile.setVisibility(ImageView.VISIBLE);
+				mImgProfileWeb.setVisibility(WebImageView.GONE);
 			}
 			mImageCaptureUri = holder.mImgCaptureUri;
 		}
@@ -143,6 +155,8 @@ public class EditProfileActivity extends BaseActivity{
 				if(extras != null){
 					mNewProfilePhoto = extras.getParcelable("data");
 					mImgProfile.setImageBitmap(mNewProfilePhoto);
+					mImgProfile.setVisibility(ImageView.VISIBLE);
+					mImgProfileWeb.setVisibility(WebImageView.GONE);
 					
 					//delete file
 					File f = new File(mImageCaptureUri.getPath());
@@ -220,7 +234,8 @@ public class EditProfileActivity extends BaseActivity{
 			//don't need to check pw against old pw cuz if user didn't update pw, then the pw text field will be empty
 	
 			if(AccountService.EditProfile(newPassword, newFirstName, newLastName, newPhotoPath) == BasicStatus.SUCCESS){
-				Toast.makeText(mContext, "Test Success", Toast.LENGTH_LONG).show();
+				setResult(RESULT_OK, null);
+				finish();
 			}else{
 				Toast.makeText(mContext, "Sorry for the inconvenience, but we ran into an error :( Please try updating again later.", Toast.LENGTH_LONG).show();
 			}

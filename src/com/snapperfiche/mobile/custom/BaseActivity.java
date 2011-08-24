@@ -15,7 +15,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.snapperfiche.code.Constants;
 import com.snapperfiche.mobile.AuthenticationActivity;
 import com.snapperfiche.mobile.CameraActivity;
 import com.snapperfiche.mobile.EditProfileActivity;
@@ -31,6 +33,7 @@ public class BaseActivity extends Activity {
 	LinearLayout llBase;
 	ProgressDialog mDialog;
 	LogoutAsyncTask mLogoutTask;
+	Context mContext = this;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class BaseActivity extends Activity {
 		switch(item.getItemId()){
 			case R.id.itm_edit_profile:
 				Intent intent = new Intent(this, EditProfileActivity.class);
-		        startActivity(intent);
+		        startActivityForResult(intent, Constants.REQCODE_EDIT_PROFILE);
 				return true;
 			case R.id.itm_settings:
 				return true;
@@ -76,6 +79,15 @@ public class BaseActivity extends Activity {
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+		if(requestCode == Constants.REQCODE_EDIT_PROFILE){
+			if(resultCode == RESULT_OK){
+				//ACT A FOO
+				Toast.makeText(mContext, "Profile updated!", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 	
 	//helpers
