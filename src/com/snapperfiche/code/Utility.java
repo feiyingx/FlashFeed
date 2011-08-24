@@ -200,4 +200,12 @@ public class Utility {
 		
 		return Constants.GetReceivedNotifications_Format.replace(":user_id", String.valueOf(userId));
 	}
+	
+	public static String GetEditProfileUrl(int userId){
+		String url = "";
+		if(userId < 0)
+			return url;
+		
+		return Constants.EditProfileUrl_Format.replace(":user_id", String.valueOf(userId));
+	}
 }

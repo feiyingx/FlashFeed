@@ -1,5 +1,8 @@
 package com.snapperfiche.data;
 
+import com.snapperfiche.code.Utility;
+import com.snapperfiche.webservices.AccountService;
+
 public class User {
 	private int id;
 	private String email;
@@ -7,6 +10,7 @@ public class User {
 	private String accounttype;
 	private String first_name;
 	private String last_name;
+	private String photo_file_name;
 	
 	public User(){}
 	
@@ -41,5 +45,12 @@ public class User {
 	
 	public String getLastName(){
 		return last_name;
+	}
+	
+	public String getPhotoUrl(){
+		if(Utility.IsNullOrEmpty(photo_file_name)) return "";
+		
+		String url = "/images/upload/" + AccountService.getUser().getId() + "/" + photo_file_name.replace(".jpg", "_original.jpg");
+		return Utility.GetAbsoluteUrl(url);
 	}
 }

@@ -1,5 +1,6 @@
 package com.snapperfiche.webservices;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -16,9 +17,16 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+
+import android.graphics.Bitmap;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -27,6 +35,7 @@ import com.google.gson.JsonParser;
 import com.snapperfiche.code.Constants;
 import com.snapperfiche.code.Enumerations;
 import com.snapperfiche.code.Enumerations.AccountType;
+import com.snapperfiche.code.Enumerations.BasicStatus;
 import com.snapperfiche.code.Enumerations.LoginStatus;
 import com.snapperfiche.code.Enumerations.RegisterStatus;
 import com.snapperfiche.code.Utility;
@@ -232,5 +241,67 @@ public class AccountService extends BaseService {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static BasicStatus EditProfile(String password, String firstName, String lastName, String photoPath){
+		User currentUser = AccountService.getUser();
+		if(currentUser == null) return BasicStatus.ERROR;
+		HttpPut post = new HttpPut(Utility.GetEditProfileUrl(currentUser.getId()));
+		MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+		/*
+		if(!Utility.IsNullOrEmpty(password)){
+			nvps.add(new BasicNameValuePair("user[password]", password));
+			nvps.add(new BasicNameValuePair("user[password_confirmation]", password));
+		}*/
+		
+		try {
+			if(!Utility.IsNullOrEmpty(firstName)){				
+				reqEntity.addPart("user[first_name]", new StringBody(firstName));			
+			}
+			if(!Utility.IsNullOrEmpty(lastName)){
+				reqEntity.addPart("user[last_name]", new StringBody(lastName));
+			}
+			
+			if(!Utility.IsNullOrEmpty(photoPath)){
+				File f = new File(photoPath);
+				f = f.getAbsoluteFile();
+				boolean isFile = f.isFile();
+				boolean isExists = f.exists(); 
+				FileBody bin = new FileBody(f, "image/jpeg");
+		        reqEntity.addPart("user[photo]", bin);
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		post.setEntity(reqEntity);
+		
+		try {
+			HttpResponse registerResponse = GetHttpClient().execute(post);
+			HttpEntity entity = registerResponse.getEntity();
+			if(entity != null){				
+				InputStream stream = entity.getContent();
+				String jsonResultString = Utility.ConvertStreamToString(stream);
+				JsonParser parser = new JsonParser();
+				JsonElement resultElement = parser.parse(jsonResultString);
+				JsonObject resultJson = resultElement.getAsJsonObject();
+				JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+				
+				Gson gson = new Gson();
+				int status = gson.fromJson(statusJson, int.class);
+				entity.consumeContent();
+				
+				return BasicStatus.getStatus(status);
+			}
+			
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return BasicStatus.ERROR;
 	}
 }
