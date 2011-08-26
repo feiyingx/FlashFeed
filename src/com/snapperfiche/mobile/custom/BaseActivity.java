@@ -65,6 +65,7 @@ public class BaseActivity extends Activity {
 			case R.id.itm_edit_profile:
 				Intent intent = new Intent(this, EditProfileActivity.class);
 		        startActivityForResult(intent, Constants.REQCODE_EDIT_PROFILE);
+				//startActivity(intent);
 				return true;
 			case R.id.itm_settings:
 				return true;

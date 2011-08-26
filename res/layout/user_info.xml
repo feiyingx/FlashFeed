@@ -4,11 +4,12 @@ android:id="@+id/nav"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:droidfu="http://github.com/droidfu/schema"
 android:background="@drawable/bggradient"
 android:padding="10dip"
 >
 	<!-- change @drawable/terran to actual profile pictures -->
-	<ImageView
+	<com.github.droidfu.widgets.WebImageView 
 	android:id="@+id/imageprofilepicture"
 	android:layout_width="70dip"
 	android:layout_height="70dip"
@@ -18,12 +19,13 @@ android:padding="10dip"
 	android:scaleType="fitXY"
 	android:layout_below="@id/logotop"
 	android:layout_alignParentLeft="true"
-	></ImageView>
+	droidfu:autoLoad="true"
+	></com.github.droidfu.widgets.WebImageView>
+	
 	<TextView
 	android:id="@+id/textusername"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="Wen Hou"
 	android:layout_toRightOf="@id/imageprofilepicture"
 	android:layout_alignTop="@id/imageprofilepicture"
 	android:layout_marginLeft="10dip"
@@ -54,7 +56,7 @@ android:padding="10dip"
 	android:textSize="12dip"
 	android:textColor="@color/textwhite"
 	></TextView>
-	
+	<!-- 
 	<Button
 	android:id="@+id/btnNotifications"
 	android:layout_height="wrap_content"
@@ -67,7 +69,7 @@ android:padding="10dip"
 	android:background="@drawable/textbutton"
 	android:textColor="#ffffff"
 	></Button>	
-	
+	-->
 	<!-- 
   	<Button
 	android:id="@+id/buttonfriends"

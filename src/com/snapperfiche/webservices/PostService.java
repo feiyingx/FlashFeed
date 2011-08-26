@@ -656,4 +656,58 @@ public class PostService extends BaseService {
 		
 		return posts;
 	}
+	
+	public static Post GetLatestPost(boolean forceCacheRefresh){
+		User currentUser = AccountService.getUser();
+		if(currentUser != null){
+			String cacheKey = "GetLatestPost";
+			Post cacheData = (Post)SimpleCache.get(cacheKey);
+			if(!forceCacheRefresh && cacheData != null){
+				return cacheData;
+			}
+			
+			String recentPostUrl = Constants.GetMostRecentPost;
+			if(Utility.IsNullOrEmpty(recentPostUrl))
+				return null;
+			HttpGet getPost = new HttpGet(recentPostUrl);
+			try {
+				HttpResponse response = GetHttpClient().execute(getPost);
+				HttpEntity entity = response.getEntity();
+				if(entity != null){
+					InputStream stream = entity.getContent();
+					String jsonResultString = Utility.ConvertStreamToString(stream);
+					entity.consumeContent();
+					
+					JsonParser parser = new JsonParser();
+					JsonElement resultElement = parser.parse(jsonResultString);
+					JsonObject resultJson = resultElement.getAsJsonObject();
+					JsonElement statusJson = resultJson.get(Constants.jsonParameter_Status);
+					JsonElement postJson = resultJson.get(Constants.jsonParameter_Post);
+					
+					Gson gson = new Gson();
+					int status = gson.fromJson(statusJson, int.class);
+					
+					if(status == Enumerations.BasicStatus.SUCCESS.value()){
+						Post userPost = gson.fromJson(postJson, Post.class);
+						SimpleCache.put(cacheKey, userPost);
+						return userPost;
+					}else if(status == Enumerations.BasicStatus.NO_RESULTS.value()){
+						
+					}else if(status == Enumerations.BasicStatus.ERROR_NOT_AUTHENTICATED.value()){
+						
+					}else{ //error case
+						
+					}
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
+	}
  }

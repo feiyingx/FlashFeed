@@ -2,6 +2,7 @@ package com.snapperfiche.data;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.snapperfiche.code.Enumerations;
@@ -57,9 +58,10 @@ public class Post {
 	}
 	
 	public Date getDate(){
-		DateFormat format = DateFormat.getTimeInstance(DateFormat.SHORT);
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //DateFormat.getTimeInstance(DateFormat.SHORT);
 		Date date = new Date();
 		try {
+			format.setTimeZone(java.util.TimeZone.getTimeZone("PST"));
 			date = format.parse(created_at);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

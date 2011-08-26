@@ -31,6 +31,7 @@ public class Constants {
 	public static final String FavPost_Format = BaseUrl + "fav/:post_id.json";
 	public static final String UnfavPost_Format = BaseUrl + "unfav/:post_id.json";
 	public static final String GetPostsByTag_Format = BaseUrl + "posts/tag/:tag_id.json";
+	public static final String GetMostRecentPost = BaseUrl + "posts/recentpost.json";
 	
 	/* Comment urls */
 	public static final String NewComment_Format = BaseUrl + "comments/new/:post_id.json";

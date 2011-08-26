@@ -136,6 +136,7 @@ public class EditProfileActivity extends BaseActivity{
 		}
 		
 		mBtnDone.setOnClickListener(onClick_btnDone);
+		mBtnCancel.setOnClickListener(onClick_btnCancel);
 	}
 	
 	@Override
@@ -192,7 +193,8 @@ public class EditProfileActivity extends BaseActivity{
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			
+			setResult(RESULT_OK, null);
+			finish();
 		}
 	};
 	
