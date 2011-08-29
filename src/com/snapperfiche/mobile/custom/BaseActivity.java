@@ -23,6 +23,7 @@ import com.snapperfiche.mobile.CameraActivity;
 import com.snapperfiche.mobile.EditProfileActivity;
 import com.snapperfiche.mobile.LoginActivity;
 import com.snapperfiche.mobile.ProfileActivity;
+import com.snapperfiche.mobile.ProfileFeedActivity;
 import com.snapperfiche.mobile.QuestionActivity;
 import com.snapperfiche.mobile.R;
 import com.snapperfiche.mobile.StatusFeedActivity;
@@ -118,7 +119,7 @@ public class BaseActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(BaseActivity.this, ProfileActivity.class);
+				Intent i = new Intent(BaseActivity.this, ProfileFeedActivity.class);
 				startActivity(i);
 			}
 		});

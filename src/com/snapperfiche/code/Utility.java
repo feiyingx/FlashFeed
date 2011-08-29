@@ -9,6 +9,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.snapperfiche.code.Enumerations.GroupType;
 
@@ -64,6 +69,24 @@ public class Utility {
         }
 	}
 	
+	public static Date GetDate(String utcDateString){
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //DateFormat.getTimeInstance(DateFormat.SHORT);
+		Date date = new Date();
+		try {
+			format.setTimeZone(java.util.TimeZone.getTimeZone("PST"));
+			date = format.parse(utcDateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return date;
+	}
+	
+	public static String GetPostDateLocationString(Date date, String locality, String adminArea){
+		Format formatter = new SimpleDateFormat("hh:mm a");
+		return formatter.format(date) + " @" + locality + ", " + adminArea;
+	}
+	
 	public static String GetAbsoluteUrl(String url){
 		if(url.startsWith("/")){
 			url = (url.length() > 1) ? url.substring(1) : "";
@@ -72,7 +95,7 @@ public class Utility {
 	}
 	
 	public static boolean IsNullOrEmpty(String input){
-		return (input == null || input == "");
+		return (input == null || input.length() == 0);
 	}
 	
 	public static String GetPostDetailUrl(int id){

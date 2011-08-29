@@ -23,4 +23,18 @@
 	android:layout_height="50dp" 
 	android:layout_alignParentBottom="true" 
 	android:id="@+id/bottomnav" />
+	
+	<LinearLayout
+	android:id="@+id/vwsw_loader"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_below="@id/userInfo"
+	android:layout_above="@id/bottomnav"
+	android:orientation="vertical">
+		<ListView
+		android:id="@+id/lv_posts"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+		</ListView>
+	</LinearLayout>
 </RelativeLayout>

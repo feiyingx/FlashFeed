@@ -225,7 +225,7 @@ public class StatusFeed extends BaseActivity{
 		@Override
 		protected Void doInBackground(Void... params) {
 			AccountService.Login("bigfiche@fiche.com", "asdf");		
-			mPosts = PostService.GetLatestPosts();
+			//mPosts = PostService.GetLatestPosts();
 			mGroups = GroupService.GetGroups(AccountService.getUser().getId(), GroupType.USER_FEED);
 			
 			//SimpleCache.put(mPostsCacheKey, mPosts);

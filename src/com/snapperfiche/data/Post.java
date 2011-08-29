@@ -1,8 +1,5 @@
 package com.snapperfiche.data;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.snapperfiche.code.Enumerations;
@@ -22,6 +19,7 @@ public class Post {
 	private boolean is_favorite;
 	private String locality;
 	private String admin_area;
+	private int num_answers;
 	
 	public Post() {}
 	
@@ -58,16 +56,7 @@ public class Post {
 	}
 	
 	public Date getDate(){
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //DateFormat.getTimeInstance(DateFormat.SHORT);
-		Date date = new Date();
-		try {
-			format.setTimeZone(java.util.TimeZone.getTimeZone("PST"));
-			date = format.parse(created_at);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return date;
+		return Utility.GetDate(created_at);
 	}
 	
 	public boolean getIsPrivate(){
@@ -96,5 +85,9 @@ public class Post {
 	
 	public String getAdminArea(){
 		return admin_area;
+	}
+	
+	public int getNumAnswers(){
+		return num_answers;
 	}
 }

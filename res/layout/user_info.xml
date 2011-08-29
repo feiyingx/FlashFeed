@@ -52,7 +52,7 @@ android:padding="10dip"
 	android:layout_marginLeft="10dip"
 	android:layout_toRightOf="@id/imageprofilepicture"
 	android:layout_below="@id/textactivity"
-	android:text="8:05PM @Pasadena,CA"
+	android:text=""
 	android:textSize="12dip"
 	android:textColor="@color/textwhite"
 	></TextView>

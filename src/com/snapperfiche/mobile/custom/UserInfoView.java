@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import com.snapperfiche.webservices.PostService;
 public class UserInfoView extends LinearLayout {
 	WebImageView mImgProfile;
 	TextView mtxtName, mtxtLatestActivity, mtxtLatestActivityDate;
+	Post mRecentPost;
+	GetLatestPostTask mTask;
 	
 	public UserInfoView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,20 +41,12 @@ public class UserInfoView extends LinearLayout {
 		mtxtName = (TextView)findViewById(R.id.textusername);
 		mtxtName.setText(user.getFirstName() + " " + user.getLastName());
 		
-		Post recentPost = PostService.GetLatestPost(false); 
 		mtxtLatestActivity = (TextView)findViewById(R.id.textlatestactivity);
 		mtxtLatestActivityDate = (TextView)findViewById(R.id.textactivity);
-		//no activity yet
-		if(recentPost == null){
-			mtxtLatestActivity.setText("None yet, coming soon!");
-		}else{
-			Date date = recentPost.getDate();
-			Format formatter = new SimpleDateFormat("hh:mma");
-			String activity = formatter.format(date) + " @ " + recentPost.getLocality() + ", " + recentPost.getAdminArea();
-			mtxtLatestActivity.setText(activity); 
-			formatter = new SimpleDateFormat("MM/dd/yyyy");
-			mtxtLatestActivityDate.setText("Latest Activity: " + formatter.format(date));
-		}
+		
+		mTask = new GetLatestPostTask();
+		mTask.attach(this);
+		mTask.execute();
 		/*
 		Button btnNotifications = (Button)findViewById(R.id.btnNotifications);
 		btnNotifications.setOnClickListener(new OnClickListener() {
@@ -62,5 +57,43 @@ public class UserInfoView extends LinearLayout {
 			}
 		});
 		*/
+	}
+	
+	private void loadLatestPost(){
+		
+		//no activity yet
+		if(mRecentPost == null){
+			mtxtLatestActivity.setText("None yet, coming soon!");
+		}else{
+			Date date = mRecentPost.getDate();
+			Format formatter = new SimpleDateFormat("hh:mm a");
+			String activity = formatter.format(date) + " @" + mRecentPost.getLocality() + ", " + mRecentPost.getAdminArea();
+			mtxtLatestActivity.setText(activity); 
+			formatter = new SimpleDateFormat("MM/dd/yyyy");
+			mtxtLatestActivityDate.setText("Latest Activity: " + formatter.format(date));
+		}
+	}
+	
+	public class GetLatestPostTask extends AsyncTask<Void, Integer, Void>{
+		UserInfoView activity = null;
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			activity.mRecentPost = PostService.GetLatestPost(false); 
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result){
+			activity.loadLatestPost();
+		}
+		
+		void attach(UserInfoView activity){
+			this.activity = activity;
+		}
+		
+		void detach(){
+			this.activity = null;
+		}
 	}
 }

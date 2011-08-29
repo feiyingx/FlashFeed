@@ -1,38 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:droidfu="http://github.com/droidfu/schema"
 	android:id="@+id/profilePostRow"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical"
 	android:padding="20px"
 	android:background="@anim/post_background">
-	<LinearLayout
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="horizontal">
-	<TextView android:id="@+id/profilePostRow_time"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="7:45pm" android:layout_above="@+id/profilePostRow_img"/>
-	<TextView android:id="@+id/profilePostRow_location"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="Cerritos, CA" android:layout_toRightOf="@+id/profileRostRow_time"
-		android:gravity="right"/>
-	</LinearLayout>
-	<ImageView android:id="@+id/profilePostRow_img" android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"/>
-	<TextView android:id="@+id/profilePostRow_caption" android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:gravity="center_horizontal" android:paddingBottom="15dp"/>
-	<LinearLayout
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="horizontal" android:gravity="center_horizontal">
-	<Button android:id="@+id/profilePostRow_favBtn" android:gravity="center"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:text="Favorite" android:layout_below="@+id/profilePostRow_caption"/>
-	<Button android:id="@+id/profilePostRow_likeBtn" android:gravity="center"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:text="Like" android:layout_toRightOf="@+id/profilePostRow_favBtn"/>
-	<Button android:id="@+id/profilePostRow_commentBtn" android:gravity="center"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:text="Comment" android:layout_toRightOf="@+id/profilePostRow_likeBtn"/>
-	</LinearLayout>	
-</LinearLayout>
+    <com.github.droidfu.widgets.WebImageView 
+	android:id="@+id/imgPost"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:scaleType="fitXY"
+	android:layout_alignParentLeft="true"
+	android:layout_alignParentTop="true"
+	droidfu:autoLoad="true"
+	></com.github.droidfu.widgets.WebImageView>
+    <TextView 
+    android:layout_toRightOf="@+id/imgPost" 
+    android:layout_height="wrap_content" 
+    android:layout_width="wrap_content" 
+    android:text="You Posted" 
+    android:id="@+id/txtPostType" 
+    android:layout_alignTop="@+id/imgPost">
+    </TextView>
+    <TextView 
+    android:layout_below="@+id/txtPostType" 
+    android:layout_height="wrap_content" 
+    android:layout_width="wrap_content" 
+    android:text="" 
+    android:id="@+id/txtPostText" 
+    android:layout_alignLeft="@+id/txtPostType">
+    </TextView>
+    <TextView android:layout_below="@+id/txtPostText" 
+    android:layout_height="wrap_content" 
+    android:layout_width="wrap_content" 
+    android:text="" 
+    android:id="@+id/txtPostLocation" 
+    android:layout_alignLeft="@+id/txtPostText">
+    </TextView>
+    <Button 
+    android:layout_below="@+id/txtPostLocation" 
+    android:id="@+id/btnComments" 
+    android:layout_height="wrap_content" 
+    android:text="Comments" 
+    android:layout_width="wrap_content" 
+    android:layout_alignLeft="@+id/txtPostLocation"
+    android:focusable="false">
+    </Button>
+</RelativeLayout>

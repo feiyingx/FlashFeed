@@ -140,6 +140,7 @@ public class Profile extends Activity{
 				//convertView.setBackgroundDrawable(rowBg);
 				
 				holder = new ViewHolder();
+				/*
 				holder.txtCaption = (TextView) convertView.findViewById(R.id.profilePostRow_caption);
 				holder.txtLocation = (TextView) convertView.findViewById(R.id.profilePostRow_location);
 				holder.txtTime = (TextView) convertView.findViewById(R.id.profilePostRow_caption);
@@ -147,7 +148,7 @@ public class Profile extends Activity{
 				holder.favBtn = (Button) convertView.findViewById(R.id.profilePostRow_favBtn);
 				holder.likeBtn = (Button) convertView.findViewById(R.id.profilePostRow_likeBtn);
 				holder.commentBtn = (Button) convertView.findViewById(R.id.profilePostRow_commentBtn);
-				
+				*/
 				convertView.setOnClickListener(new OnClickListener(){
 					private int pos = position;
 					

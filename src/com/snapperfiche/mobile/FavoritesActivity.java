@@ -49,7 +49,7 @@ public class FavoritesActivity extends BaseActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			AccountService.Login("bigfiche@fiche.com", "asdf");		
-			mFavoritePosts = PostService.GetLatestPosts();
+			mFavoritePosts = null; //PostService.GetLatestPosts();
 			
 			//SimpleCache.put(mPostsCacheKey, mPosts);
 			//SimpleCache.put(mGroupCacheKey, mGroups);

@@ -62,11 +62,13 @@ public class LoginActivity extends Activity {
 			startActivity(i);
 		*/
 		
+        
+        AccountService.Login("u1@u.com", "asdf");
         /*
-        AccountService.Login("bigfiche@fiche.com", "asdf");
-		Intent i = new Intent(this, StatusFeedActivity.class);
+		Intent i = new Intent(this, ProfileFeedActivity.class);
 		startActivity(i);
 		*/
+        
         /*
         Intent i = new Intent(this, FacebookConnect.class);
         startActivity(i);
